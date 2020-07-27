@@ -13,7 +13,7 @@ class User(db.Model):
     occupation = db.Column(db.String(50), unique=False, nullable=False) 
     contact_one = db.Column(db.String(14), unique=False, nullable=False, index=True) 
     contact_two = db.Column(db.String(14), unique=False, nullable=False, index=True) 
-    dob = db.column(db.DateTime, unique=False, nullable=False)
+    dob = db.Column(db.DateTime(), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     marital_status = db.Column(db.String(10), unique=False, nullable=False)
     area = db.Column(db.String(50), unique=False, nullable=False)

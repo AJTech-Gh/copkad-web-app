@@ -60,8 +60,8 @@ var KTAppContactsAdd = function () {
 				KTUtil.scrollTop();
 
 				swal.fire({
-					"title": "", 
-					"text": "There are some errors in your submission. Please correct them.", 
+					"title": "",
+					"text": "Your form is incomplete, Please complete it!", 
 					"type": "error",
 					"buttonStyling": false,
 					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
@@ -87,10 +87,26 @@ var KTAppContactsAdd = function () {
 				//KTApp.block(formEl);
 
 				// See: http://malsup.com/jquery/form/#ajaxSubmit
+				// Docs for ajaxSubmit: https://github.com/claviska/jquery-ajaxSubmit
+				
 				formEl.ajaxSubmit({
-					success: function() {
+
+					error: function(res, err) {
+						KTApp.unprogress(btn);
+
+						swal.fire({
+							"title": "",
+							"text": err, 
+							"type": "error",
+							"buttonStyling": false,
+							"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+						});
+					},
+
+					success: function(res) {
 						KTApp.unprogress(btn);
 						//KTApp.unblock(formEl);
+						console.log(res);
 
 						swal.fire({
 							"title": "", 

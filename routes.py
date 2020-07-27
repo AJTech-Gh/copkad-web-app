@@ -1,4 +1,5 @@
-from flask import render_template
+from flask import render_template, request, make_response, jsonify, Response
+import json
 from app import app
 
 @app.route('/')
@@ -45,6 +46,17 @@ def office_of_the_district_secretary():
 @app.route('/records')
 def records():
     return render_template('add-user.html')
+
+@app.route('/add_user_submit', methods=['POST'])
+def add_user_submit():
+    if request.method == 'POST':
+        form = request.form
+        # return json.dumps({'status':'OK', 'message': 'successful'})
+        return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+    else:
+        return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=400, mimetype='application/json')
+
+
     
     
 
