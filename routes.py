@@ -54,8 +54,7 @@ def add_user_submit():
         # return json.dumps({'status':'OK', 'message': 'successful'})
         return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
     else:
-        return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=400, mimetype='application/json')
-
+        pass
 
     
     
