@@ -21,5 +21,3 @@ def get_valid_combinations():
     # join all combinations into strings
     all_combinations = [''.join(m) for m in all_combinations]
     return all_combinations
-
-print(len(get_valid_combinations()))
