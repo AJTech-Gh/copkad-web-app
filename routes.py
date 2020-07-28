@@ -1,5 +1,6 @@
 from flask import render_template, request, make_response, jsonify, Response
 import json
+from datetime import datetime
 from app import app, db
 from models import User
 
@@ -55,43 +56,55 @@ def add_user_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
-        photo_id = form.get('photo_id')
+        photo_id = 'static' #form.get('photo_id')
         member_id = form.get('member_id')
         first_name = form.get('first_name')
         last_name = form.get('last_name')
         other_names = form.get('other_names') 
         gender = form.get('gender')
         occupation = form.get('occupation')
-        contact_one = form.get('contact_one')
-        contact_two = form.get('contacta_two')
+        contact_phone_1 = form.get('contact_phone_1')
+        contact_phone_2 = form.get('contact_phone_2')
         dob = form.get('dob')
         email = form.get('email')
         marital_status = form.get('marital_status')
         church_affiliation = form.get('church_affiliation')
 
         password = form.get('password')
-        mode_of_communication = form.get('mode_of_communication')
+        comm_email = form.get('comm_email')
+        comm_sms = form.get('comm_sms')
+        comm_phone = form.get('comm_phone')
         
-        address_line_one = form.get('address_line_one')
-        address_line_two = form.get('address_line_two')
-        digital_address = form.get('digital_address')
+        address_line_1 = form.get('address_line_1')
+        address_line_2 = form.get('address_line_2')
+        digital_address_code = form.get('digital_address_code')
         region = form.get('region')
         district = form.get('district')
         country = form.get('country')
 
-        # create new user object
-        user = User(photo_id=photo_id, member_id=member_id, first_name=first_name, last_name=last_name, other_names=other_names,\
-                    gender=gender, occupation=occupation, contact_one=contact_one, contact_two=contact_two, dob=dob, email=email, \
-                    marital_status=marital_status, church_affiliation=church_affiliation, address_line_one=address_line_one, \
-                    address_line_two=address_line_two, digital_address=digital_address, region=region, district=district, country=country
-                )
-        user.set_password(password)
-        # add the new user to the database and save the changes
-        db.session.add(user)
-        db.session.commit()
-        # return the success response to Ajax
-        # return json.dumps({'status':'OK', 'message': 'successful'})
-        return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+        try:
+            # create new user object
+            user = User(photo_id=photo_id, member_id=member_id, first_name=first_name, last_name=last_name, other_names=other_names,
+                        occupation=occupation, contact_phone_1=contact_phone_1, contact_phone_2=contact_phone_2, email=email,
+                        marital_status=marital_status, church_affiliation=church_affiliation, address_line_1=address_line_1, 
+                        address_line_2=address_line_2, digital_address_code=digital_address_code, region=region, district=district, country=country
+                    )
+            user.set_gender(gender)
+            user.set_dob(dob)
+            user.set_password(password)
+            user.set_comm_email(comm_email)
+            user.set_comm_sms(comm_sms)
+            user.set_comm_phone(comm_phone)
+            # add the new user to the database and save the changes
+            db.session.add(user)
+            db.session.commit()
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'fatal error'}), status=400, mimetype='application/json')
 
     
     
