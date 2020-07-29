@@ -54,7 +54,3 @@ class MinistryCodeGen():
         if len(val) == self.max_mininstry_code_len:
             return val
         return ('0' * (self.max_mininstry_code_len - len(val))) + val
-
-
-ministry_code_gen = MinistryCodeGen()
-print(ministry_code_gen.get_ministry_combs_with_code())
