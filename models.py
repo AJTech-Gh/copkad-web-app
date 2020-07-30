@@ -5,8 +5,7 @@ from app import app, db
 
 class User(db.Model):
     # personal info page
-    # id = db.Column(db.Integer, primary_key=True, autoincrement=True) # this is for production MySQL
-    id = db.Column(db.Integer, autoincrement=True, unique=True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     photo_id = db.Column(db.String(30), nullable=False)
     member_id = db.Column(db.String(20), primary_key=True, nullable=False, index=True)
     first_name = db.Column(db.String(50), unique=False, nullable=False, index=True)
@@ -20,7 +19,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     marital_status = db.Column(db.String(10), unique=False, nullable=False)
     church_affiliation = db.Column(db.String(50), unique=False, nullable=False)
-    # Account seettings page
+    # Account settings page
     #dashboard_link = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), unique=True, nullable=False)
     comm_email = db.Column(db.Integer, unique=False, nullable=False)

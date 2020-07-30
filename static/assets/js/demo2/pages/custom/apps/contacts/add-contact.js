@@ -26,6 +26,8 @@ var KTAppContactsAdd = function () {
 		// Change event
 		wizard.on('change', function(wizard) {
 			KTUtil.scrollTop();	
+			// write form data to cookies
+			writeAddUserCookies();
 		});
 	}
 

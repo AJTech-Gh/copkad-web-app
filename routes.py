@@ -56,7 +56,7 @@ def add_user_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
-        photo_id = 'static' #form.get('photo_id')
+        photo_id = 'static' #form.get('kt_apps_contacts_add_avatar')
         member_id = form.get('member_id')
         first_name = form.get('first_name')
         last_name = form.get('last_name')
