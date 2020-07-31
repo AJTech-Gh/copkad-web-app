@@ -1,68 +1,102 @@
 "use strict";
 
 // defines the separator to use when storing the selected church affiliation cookies
-let affiliationValsSep = "|";
+let multipleSelectSep = "|";
 
 function writeAddUserCookies() {
   // get the for elements
-  let member_id = document.querySelector("#member_id");
-  let first_name = document.querySelector("#first_name");
-  let last_name = document.querySelector("#last_name");
-  let other_names = document.querySelector("#other_names");
-  let gender = document.querySelector("#gender");
-  let occupation = document.querySelector("#occupation");
-  let contact_phone_1 = document.querySelector("#contact_phone_1");
-  let contact_phone_2 = document.querySelector("#contact_phone_2");
-  let dob = document.querySelector("#dob");
-  let email = document.querySelector("#email");
-  let marital_status = document.querySelector("#marital_status");
-  let church_affiliation = document.querySelector("#kt_select2_3");
-  let full_name = document.querySelector("#full_name");
-  let email_readonly = document.querySelector("#email_readonly");
-  let password = document.querySelector("#password");
-  let confirm_password = document.querySelector("#confirm_password");
-  let comm_email = document.querySelector("#comm_email");
-  let comm_sms = document.querySelector("#comm_sms");
-  let comm_phone = document.querySelector("#comm_phone");
-  let address_line_1 = document.querySelector("#address_line_1");
-  let address_line_2 = document.querySelector("#address_line_2");
-  let digital_address_code = document.querySelector("#digital_address_code");
-  let region = document.querySelector("#region");
-  let district = document.querySelector("#district");
-  let country = document.querySelector("#country");
-  // set the cookies
-  document.cookie = member_id.name + "=" + escape(member_id.value) + ";";
-  document.cookie = first_name.name + "=" + escape(first_name.value) + ";";
-  document.cookie = last_name.name + "=" + escape(last_name.value) + ";";
-  document.cookie = other_names.name + "=" + escape(other_names.value) + ";";
-  document.cookie = gender.name + "=" + escape(gender.value) + ";";
-  document.cookie = occupation.name + "=" + escape(occupation.value) + ";";
-  document.cookie = contact_phone_1.name + "=" + escape(contact_phone_1.value) + ";";
-  document.cookie = contact_phone_2.name + "=" + escape(contact_phone_2.value) + ";";
-  document.cookie = dob.name + "=" + escape(dob.value) + ";";
-  document.cookie = email.name + "=" + escape(email.value) + ";";
-  document.cookie = marital_status.name + "=" + escape(marital_status.value) + ";";
-  let affiliationVals = "";
-  let selectedOptions = church_affiliation.selectedOptions;
-  for(let i = 0; i < selectedOptions.length; i++) {
-    affiliationVals = affiliationVals.concat(affiliationValsSep, [selectedOptions[i].value]);
+  const general_ids = ["member_id", "first_name", "last_name", "other_names", "gender", "occupation", "contact_phone_1", 
+  "contact_phone_2", "dob", "email", "marital_status", "kt_select2_3", "full_name", "email_readonly", "password", 
+  "confirm_password", "comm_email", "comm_sms", "comm_phone", "address_line_1", "address_line_2", 
+  "digital_address_code", "region", "district", "country"];
+  const checkbox_ids = ["comm_email", "comm_sms", "comm_phone"];
+  const multiple_select_ids = ["kt_select2_3"];
+  // set all the cookies
+  for(let i = 0; i < general_ids.length; i++) {
+    // get the id text and the element
+    let id = general_ids[i];
+    let element = document.querySelector("#" + id);
+    // handle checkboxes by getting a boolean for checked status
+    if(checkbox_ids.includes(id)) {
+      document.cookie = element.name + "=" + escape(element.checked) + ";";
+      continue;
+    }
+    // handle multiple select boxes
+    if(multiple_select_ids.includes(id)) {
+      let selectedVals = "";
+      let selectedOptions = element.selectedOptions;
+      for(let i = 0; i < selectedOptions.length; i++) {
+        selectedVals = selectedVals.concat(multipleSelectSep, [selectedOptions[i].value]);
+      }
+      if(selectedVals.length > 1) {
+        selectedVals = selectedVals.substring(1, selectedVals.length);
+      }
+      document.cookie = element.name + "=" + escape(selectedVals) + ";";
+      continue;
+    }
+    // handle other elements whose values are directly accessible by the value property
+    document.cookie = element.name + "=" + escape(element.value) + ";";
   }
-  if(affiliationVals.length > 1) {
-  affiliationVals = affiliationVals.substring(1, affiliationVals.length);
-  }
-  document.cookie = church_affiliation.name + "=" + escape(affiliationVals) + ";";
-  document.cookie = full_name.name + "=" + escape(full_name.value) + ";";
-  document.cookie = email_readonly.name + "=" + escape(email_readonly.value) + ";";
-  document.cookie = password.name + "=" + escape(password.value) + ";";
-  document.cookie = confirm_password.name + "=" + escape(confirm_password.value) + ";";
-  document.cookie = comm_email.name + "=" + escape(comm_email.checked) + ";";
-  document.cookie = comm_sms.name + "=" + escape(comm_sms.checked) + ";";
-  document.cookie = comm_phone.name + "=" + escape(comm_phone.checked) + ";";
-  document.cookie = address_line_1.name + "=" + escape(address_line_1.value) + ";";
-  document.cookie = address_line_2.name + "=" + escape(address_line_2.value) + ";";
-  document.cookie = digital_address_code.name + "=" + escape(digital_address_code.value) + ";";
-  document.cookie = region.name + "=" + escape(region.value) + ";";
-  document.cookie = district.name + "=" + escape(district.value) + ";";
-  document.cookie = country.name + "=" + escape(country.value) + ";";
+  // se the samesite value
   document.cookie = "SameSite=Lax;";
+  // set expiry time for cookies to 30 minutes
+  let now = new Date();
+  now.setMinutes(now.getMinutes() + 30);
+  document.cookie = "expires=" + now.toUTCString() + ";";
+  // alert(document.cookie);
 }
+
+
+// function loadAddUserCookie()
+document.addEventListener("DOMContentLoaded", function(){
+  console.log("Hello");
+  const ids = ["member_id", "first_name", "last_name", "other_names", "gender", "occupation", "contact_phone_1", 
+  "contact_phone_2", "dob", "email", "marital_status", "kt_select2_3", "fullname", "email_readonly", "password", "confirm_password",
+  "comm_email", "comm_sms", "comm_phone", "address_line_1", "address_line_2", "digital_address_code", "region", "district", "country"];
+
+  const checkbox_ids = ["comm_email", "comm_sms", "comm_phone"];
+  const multiple_select_ids = ["kt_select2_3"];
+
+  const allCookies = document.cookie;
+
+  // Obtain all the cookies pairs in an array
+  let cookieList = allCookies.split(';');
+
+  // Take the name value pairs from the cokieList
+  for(var i=0; i<ids.length; i++) {
+    let id = ids[i];
+    let name = cookieList[i].split('=')[0];
+    let value = cookieList[i].split('=')[1];
+    // handle checkboxes
+    if (checkbox_ids.includes(id)){
+      if (value === "true"){
+        document.querySelector("#" + id).checked = true;
+      }
+      else{
+        document.querySelector("#" + id).checked = false;
+      }
+      continue;
+    }
+    // handle multiple select boxes
+    if(multiple_select_ids.includes(id)) {
+      const vals = value.split("|");
+      for(let i = 0; i < vals.length; i++) 
+        const select = document.querySelector("#" + id);
+        /* Iterate options of select element */
+        for (let option of document.querySelectorAll('#' + id + ' option')) {
+          /* Parse value to integer */
+          const value = Number.parseInt(option.value);
+          /* If option value contained in values, set selected attribute */
+          if (selectValues.indexOf(value) !== -1) {
+            option.setAttribute('selected', 'selected');
+          }
+          /* Otherwise ensure no selected attribute on option */
+          else {
+            option.removeAttribute('selected');
+          }
+        }
+      }
+      continue;
+    }
+    document.querySelector("#" + id).value = value;
+});
