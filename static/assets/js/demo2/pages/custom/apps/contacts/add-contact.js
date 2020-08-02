@@ -27,7 +27,7 @@ var KTAppContactsAdd = function () {
 		wizard.on('change', function(wizard) {
 			//KTUtil.scrollTop();	
 			// write form data to cookies
-			writeAddUserCookies();
+			// writeAddUserCookies();
 		});
 	}
 
@@ -98,9 +98,8 @@ var KTAppContactsAdd = function () {
 
 						swal.fire({
 							"title": "",
-							"text": err, 
+							"text": res.responseJSON.message, 
 							"type": "error",
-							"buttonStyling": false,
 							"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
 						});
 					},
@@ -108,7 +107,6 @@ var KTAppContactsAdd = function () {
 					success: function(res) {
 						KTApp.unprogress(btn);
 						//KTApp.unblock(formEl);
-						console.log(res);
 
 						swal.fire({
 							"title": "", 
@@ -141,4 +139,12 @@ var KTAppContactsAdd = function () {
 
 jQuery(document).ready(function() {	
 	KTAppContactsAdd.init();
+});
+
+$('select optgroup option').click(function () {
+    var len = $(this).parent().find(':selected').length;
+    if (len > 1) {
+        alert('only 1 allowed')
+        $(this).prop('selected', false);
+    }
 });

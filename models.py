@@ -2,6 +2,7 @@ from enum import unique
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from app import app, db
+import re
 
 class User(db.Model):
     # personal info page
@@ -18,7 +19,9 @@ class User(db.Model):
     dob = db.Column(db.DateTime(), unique=False, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False, index=True)
     marital_status = db.Column(db.String(10), unique=False, nullable=False)
-    church_affiliation = db.Column(db.String(50), unique=False, nullable=False)
+    assembly = db.Column(db.String(30), unique=False, nullable=False)
+    ministry = db.Column(db.String(50), unique=False, nullable=True)
+    group = db.Column(db.String(50), unique=False, nullable=True)
     # Account settings page
     #dashboard_link = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), unique=True, nullable=False)
@@ -39,6 +42,12 @@ class User(db.Model):
 
     def get_gender(self, gender):
         return ('Male' if gender.lower() == 'm' else 'Female')
+
+    def set_contact_phone_1(self, contact):
+        self.contact_phone_1 = re.sub(r"[\+\-\s]+", "", contact)
+
+    def set_contact_phone_2(self, contact):
+        self.contact_phone_2 = re.sub(r"[\+\-\s]+", "", contact)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

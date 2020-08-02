@@ -237,7 +237,7 @@
 									<span class="kt-nav__link-text">Save &amp; add new</span>
 								</a>
 							</li>
-							<li class="kt-nav__item">
+                            cookieList	<li class="kt-nav__item">
 								<a href="#" class="kt-nav__link">
 									<i class="kt-nav__link-icon flaticon2-hourglass-1"></i>
 									<span class="kt-nav__link-text">Save &amp; exit</span>
@@ -352,7 +352,7 @@
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Member ID</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="member_id" value="copkad001" name="member_id">
+                                                    <input class="form-control" type="text" id="member_id" value="copkad010" name="member_id">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -465,40 +465,50 @@
                                             <div class="form-group row">
                                                 <label class="col-form-label col-lg-3 col-sm-12">Church Affiliation</label>
                                                 <div class=" col-lg-9 col-md-9 col-sm-12">
-                                                    <select class="form-control kt-select2" id="kt_select2_3" name="church_affiliation" multiple>
+                                                    <select class="form-control kt-select2" id="kt_select2_3" name="assembly" multiple>
                                                         
-                                                          <optgroup label="Assembly">
+                                                        <optgroup id ="Assembly" label="Assembly">
                                                             <option value="EEA">Emmanuel English Assembly</option>
                                                             <option value="GA">Glory Assembly</option>
                                                             <option value="HA">Hope Assembly</option>
-                                                          </optgroup>
+                                                        </optgroup>
                                                         
-                                                          <optgroup label="Ministry">
+                                                    </select>
+                                                    <br/><br/>
+                                                    <select class="form-control kt-select2" id="kt_select2_4" name="ministry" multiple>
+                                                    
+                                                        <optgroup label="Ministry">
                                                             <option value="CM">Children</option>
                                                             <option value="EM">Evangelism</option>
                                                             <option value="PM">PEMEM</option>
                                                             <option value="WM">Women</option>
                                                             <option value="YM">Youth</option>
-                                                          </optgroup>
-                                                      <optgroup label="EEA Bible Studies Groups">
-                                                        <option value="EPG">Patience</option>
-                                                        <option value="EPG" >Peace</option>
-                                                        <option value="EJG">Joy</option>
-                                                        <option value="ELG">Love</option>
-                                                      </optgroup>
-                                                      <optgroup label="Glory Assembly Bible Studies Group">
-                                                        <option value="GAGO">Group One</option>
-                                                        <option value="GAGW">Group Two</option>
-                                                        <option value="GAGT">Group Three</option>
-                                                        <option value="GAGF">Group Four</option>
-                                                      </optgroup>
-                                                      <optgroup label="Hope Assembly Bible Studies Group">
-                                                        <option value="HAGO">Group One</option>
-                                                        <option value="HAGW">Group Two</option>
-                                                        <option value="HAGT">Group Three</option>
-                                                        <option value="HAGF">Group Four</option>
-                                                      </optgroup>
-                                                    </select>	
+                                                        </optgroup>
+                                                        
+                                                    </select>
+                                                    <br/><br/>
+                                                    <select class="form-control kt-select2" id="kt_select2_5" name="assembly_groups" multiple>
+
+                                                        <optgroup label="EEA Bible Studies Groups" id="EEA-groups">
+                                                            <option value="EAG">Patience</option>
+                                                            <option value="EPG" >Peace</option>
+                                                            <option value="EJG">Joy</option>
+                                                            <option value="ELG">Love</option>
+                                                        </optgroup>
+                                                        <optgroup label="Glory Assembly Bible Studies Group" id="GA-groups">
+                                                            <option value="GAGO">Group One</option>
+                                                            <option value="GAGW">Group Two</option>
+                                                            <option value="GAGT">Group Three</option>
+                                                            <option value="GAGF">Group Four</option>
+                                                        </optgroup>
+                                                        <optgroup label="Hope Assembly Bible Studies Group" id="HA-groups">
+                                                            <option value="HAGO">Group One</option>
+                                                            <option value="HAGW">Group Two</option>
+                                                            <option value="HAGT">Group Three</option>
+                                                            <option value="HAGF">Group Four</option>
+                                                        </optgroup>
+
+                                                    </select>
                                                     <span class="form-text text-muted">Select assembly, ministry and bible studies group of the member. Selection will be saved to the database </span>
                                                 </div>
                                             </div>
@@ -655,7 +665,7 @@
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Digital Address Code</label>
-                                            <input type="text" class="form-control" id="digital_address_code" name="digital_address_code" placeholder="AS-24343" value="AS-24343" required>
+                                            <input type="text" class="form-control" id="digital_address_code" name="digital_address_code" placeholder="AS-24343" value="AS-24343" required>id
                                             <span class="form-text text-muted">Please enter your digital address code</span>
                                         </div>
                                     </div>
@@ -1416,7 +1426,7 @@
 
                     
             <!--begin::Page Scripts(used by this page) -->
-                            <script src="{{ url_for('static', filename='custom_scripts/cookies.js') }}" type="text/javascript"></script>
+                            <!-- <script src="{{ url_for('static', filename='custom_scripts/cookies.js') }}" type="text/javascript"></script> -->
                             <script src="{{ url_for('static', filename='assets/js/demo2/pages/custom/apps/contacts/add-contact.js') }}" type="text/javascript"></script>
                                 <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/forms/widgets/select2.js') }}" type="text/javascript"></script>
                         <!--end::Page Scripts -->

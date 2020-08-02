@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from app import app, db
 from models import User
+import utils
 
 @app.route('/')
 @app.route('/index')
@@ -68,7 +69,7 @@ def add_user_submit():
         dob = form.get('dob')
         email = form.get('email')
         marital_status = form.get('marital_status')
-        church_affiliation = form.get('church_affiliation')
+        church_affiliation = form.getlist('church_affiliation')
 
         password = form.get('password')
         comm_email = form.get('comm_email')
@@ -83,13 +84,19 @@ def add_user_submit():
         country = form.get('country')
 
         try:
+            if utils.check_email_duplicates(email):
+                return Response(json.dumps({'status':'FAIL', 'message': 'Email already exists.'}), status=400, mimetype='application/json')
+            if utils.check_contact_duplicates(contact_phone_1):
+                return Response(json.dumps({'status':'FAIL', 'message': 'Contact 1 already exists.'}), status=400, mimetype='application/json')
             # create new user object
             user = User(photo_id=photo_id, member_id=member_id, first_name=first_name, last_name=last_name, other_names=other_names,
-                        occupation=occupation, contact_phone_1=contact_phone_1, contact_phone_2=contact_phone_2, email=email,
-                        marital_status=marital_status, church_affiliation=church_affiliation, address_line_1=address_line_1, 
-                        address_line_2=address_line_2, digital_address_code=digital_address_code, region=region, district=district, country=country
+                        occupation=occupation, email=email, marital_status=marital_status, church_affiliation=church_affiliation, 
+                        address_line_1=address_line_1, address_line_2=address_line_2, digital_address_code=digital_address_code, region=region, 
+                        district=district, country=country
                     )
             user.set_gender(gender)
+            user.set_contact_phone_1(contact_phone_1)
+            user.set_contact_phone_2(contact_phone_2)
             user.set_dob(dob)
             user.set_password(password)
             user.set_comm_email(comm_email)
@@ -104,9 +111,8 @@ def add_user_submit():
         except Exception as e:
             print(e)
             print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'fatal error'}), status=400, mimetype='application/json')
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
     
     
-
 

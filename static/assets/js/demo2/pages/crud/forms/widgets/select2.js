@@ -1,4 +1,5 @@
 // Class definition
+
 var KTSelect2 = function() {
     // Private functions
     var demos = function() {
@@ -14,37 +15,83 @@ var KTSelect2 = function() {
 
         // multi select
         $('#kt_select2_3, #kt_select2_3_validate').select2({
-            placeholder: "Select a state",
+            placeholder: "Select assembly",
         });
 
         // basic
         $('#kt_select2_4').select2({
-            placeholder: "Select a state",
+            placeholder: "Select ministries",
             allowClear: true
         });
 
         // loading data from array
-        var data = [{
-            id: 0,
-            text: 'Enhancement'
-        }, {
-            id: 1,
-            text: 'Bug'
-        }, {
-            id: 2,
-            text: 'Duplicate'
-        }, {
-            id: 3,
-            text: 'Invalid'
-        }, {
-            id: 4,
-            text: 'Wontfix'
-        }];
+        // var data = [{
+        //     id: 0,
+        //     text: 'Enhancement'
+        // }, {
+        //     id: 1,
+        //     text: 'Bug'
+        // }, {
+        //     id: 2,
+        //     text: 'Duplicate'
+        // }, {
+        //     id: 3,
+        //     text: 'Invalid'
+        // }, {
+        //     id: 4,
+        //     text: 'Wontfix'
+        // }];
 
         $('#kt_select2_5').select2({
-            placeholder: "Select a value",
-            data: data
+            placeholder: "Select groups",
+            allowClear: true
         });
+
+        $("#kt_select2_3").select2({
+            maximumSelectionLength: 1
+          });
+
+        $("#kt_select2_4").select2({
+            maximumSelectionLength: 3
+          });
+
+        $("#kt_select2_5").select2({
+            maximumSelectionLength: 1
+          });
+        
+        $("#kt_select2_3").on("change", function(){
+            let groups_list = ["EEA-groups", "GA-groups", "HA-groups"];
+            let selected_assembly = $("#kt_select2_3").val();
+            if (selected_assembly.length > 0) {
+                for (let i = 0; i < groups_list.length; i++) {
+                    $("#kt_select2_5").attr("disabled", false);
+                    let group_name = groups_list[i];
+                    let options_obj = $("#kt_select2_5").find("#" + group_name).find("option");
+                    if (group_name.startsWith(selected_assembly[0])) {
+                        console.log(options_obj.length);
+                        for (let i = 0; i < options_obj.length; i++) {
+                            options_obj[i].disabled = false;
+                        }
+                    } else {
+                        console.log(options_obj.length);
+                        for (let i = 0; i < options_obj.length; i++) {
+                            options_obj[i].disabled = true;
+                        }
+                    }
+                }
+            } else {
+                for (let i = 0; i < groups_list.length; i++) {
+                    let group_name = groups_list[i];
+                    let options_obj = $("#kt_select2_5").find("#" + group_name).find("option");
+                    console.log(options_obj.length);
+                    for (let i = 0; i < options_obj.length; i++) {
+                        options_obj[i].disabled = true;
+                    }
+                }
+            }
+        });
+
+        $("#kt_select2_3").triggerHandler("change");
 
         // loading remote data
 

@@ -48,8 +48,7 @@ function writeAddUserCookies() {
 
 
 // function loadAddUserCookie()
-document.addEventListener("DOMContentLoaded", function(){
-  console.log("Hello");
+document.addEventListener("DOMContentLoaded", function() {
   const ids = ["member_id", "first_name", "last_name", "other_names", "gender", "occupation", "contact_phone_1", 
   "contact_phone_2", "dob", "email", "marital_status", "kt_select2_3", "fullname", "email_readonly", "password", "confirm_password",
   "comm_email", "comm_sms", "comm_phone", "address_line_1", "address_line_2", "digital_address_code", "region", "district", "country"];
@@ -57,46 +56,53 @@ document.addEventListener("DOMContentLoaded", function(){
   const checkbox_ids = ["comm_email", "comm_sms", "comm_phone"];
   const multiple_select_ids = ["kt_select2_3"];
 
-  const allCookies = document.cookie;
+  let allCookies = document.cookie;
 
   // Obtain all the cookies pairs in an array
   let cookieList = allCookies.split(';');
-
-  // Take the name value pairs from the cokieList
-  for(var i=0; i<ids.length; i++) {
-    let id = ids[i];
-    let name = cookieList[i].split('=')[0];
-    let value = cookieList[i].split('=')[1];
-    // handle checkboxes
-    if (checkbox_ids.includes(id)){
-      if (value === "true"){
-        document.querySelector("#" + id).checked = true;
+  if (cookieList.length > 0) {
+    // Take the name value pairs from the cokieList
+    for(let i = 0; i < ids.length; i++) {
+      let id = ids[i];
+      let name = cookieList[i].split('=')[0];
+      let value = unescape(cookieList[i].split('=')[1]);
+      if (value === null) {
+        value = "";
       }
-      else{
-        document.querySelector("#" + id).checked = false;
-      }
-      continue;
-    }
-    // handle multiple select boxes
-    if(multiple_select_ids.includes(id)) {
-      const vals = value.split("|");
-      for(let i = 0; i < vals.length; i++) 
-        const select = document.querySelector("#" + id);
-        /* Iterate options of select element */
-        for (let option of document.querySelectorAll('#' + id + ' option')) {
-          /* Parse value to integer */
-          const value = Number.parseInt(option.value);
-          /* If option value contained in values, set selected attribute */
-          if (selectValues.indexOf(value) !== -1) {
-            option.setAttribute('selected', 'selected');
-          }
-          /* Otherwise ensure no selected attribute on option */
-          else {
-            option.removeAttribute('selected');
-          }
+      // handle checkboxes
+      if (checkbox_ids.includes(id)){
+        if (value === "true"){
+          document.querySelector("#" + id).checked = true;
         }
+        else{
+          document.querySelector("#" + id).checked = false;
+        }
+        continue;
       }
-      continue;
-    }
-    document.querySelector("#" + id).value = value;
+      // handle multiple select boxes
+      if(multiple_select_ids.includes(id)) {
+        let selectValues = value.split("|");
+        for(let i = 0; i < selectValues.length; i++) {
+          // let select = document.querySelector("#" + id);
+          /* Iterate options of select element */
+            for (let option of document.querySelectorAll('#' + id + ' option')) {
+              /* Parse value to integer */
+              let val = Number.parseInt(option.value);
+              /* If option value contained in values, set selected attribute */
+              if (selectValues.indexOf(val) !== -1) {
+                option.setAttribute('selected', 'selected');
+                continue;
+              }
+              /* Otherwise ensure no selected attribute on option */
+              else {
+                option.removeAttribute('selected');
+                continue;
+              }
+            }
+          }
+          continue;
+        }
+        document.querySelector("#" + id).value = value;
+      }
+  }
 });
