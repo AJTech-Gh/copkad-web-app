@@ -15,14 +15,22 @@ var KTSelect2 = function() {
 
         // multi select
         $('#kt_select2_3, #kt_select2_3_validate').select2({
-            placeholder: "Select assembly",
+            placeholder: "Select assembly"
+        });
+
+        $('#kt_select2_4, #kt_select2_4_validate').select2({
+            placeholder: "Select ministries"
+        });
+
+        $('#kt_select2_5, #kt_select2_5_validate').select2({
+            placeholder: "Select groups"
         });
 
         // basic
-        $('#kt_select2_4').select2({
-            placeholder: "Select ministries",
-            allowClear: true
-        });
+        // $('#kt_select2_4').select2({
+        //     placeholder: "Select ministries",
+        //     allowClear: true
+        // });
 
         // loading data from array
         // var data = [{
@@ -42,56 +50,50 @@ var KTSelect2 = function() {
         //     text: 'Wontfix'
         // }];
 
-        $('#kt_select2_5').select2({
-            placeholder: "Select groups",
-            allowClear: true
-        });
-
         $("#kt_select2_3").select2({
+            placeholder: "Select assembly",
+            allowClear: true,
             maximumSelectionLength: 1
           });
 
         $("#kt_select2_4").select2({
-            maximumSelectionLength: 3
+            maximumSelectionLength: 3,
+            placeholder: "Select ministries",
+            allowClear: true
           });
 
         $("#kt_select2_5").select2({
-            maximumSelectionLength: 1
-          });
+            maximumSelectionLength: 1,
+            placeholder: "Select groups",
+            allowClear: true
+        });
         
         $("#kt_select2_3").on("change", function(){
             let groups_list = ["EEA-groups", "GA-groups", "HA-groups"];
             let selected_assembly = $("#kt_select2_3").val();
+            let group_name = null;
+            let options_obj = null;
             if (selected_assembly.length > 0) {
                 for (let i = 0; i < groups_list.length; i++) {
                     $("#kt_select2_5").attr("disabled", false);
-                    let group_name = groups_list[i];
-                    let options_obj = $("#kt_select2_5").find("#" + group_name).find("option");
+                    group_name = groups_list[i];
+                    options_obj = $("#kt_select2_5").find("#" + group_name).find("option");
                     if (group_name.startsWith(selected_assembly[0])) {
-                        console.log(options_obj.length);
                         for (let i = 0; i < options_obj.length; i++) {
-                            options_obj[i].disabled = false;
+                            options_obj.get(i).disabled = false;
                         }
                     } else {
-                        console.log(options_obj.length);
                         for (let i = 0; i < options_obj.length; i++) {
-                            options_obj[i].disabled = true;
+                            options_obj.get(i).disabled = true;
                         }
                     }
                 }
             } else {
-                for (let i = 0; i < groups_list.length; i++) {
-                    let group_name = groups_list[i];
-                    let options_obj = $("#kt_select2_5").find("#" + group_name).find("option");
-                    console.log(options_obj.length);
-                    for (let i = 0; i < options_obj.length; i++) {
-                        options_obj[i].disabled = true;
-                    }
-                }
+                $("#kt_select2_5").attr("disabled", true);
             }
         });
 
-        $("#kt_select2_3").triggerHandler("change");
+        $("#kt_select2_3").trigger("change");
 
         // loading remote data
 

@@ -141,10 +141,22 @@ jQuery(document).ready(function() {
 	KTAppContactsAdd.init();
 });
 
-$('select optgroup option').click(function () {
-    var len = $(this).parent().find(':selected').length;
-    if (len > 1) {
-        alert('only 1 allowed')
-        $(this).prop('selected', false);
+
+// display the selected photo
+$("#kt_apps_contacts_add_avatar").on("change", function () {
+    var acceptedImgExt = ["jpg", "jpeg", "png", "gif"];
+    var filePath = $(this).val();
+    var fileName = filePath.split("\\").pop();
+    var fileNameExt = fileName.split(".");
+    var fileExt = fileNameExt[fileNameExt.length - 1].toLowerCase()
+    if (acceptedImgExt.indexOf(fileExt) > -1) {
+        try {
+			$('.kt-avatar__holder').attr("style", "background-image: url(" + window.URL.createObjectURL(this.files[0]) + 
+			"); background-position: center; ");
+        } catch (error) {
+            // do nothing  console.log(error)
+        }
+    } else {
+        // $("#src-image-text").text("Unacceptable file format! Expected JPG(JPEG), PNG OR GIF");
     }
 });

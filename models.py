@@ -7,7 +7,6 @@ import re
 class User(db.Model):
     # personal info page
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    photo_id = db.Column(db.String(30), nullable=False)
     member_id = db.Column(db.String(20), primary_key=True, nullable=False, index=True)
     first_name = db.Column(db.String(50), unique=False, nullable=False, index=True)
     last_name = db.Column(db.String(50), unique=False, nullable=False, index=True) 
@@ -61,6 +60,12 @@ class User(db.Model):
 
     def get_dob(self, dob):
         return '{}-{}-{}'.format(dob.year, dob.month, dob.day)
+
+    def set_ministry(self, ministry):
+        self.ministry = ",".join(ministry)
+
+    def set_group(self, group):
+        self.group = ("" if not group else group)
 
     def set_comm_email(self, comm_email):
         self.comm_email = (1 if comm_email and comm_email.lower() == 'on' else 0)

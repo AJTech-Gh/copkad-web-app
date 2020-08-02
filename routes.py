@@ -5,6 +5,7 @@ from app import app, db
 from models import User
 import utils
 
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -57,8 +58,7 @@ def add_user_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
-        photo_id = 'static' #form.get('kt_apps_contacts_add_avatar')
-        member_id = form.get('member_id')
+        # member_id = form.get('member_id')
         first_name = form.get('first_name')
         last_name = form.get('last_name')
         other_names = form.get('other_names') 
@@ -69,7 +69,9 @@ def add_user_submit():
         dob = form.get('dob')
         email = form.get('email')
         marital_status = form.get('marital_status')
-        church_affiliation = form.getlist('church_affiliation')
+        assembly = form.get('assembly')
+        ministry = form.getlist('ministry')
+        group = form.get('group')
 
         password = form.get('password')
         comm_email = form.get('comm_email')
@@ -84,13 +86,18 @@ def add_user_submit():
         country = form.get('country')
 
         try:
+            member_id = utils.gen_id(assembly, ministry)
+            if not member_id:
+                return Response(json.dumps({'status':'FAIL', 'message': 'Invalid combination of ministries.'}), status=400, mimetype='application/json')
+            if not utils.upload_photo(member_id):
+                return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
             if utils.check_email_duplicates(email):
                 return Response(json.dumps({'status':'FAIL', 'message': 'Email already exists.'}), status=400, mimetype='application/json')
             if utils.check_contact_duplicates(contact_phone_1):
                 return Response(json.dumps({'status':'FAIL', 'message': 'Contact 1 already exists.'}), status=400, mimetype='application/json')
             # create new user object
-            user = User(photo_id=photo_id, member_id=member_id, first_name=first_name, last_name=last_name, other_names=other_names,
-                        occupation=occupation, email=email, marital_status=marital_status, church_affiliation=church_affiliation, 
+            user = User(member_id=member_id, first_name=first_name, last_name=last_name, other_names=other_names,
+                        occupation=occupation, email=email, marital_status=marital_status, assembly=assembly,
                         address_line_1=address_line_1, address_line_2=address_line_2, digital_address_code=digital_address_code, region=region, 
                         district=district, country=country
                     )
@@ -98,6 +105,8 @@ def add_user_submit():
             user.set_contact_phone_1(contact_phone_1)
             user.set_contact_phone_2(contact_phone_2)
             user.set_dob(dob)
+            user.set_ministry(ministry)
+            user.set_group(group)
             user.set_password(password)
             user.set_comm_email(comm_email)
             user.set_comm_sms(comm_sms)
@@ -113,6 +122,4 @@ def add_user_submit():
             print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
-    
-    
 

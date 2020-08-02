@@ -9,3 +9,4 @@ class Config(object):
     # dialect+driver://username:password@host:port/database
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://root:@127.0.0.1:3306/copkad'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    UPLOAD_FOLDER = 'static/images'
