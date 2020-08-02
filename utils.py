@@ -9,8 +9,6 @@ from werkzeug.utils import secure_filename
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 IMG_FILE_EXT = '.jpg'
-IMG_NAME_PREFIX = 'img'
-DEFAULT_IMG_NAME = 'default_img' + IMG_FILE_EXT
 
 
 def check_email_duplicates(email):
