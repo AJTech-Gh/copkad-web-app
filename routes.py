@@ -118,8 +118,8 @@ def add_user_submit():
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
-            print(e)
-            print(form)
+            # print(e)
+            # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
