@@ -116,7 +116,7 @@ def add_user_submit():
             db.session.commit()
 
             # send confirmation email
-            subject = "CHURCH OF PENTECOST - KAD"
+            subject = "COP"
             msg_content = utils.compose_email_msg(member_id, password)
             utils.send_email(subject, email, msg_content)
 
@@ -124,7 +124,7 @@ def add_user_submit():
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
-            # print(e)
+            print(e)
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 

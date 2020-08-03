@@ -35,8 +35,14 @@ def gen_id(assembly, selected_ministries):
     # EEA=1, GA=2, HA=3
     digit_1 = str(assemblies.index(assembly) + 1)
     # get the 2nd to 6th digits
-    num_of_assembly_members = User.query.filter_by(assembly=assembly).count()
-    digits_2_to_6 = to_given_length(num_of_assembly_members + 1, 5)
+    max_prev_count = 0
+    assembly_ids = User.query.filter_by(assembly=assembly).with_entities(User.member_id).all()
+    for m_id in assembly_ids:
+        count_str = m_id[0][1:-2]
+        count = int(count_str)
+        if count > max_prev_count:
+            max_prev_count = count
+    digits_2_to_6 = to_given_length(max_prev_count + 1, 5)
     # get the 7th and 8th digits
     selected_ministries = [m[0] for m in selected_ministries]
     selected_ministries = "".join(sorted(selected_ministries))

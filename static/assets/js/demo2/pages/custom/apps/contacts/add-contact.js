@@ -26,12 +26,16 @@ var KTAppContactsAdd = function () {
 		// Change event
 		wizard.on('change', function(wizard) {
 			//KTUtil.scrollTop();	
+
 			// write form data to cookies
 			// writeAddUserCookies();
+
+			// set values for fullname in email in account settings
 			showFullName();
 			showEmail();
+
+			// populate review and submit
 			reviewDetails();
-			console.log("show full name  and email fired successfully");
 		});
 	}
 
@@ -120,6 +124,7 @@ var KTAppContactsAdd = function () {
 						});
 
 						// reset the form
+						location.href = "add_user";
 						formEl[0].reset();
 					}
 				});
@@ -213,26 +218,35 @@ jQuery(document).ready(function() {
 
 
 		//Get values from multiple selections
-		let assembly = document.querySelector("#kt_select2_3").selectedOptions[0].textContent;
+		let assembly = document.querySelector("#kt_select2_3").selectedOptions;
+		if (assembly.length > 0) {
+			assembly = assembly[0].textContent;
+		} else {
+			assembly = "";
+		}
 
 		let ministry = "";
-		let selectedOptions = document.querySelector("#kt_select2_4").selectedOptions[0].textContent;
+		let selectedOptions = document.querySelector("#kt_select2_4").selectedOptions;
 		for(let i = 0; i < selectedOptions.length; i++) {
-			ministry = ministry.concat(', ', [selectedOptions[i].value]);
+			ministry = ministry.concat(', ', [selectedOptions[i].textContent]);
 		}
 		if(ministry.length > 1) {
 			ministry = ministry.substring(1, ministry.length);
 		}
 		
-		let group = document.querySelector("#kt_select2_5").selectedOptions[0].textContent;
+		let group = document.querySelector("#kt_select2_5").selectedOptions;
+		if (group.length > 0) {
+			group = group[0].textContent;
+		} else {
+			group = "";
+		}
 
 		let affiliations = [assembly, ministry, group];
-		console.log(affiliations)
 		let rev_affiliations_id = ["review_assembly", "review_ministry", "review_study_group"];
 
 		for(let i = 0; i < affiliations.length; i++){
 			let id = rev_affiliations_id[i];
-			document.querySelector("#"+id).textContent = affiliations[i];
+			document.querySelector("#" + id).textContent = affiliations[i];
 		}
 
 	}

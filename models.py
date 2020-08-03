@@ -86,4 +86,4 @@ class User(db.Model):
         return ('on' if comm_phone == 1 else 'off')
 
     def __repr__(self):
-        return f'User: {self.member_id} - {self.lastname}, {self.first_name} {self.othername}'
+        return f'User: {self.member_id} - {self.last_name}, {self.first_name} {self.other_names}'
