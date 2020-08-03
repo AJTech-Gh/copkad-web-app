@@ -1,8 +1,8 @@
-"""Initial migrate
+"""fire db
 
-Revision ID: d7e6982c6cb3
+Revision ID: 6f608523653a
 Revises: 
-Create Date: 2020-08-02 20:43:16.777072
+Create Date: 2020-08-03 11:30:47.757984
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd7e6982c6cb3'
+revision = '6f608523653a'
 down_revision = None
 branch_labels = None
 depends_on = None

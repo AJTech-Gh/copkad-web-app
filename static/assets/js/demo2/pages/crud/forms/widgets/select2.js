@@ -68,32 +68,32 @@ var KTSelect2 = function() {
             allowClear: true
         });
         
-        $("#kt_select2_3").on("change", function(){
-            let groups_list = ["EEA-groups", "GA-groups", "HA-groups"];
-            let selected_assembly = $("#kt_select2_3").val();
-            let group_name = null;
-            let options_obj = null;
-            if (selected_assembly.length > 0) {
-                for (let i = 0; i < groups_list.length; i++) {
-                    $("#kt_select2_5").attr("disabled", false);
-                    group_name = groups_list[i];
-                    options_obj = $("#kt_select2_5").find("#" + group_name).find("option");
-                    if (group_name.startsWith(selected_assembly[0])) {
-                        for (let i = 0; i < options_obj.length; i++) {
-                            options_obj.get(i).disabled = false;
-                        }
-                    } else {
-                        for (let i = 0; i < options_obj.length; i++) {
-                            options_obj.get(i).disabled = true;
-                        }
-                    }
-                }
-            } else {
-                $("#kt_select2_5").attr("disabled", true);
-            }
-        });
+        // $("#kt_select2_3").on("change", function(){
+        //     let groups_list = ["EEA-groups", "GA-groups", "HA-groups"];
+        //     let selected_assembly = $("#kt_select2_3").val();
+        //     let group_name = null;
+        //     let options_obj = null;
+        //     if (selected_assembly.length > 0) {
+        //         for (let i = 0; i < groups_list.length; i++) {
+        //             $("#kt_select2_5").attr("disabled", false);
+        //             group_name = groups_list[i];
+        //             options_obj = $("#kt_select2_5").find("#" + group_name).find("option");
+        //             if (group_name.startsWith(selected_assembly[0])) {
+        //                 for (let i = 0; i < options_obj.length; i++) {
+        //                     options_obj.get(i).disabled = false;
+        //                 }
+        //             } else {
+        //                 for (let i = 0; i < options_obj.length; i++) {
+        //                     options_obj.get(i).disabled = true;
+        //                 }
+        //             }
+        //         }
+        //     } else {
+        //         $("#kt_select2_5").attr("disabled", true);
+        //     }
+        // });
 
-        $("#kt_select2_3").trigger("change");
+        // $("#kt_select2_3").trigger("change");
 
         // loading remote data
 

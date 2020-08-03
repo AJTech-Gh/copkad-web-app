@@ -1,10 +1,11 @@
-from operator import length_hint
 import os
 import time
-from app import db, app
+from app import db, app, mail
 from models import User
 from flask import request
 from werkzeug.utils import secure_filename
+from flask_mail import Message
+from threading import Thread
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -19,12 +20,14 @@ def check_contact_duplicates(contact):
     ret = User.query.filter_by(contact_phone_1=contact).first()
     return (False if ret is None else True)
 
-# 8-digit code
-# 1st digit: Assembly (1=Emmanuel, 2=Glory, 3=Hope)
-# 2nd - 6th: Position of registration
-# 7th - 8th: Ministries
-#
+
 def gen_id(assembly, selected_ministries):
+    """
+    8-digit code
+    1st digit: Assembly (1=Emmanuel, 2=Glory, 3=Hope)
+    2nd - 6th: Position of registration
+    7th - 8th: Ministries
+    """
     assemblies = ["EEA", "GA", "HA"]
     ministries = ["CM", "EM", "PM", "WM", "YM"]
     valid_ministries = ['C', 'E', 'EP', 'EPY', 'EW', 'EWY', 'EY', 'P', 'PY', 'W', 'WY', 'Y']
@@ -105,3 +108,19 @@ def remove_existing_img(member_id):
         if name.startswith(member_id):
             os.remove(os.path.join(app.config['UPLOAD_FOLDER'], name))
             break
+
+
+def async_send_mail(msg):
+
+    with app.app_context():
+        mail.send(msg)
+
+def compose_email_msg(member_id, password):
+    return f'<p>MEMBER ID: {member_id}\nPASSWORD: {password}</p>'
+
+def send_email(subject, recipient, msg_content):
+    msg = Message(subject, recipients=[recipient])
+    msg.html = msg_content
+    t = Thread(target=async_send_mail, args=[msg])
+    t.start()
+    return t

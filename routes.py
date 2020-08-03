@@ -114,6 +114,12 @@ def add_user_submit():
             # add the new user to the database and save the changes
             db.session.add(user)
             db.session.commit()
+
+            # send confirmation email
+            subject = "CHURCH OF PENTECOST - KAD"
+            msg_content = utils.compose_email_msg(member_id, password)
+            utils.send_email(subject, email, msg_content)
+
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')

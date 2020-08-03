@@ -28,6 +28,10 @@ var KTAppContactsAdd = function () {
 			//KTUtil.scrollTop();	
 			// write form data to cookies
 			// writeAddUserCookies();
+			showFullName();
+			showEmail();
+			reviewDetails();
+			console.log("show full name  and email fired successfully");
 		});
 	}
 
@@ -114,6 +118,9 @@ var KTAppContactsAdd = function () {
 							"type": "success",
 							"confirmButtonClass": "btn btn-secondary"
 						});
+
+						// reset the form
+						formEl[0].reset();
 					}
 				});
 			}
@@ -140,6 +147,111 @@ var KTAppContactsAdd = function () {
 jQuery(document).ready(function() {	
 	KTAppContactsAdd.init();
 });
+
+//Receive data and print on review
+	let reviewDetails = () => {
+
+		// Name:
+		// Phone:
+		// Email:
+		// Date of Birth:
+		// Address Details
+		// Address:
+		// Digital Address :
+		// District | Region | Country:
+		// Affiliations
+		// Assembly:
+		// Ministry:
+		// District:
+		// Bible Studies Group:
+		
+
+		let ids_to_take = ["full_name_read_only", "contact_phone_1", "contact_phone_2", "email", "dob", "address_line_1", "address_line_2",
+							"digital_address_code", "district", "region", "country"];
+		
+		let ids_to_fill = ["review_name", "review_phone", "review_mail", "review_dob", "review_address_lines", "review_digital_address", 
+		"review_dis_reg_country", ];
+
+		let values = [];
+
+		for(let i = 0; i<ids_to_take.length; i++){
+			let id = ids_to_take[i];
+			let val = document.querySelector("#" + id).value;
+			values.push(val);
+		}
+
+		let name = values[0];
+
+		let phone;
+		if (values[2] === ""){
+			phone = values[1]
+		}else{
+			phone = values[1] + " , " + values[2];
+		}
+
+		let email = values[3];
+		let dob = values[4];
+
+		let address;
+		if (values[6] === ""){
+			address = values[5]
+		}
+		else{
+			address = values[5] + " , " +values[6];
+		} 
+
+		let digital_address = values[7];
+		let dis_reg_country = values[8] +" , "+ values[9] +" , "+ values[10];
+		
+		let review_list = [name, phone.trim(), email.trim(), dob, address.trim(), digital_address.trim(), dis_reg_country];
+
+		for (let i = 0; i < ids_to_fill.length; i++){
+			let id = ids_to_fill[i];
+			document.querySelector("#" + id).textContent = review_list[i];
+		}
+
+
+
+		//Get values from multiple selections
+		let assembly = document.querySelector("#kt_select2_3").selectedOptions[0].textContent;
+
+		let ministry = "";
+		let selectedOptions = document.querySelector("#kt_select2_4").selectedOptions[0].textContent;
+		for(let i = 0; i < selectedOptions.length; i++) {
+			ministry = ministry.concat(', ', [selectedOptions[i].value]);
+		}
+		if(ministry.length > 1) {
+			ministry = ministry.substring(1, ministry.length);
+		}
+		
+		let group = document.querySelector("#kt_select2_5").selectedOptions[0].textContent;
+
+		let affiliations = [assembly, ministry, group];
+		console.log(affiliations)
+		let rev_affiliations_id = ["review_assembly", "review_ministry", "review_study_group"];
+
+		for(let i = 0; i < affiliations.length; i++){
+			let id = rev_affiliations_id[i];
+			document.querySelector("#"+id).textContent = affiliations[i];
+		}
+
+	}
+
+	let showFullName = () => {
+		let fullName = "";
+		let name_ids = ["first_name", "last_name", "other_names"];
+		for(let i = 0; i < name_ids.length; i++){
+			let id = name_ids[i];
+			fullName = fullName + " " + document.querySelector("#" + id).value;
+		}
+
+		document.querySelector("#full_name_read_only").value = fullName.trim();
+	}
+
+	let showEmail = () => {
+		let email = document.querySelector("#email").value.toLowerCase();
+		document.querySelector("#email_readonly").value = email;
+	}
 
 
 // display the selected photo

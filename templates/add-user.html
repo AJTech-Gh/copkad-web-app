@@ -535,7 +535,7 @@
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Full name</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text"n id="full_name" value="" name="full_name" readonly>
+                                                    <input class="form-control" type="text"n id="full_name_read_only" value="" readonly>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -543,7 +543,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
-                                                        <input type="text" class="form-control" id="email_readonly" name="email_readonly" readonly placeholder="nick.watson@loop.com" aria-describedby="basic-addon1">
+                                                        <input type="text" class="form-control" id="email_readonly" readonly aria-describedby="basic-addon1">
                                                     </div>
                                                     <!-- <span class="form-text text-muted">Email will not be publicly displayed. <a href="#" class="kt-link">Learn more</a>.</span> -->
                                                 </div>
@@ -665,7 +665,7 @@
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Digital Address Code</label>
-                                            <input type="text" class="form-control" id="digital_address_code" name="digital_address_code" placeholder="AS-24343" value="AS-24343" required>id
+                                            <input type="text" class="form-control" id="digital_address_code" name="digital_address_code" placeholder="AS-24343" value="AS-24343" required>
                                             <span class="form-text text-muted">Please enter your digital address code</span>
                                         </div>
                                     </div>
@@ -950,40 +950,38 @@
 
                     <!--begin: Form Wizard Step 4-->
                     <div class="kt-wizard-v1__content" data-ktwizard-type="step-content">
-                        <div class="kt-heading kt-heading--md">Review your Details and Submit</div>
+                        <div class="kt-heading kt-heading--md">Review Details and Submit</div>
                         <div class="kt-form__section kt-form__section--first">
                             <div class="kt-wizard-v1__review">
                                 <div class="kt-wizard-v1__review-item">
                                     <div class="kt-wizard-v1__review-title">
-                                        Your Account Details
+                                        Account Details
                                     </div>
                                     <div class="kt-wizard-v1__review-content">
-                                        John Wick
-                                        <br/> Phone: 
-                                        <br/> Email: 
-                                        <br/> Password: xxxxxxxxxx
+                                        Name: <label id="review_name"></label>
+                                        <br/> Phone: <label id="review_phone"></label>
+                                        <br/> Email: <label id="review_mail"></label>
+                                        <br/> Date of Birth: <label id="review_dob"></label>
                                     </div>
                                 </div>
                                 <div class="kt-wizard-v1__review-item">
                                     <div class="kt-wizard-v1__review-title">
-                                        Your Address Details
+                                        Address Details
                                     </div>
                                     <div class="kt-wizard-v1__review-content">
-                                        Address Line 1
-                                        <br/> Address Line 2
-                                        <br/> Melbourne 3000, VIC, Australia
+                                        Address: <label id="review_address_lines"></label>
+                                        <br/>Digital Address : <label id="review_digital_address"></label>
+                                        <br/>District | Region | Country: <label id="review_dis_reg_country"></label>
                                     </div>
                                 </div>
                                 <div class="kt-wizard-v1__review-item">
                                     <div class="kt-wizard-v1__review-title">
-                                        Payment Details
+                                        Affiliations
                                     </div>
                                     <div class="kt-wizard-v1__review-content">
-                                        ID number: xxxx xxxx xxxx 1111
-                                        <br/> Assembly: 
-                                        <br/> Ministry: 
-                                        <br/> District: 
-                                        <br/> Bible Studies Group
+                                         Assembly: <label id="review_assembly"></label>
+                                        <br/> Ministry: <label id="review_ministry"></label>
+                                        <br/> Bible Studies Group: <label id="review_study_group"></label>
                                     </div>
                                 </div>
                             </div>
