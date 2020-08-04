@@ -2,15 +2,29 @@ import os
 import time
 from app import db, app, mail
 from models import User
-from flask import request
+from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
 from threading import Thread
+import urllib
+import re
+import json
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 IMG_FILE_EXT = '.jpg'
+PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "profile_photos"
+PSEUDO_PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "profile_photos"
+PSEUDO_DATA_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "data"
 
+
+def gen_pseudo_id(first_name, last_name, contact_phone_1):
+    contact_phone_1 = re.sub(r"[\s\-]", "", contact_phone_1)
+    return f'{first_name}_{last_name}_{contact_phone_1[-9:]}'
+
+def save_incomplete_reg(data_dict):
+    json_data = json.dumps(data_dict)
+    
 
 def check_email_duplicates(email):
     ret = User.query.filter_by(email=email).first()
@@ -85,7 +99,7 @@ def upload_photo(member_id):
         # create unique src image name
         img_name = member_id + "_" + get_timestamp() + IMG_FILE_EXT
         # save the source image
-        img_file.save(os.path.join(app.config['UPLOAD_FOLDER'], img_name))
+        img_file.save(os.path.join(PROFILE_PHOTOS_DIR, img_name))
         return True
     # return the index page if the form is not submitted rightly
     return False
@@ -109,20 +123,19 @@ def remove_existing_img(member_id):
     """
     Removes an already existing image
     """
-    imgs = os.listdir(app.config['UPLOAD_FOLDER'])
+    imgs = os.listdir(PROFILE_PHOTOS_DIR)
     for name in imgs:
         if name.startswith(member_id):
-            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], name))
+            os.remove(os.path.join(PROFILE_PHOTOS_DIR, name))
             break
 
 
 def async_send_mail(msg):
-
     with app.app_context():
         mail.send(msg)
 
 def compose_email_msg(member_id, password):
-    return f'<p>MEMBER ID: {member_id}\nPASSWORD: {password}</p>'
+    return render_template("msg.html", member_id=member_id, password=password)
 
 def send_email(subject, recipient, msg_content):
     msg = Message(subject, recipients=[recipient])
@@ -130,3 +143,32 @@ def send_email(subject, recipient, msg_content):
     t = Thread(target=async_send_mail, args=[msg])
     t.start()
     return t
+
+def async_send_sms(msg, recipient):
+    # set progress signal
+    print("Sending Message ...")
+    # parameters to send SMS
+    base_url = "https://apps.mnotify.net/smsapi?"
+    api_key = "vuWSVGpTxpTeMHPxXNuQ4iRNO"
+    sender_name = "COP"
+    params = {"key": api_key,"to": recipient, "msg": msg, "sender_id": sender_name}
+    # prepare your url
+    url = base_url + urllib.parse.urlencode(params)
+    try:
+        # get the response
+        content = urllib.request.urlopen(url).read()   # content contains the response from mNotify
+        if int(content) == 1000:    # check if message was successful
+            # send success message signal
+            print("Message Sent")
+        else:
+            print("Message Not Sent")
+    except:
+        # send error message signal
+        print("Fatal error")
+
+def compose_sms_msg(member_id, password):
+    return f'Membership Account Details\n\nMEMBER ID: {member_id}\nPASSWORD: {password}'
+
+def send_sms(msg, recipient):
+    t = Thread(target=async_send_sms, args=[msg, recipient])
+    t.start()

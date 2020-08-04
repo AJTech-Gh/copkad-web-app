@@ -59,15 +59,15 @@ def add_user_submit():
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
         # member_id = form.get('member_id')
-        first_name = form.get('first_name')
-        last_name = form.get('last_name')
-        other_names = form.get('other_names') 
+        first_name = form.get('first_name').strip()
+        last_name = form.get('last_name').strip()
+        other_names = form.get('other_names').strip() 
         gender = form.get('gender')
-        occupation = form.get('occupation')
-        contact_phone_1 = form.get('contact_phone_1')
-        contact_phone_2 = form.get('contact_phone_2')
+        occupation = form.get('occupation').strip()
+        contact_phone_1 = form.get('contact_phone_1').strip()
+        contact_phone_2 = form.get('contact_phone_2').strip()
         dob = form.get('dob')
-        email = form.get('email')
+        email = form.get('email').strip()
         marital_status = form.get('marital_status')
         assembly = form.get('assembly')
         ministry = form.getlist('ministry')
@@ -78,11 +78,11 @@ def add_user_submit():
         comm_sms = form.get('comm_sms')
         comm_phone = form.get('comm_phone')
         
-        address_line_1 = form.get('address_line_1')
-        address_line_2 = form.get('address_line_2')
-        digital_address_code = form.get('digital_address_code')
-        region = form.get('region')
-        district = form.get('district')
+        address_line_1 = form.get('address_line_1').strip()
+        address_line_2 = form.get('address_line_2').strip()
+        digital_address_code = form.get('digital_address_code').strip()
+        region = form.get('region').strip()
+        district = form.get('district').strip()
         country = form.get('country')
 
         try:
@@ -115,17 +115,238 @@ def add_user_submit():
             db.session.add(user)
             db.session.commit()
 
-            # send confirmation email
-            subject = "COP"
-            msg_content = utils.compose_email_msg(member_id, password)
-            utils.send_email(subject, email, msg_content)
+            # send confirmation email or sms
+            if email:
+                subject = "COP"
+                msg_content = utils.compose_email_msg(member_id, password)
+                utils.send_email(subject, email, msg_content)
+            else:
+                msg = utils.compose_sms_msg(member_id, password)
+                utils.send_sms(msg, contact_phone_1)
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
-            print(e)
-            # print(form)
+            # print(e)
+            print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
+@app.route("/add_user_save_continue", methods=['POST'])
+def add_user_save_continue():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        first_name = form.get('first_name').strip()
+        last_name = form.get('last_name').strip()
+        other_names = form.get('other_names').strip() 
+        gender = form.get('gender')
+        occupation = form.get('occupation').strip()
+        contact_phone_1 = form.get('contact_phone_1').strip()
+        contact_phone_2 = form.get('contact_phone_2').strip()
+        dob = form.get('dob')
+        email = form.get('email').strip()
+        marital_status = form.get('marital_status')
+        assembly = form.get('assembly')
+        ministry = form.getlist('ministry')
+        group = form.get('group')
+
+        password = form.get('password')
+        comm_email = form.get('comm_email')
+        comm_sms = form.get('comm_sms')
+        comm_phone = form.get('comm_phone')
+        
+        address_line_1 = form.get('address_line_1').strip()
+        address_line_2 = form.get('address_line_2').strip()
+        digital_address_code = form.get('digital_address_code').strip()
+        region = form.get('region').strip()
+        district = form.get('district').strip()
+        country = form.get('country')
+        
+        try:
+            pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
+            data = {
+                "member_id": pseudo_member_id,
+                "first_name": first_name,
+                "last_name": last_name,
+                "other_names": other_names,
+                "gender": gender,
+                "occupation": occupation,
+                "contact_phone_1": contact_phone_1,
+                "contact_phone_2": contact_phone_2,
+                "dob": dob,
+                "email": email,
+                "marital_status": marital_status,
+                "assembly": assembly,
+                "ministry": ",".join(ministry),
+                "group": group,
+                "password": password,
+                "comm_email": comm_email,
+                "comm_sms": comm_sms,
+                "comm_phone": comm_phone,
+                "address_line_1": address_line_1,
+                "address_line_2": address_line_2,
+                "digital_address_code": digital_address_code,
+                "region": region,
+                "district": district,
+                "country": country
+            }
+
+            utils.save_incomplete_reg(data)
+
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+        except Exception as e:
+            # print(e)
+            print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route("/add_user_save_new", methods=['POST'])
+def add_user_save_continue():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        first_name = form.get('first_name').strip()
+        last_name = form.get('last_name').strip()
+        other_names = form.get('other_names').strip() 
+        gender = form.get('gender')
+        occupation = form.get('occupation').strip()
+        contact_phone_1 = form.get('contact_phone_1').strip()
+        contact_phone_2 = form.get('contact_phone_2').strip()
+        dob = form.get('dob')
+        email = form.get('email').strip()
+        marital_status = form.get('marital_status')
+        assembly = form.get('assembly')
+        ministry = form.getlist('ministry')
+        group = form.get('group')
+
+        password = form.get('password')
+        comm_email = form.get('comm_email')
+        comm_sms = form.get('comm_sms')
+        comm_phone = form.get('comm_phone')
+        
+        address_line_1 = form.get('address_line_1').strip()
+        address_line_2 = form.get('address_line_2').strip()
+        digital_address_code = form.get('digital_address_code').strip()
+        region = form.get('region').strip()
+        district = form.get('district').strip()
+        country = form.get('country')
+        
+        try:
+            pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
+            data = {
+                "member_id": pseudo_member_id,
+                "first_name": first_name,
+                "last_name": last_name,
+                "other_names": other_names,
+                "gender": gender,
+                "occupation": occupation,
+                "contact_phone_1": contact_phone_1,
+                "contact_phone_2": contact_phone_2,
+                "dob": dob,
+                "email": email,
+                "marital_status": marital_status,
+                "assembly": assembly,
+                "ministry": ",".join(ministry),
+                "group": group,
+                "password": password,
+                "comm_email": comm_email,
+                "comm_sms": comm_sms,
+                "comm_phone": comm_phone,
+                "address_line_1": address_line_1,
+                "address_line_2": address_line_2,
+                "digital_address_code": digital_address_code,
+                "region": region,
+                "district": district,
+                "country": country
+            }
+
+            utils.save_incomplete_reg(data)
+
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+        except Exception as e:
+            # print(e)
+            print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route("/add_user_save_exit", methods=['POST'])
+def add_user_save_continue():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        first_name = form.get('first_name').strip()
+        last_name = form.get('last_name').strip()
+        other_names = form.get('other_names').strip() 
+        gender = form.get('gender')
+        occupation = form.get('occupation').strip()
+        contact_phone_1 = form.get('contact_phone_1').strip()
+        contact_phone_2 = form.get('contact_phone_2').strip()
+        dob = form.get('dob')
+        email = form.get('email').strip()
+        marital_status = form.get('marital_status')
+        assembly = form.get('assembly')
+        ministry = form.getlist('ministry')
+        group = form.get('group')
+
+        password = form.get('password')
+        comm_email = form.get('comm_email')
+        comm_sms = form.get('comm_sms')
+        comm_phone = form.get('comm_phone')
+        
+        address_line_1 = form.get('address_line_1').strip()
+        address_line_2 = form.get('address_line_2').strip()
+        digital_address_code = form.get('digital_address_code').strip()
+        region = form.get('region').strip()
+        district = form.get('district').strip()
+        country = form.get('country')
+        
+        try:
+            pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
+            data = {
+                "member_id": pseudo_member_id,
+                "first_name": first_name,
+                "last_name": last_name,
+                "other_names": other_names,
+                "gender": gender,
+                "occupation": occupation,
+                "contact_phone_1": contact_phone_1,
+                "contact_phone_2": contact_phone_2,
+                "dob": dob,
+                "email": email,
+                "marital_status": marital_status,
+                "assembly": assembly,
+                "ministry": ",".join(ministry),
+                "group": group,
+                "password": password,
+                "comm_email": comm_email,
+                "comm_sms": comm_sms,
+                "comm_phone": comm_phone,
+                "address_line_1": address_line_1,
+                "address_line_2": address_line_2,
+                "digital_address_code": digital_address_code,
+                "region": region,
+                "district": district,
+                "country": country
+            }
+
+            utils.save_incomplete_reg(data)
+
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+        except Exception as e:
+            # print(e)
+            print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
