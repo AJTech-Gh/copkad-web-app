@@ -9,6 +9,7 @@ from threading import Thread
 import urllib
 import re
 import json
+from file_encrypter import FileEncrypter
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -23,7 +24,47 @@ def gen_pseudo_id(first_name, last_name, contact_phone_1):
     return f'{first_name}_{last_name}_{contact_phone_1[-9:]}'
 
 def save_incomplete_reg(data_dict):
+    # get the member id
+    member_pseudo_id = data_dict["member_id"]
+    # get the save the json data
     json_data = json.dumps(data_dict)
+    encrypted_json_data = encrypt_json_data(json_data)
+    json_filename = f'{member_pseudo_id}.json'
+    json_file = open(os.path.join(PSEUDO_DATA_DIR, json_filename), 'wb')
+    json_file.write(encrypted_json_data)
+    json_file.close()
+    # check if the post request has the file part
+    img_file = request.files.get("kt_apps_contacts_add_avatar")
+    if not img_file:
+        return
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if img_file.filename == '':
+        return
+    if img_file and allowed_file(img_file.filename):
+        # remove existing src and result images
+        remove_existing_img(member_pseudo_id, type="incomplete")
+        # create unique src image name
+        img_name = member_pseudo_id + "_" + get_timestamp() + IMG_FILE_EXT
+        # save the source image
+        img_file.save(os.path.join(PSEUDO_PROFILE_PHOTOS_DIR, img_name))
+
+def read_incomplete_reg(member_pseudo_id):
+    # load the data
+    json_filename = f'{member_pseudo_id}.json'
+    json_file = open(os.path.join(PSEUDO_DATA_DIR, json_filename), 'rb')
+    encrypted_json_data = json_file.read()
+    decrypted_json_data = decrypt_json_data(encrypted_json_data)
+    json_file.close()
+    return json.loads(decrypted_json_data)
+
+def encrypt_json_data(json_data):
+    f = FileEncrypter()
+    return f.encrypt(bytes(json_data, encoding='utf-8'))
+
+def decrypt_json_data(encrypted_data):
+    f = FileEncrypter()
+    return f.decrypt(encrypted_data)
     
 
 def check_email_duplicates(email):
@@ -119,14 +160,15 @@ def get_timestamp():
     return timestamp
 
 
-def remove_existing_img(member_id):
+def remove_existing_img(member_id, type='complete'):
     """
     Removes an already existing image
     """
-    imgs = os.listdir(PROFILE_PHOTOS_DIR)
+    dest_dir = PSEUDO_PROFILE_PHOTOS_DIR if type=='incomplete' else PROFILE_PHOTOS_DIR
+    imgs = os.listdir(dest_dir)
     for name in imgs:
         if name.startswith(member_id):
-            os.remove(os.path.join(PROFILE_PHOTOS_DIR, name))
+            os.remove(os.path.join(dest_dir, name))
             break
 
 

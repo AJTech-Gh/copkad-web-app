@@ -124,7 +124,6 @@ var KTAppContactsAdd = function () {
 							"type": "success",
 							"confirmButtonClass": "btn btn-secondary"
 						}).then((result) => {
-							console.log(result);
 							if (result.value) {
 								// reset the form
 								location.href = "add_user";
@@ -226,6 +225,11 @@ $("#save_new").on('click', function(e) {
 				"text": "Saved successfully!", 
 				"type": "success",
 				"confirmButtonClass": "btn btn-secondary"
+			}).then((result) => {
+				if (result.value) {
+					// reset the form
+					location.href = "add_user";
+				}
 			});
 
 		}

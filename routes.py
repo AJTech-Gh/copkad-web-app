@@ -167,7 +167,9 @@ def add_user_save_continue():
         country = form.get('country')
         
         try:
+            # generate the pseudo id
             pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
+            # put the data in a dictionary
             data = {
                 "member_id": pseudo_member_id,
                 "first_name": first_name,
@@ -194,7 +196,7 @@ def add_user_save_continue():
                 "district": district,
                 "country": country
             }
-
+            # save the data
             utils.save_incomplete_reg(data)
 
             # return the success response to Ajax
@@ -202,12 +204,12 @@ def add_user_save_continue():
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
             # print(e)
-            print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
 
 
 @app.route("/add_user_save_new", methods=['POST'])
-def add_user_save_continue():
+def add_user_save_new():
     if request.method == 'POST':
         # get the form data transmitted by Ajax
         # form is an ImmutableMultiDict object
@@ -240,7 +242,9 @@ def add_user_save_continue():
         country = form.get('country')
         
         try:
+            # generate the pseudo id
             pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
+            # put the data in a dictionary
             data = {
                 "member_id": pseudo_member_id,
                 "first_name": first_name,
@@ -267,7 +271,7 @@ def add_user_save_continue():
                 "district": district,
                 "country": country
             }
-
+            # save the data
             utils.save_incomplete_reg(data)
 
             # return the success response to Ajax
@@ -275,12 +279,12 @@ def add_user_save_continue():
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
             # print(e)
-            print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
 
 
 @app.route("/add_user_save_exit", methods=['POST'])
-def add_user_save_continue():
+def add_user_save_exit():
     if request.method == 'POST':
         # get the form data transmitted by Ajax
         # form is an ImmutableMultiDict object
@@ -313,7 +317,9 @@ def add_user_save_continue():
         country = form.get('country')
         
         try:
+            # generate the pseudo id
             pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
+            # put the data in a dictionary
             data = {
                 "member_id": pseudo_member_id,
                 "first_name": first_name,
@@ -340,7 +346,7 @@ def add_user_save_continue():
                 "district": district,
                 "country": country
             }
-
+            # save the data
             utils.save_incomplete_reg(data)
 
             # return the success response to Ajax
@@ -348,5 +354,5 @@ def add_user_save_continue():
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
             # print(e)
-            print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
