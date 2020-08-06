@@ -9,6 +9,10 @@ from threading import Thread
 import urllib
 import re
 import json
+import binascii
+import base64
+from io import BytesIO
+from PIL import Image
 from file_encrypter import FileEncrypter
 
 
@@ -18,9 +22,24 @@ PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "profile_photos"
 PSEUDO_PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "profile_photos"
 PSEUDO_DATA_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "data"
 
+def remove_contact_symbols(contact):
+    return re.sub(r"\D+", "", contact)
+
+def remove_name_symbols(name):
+    return re.sub(r"\W+", "", name)
+
+def pil_image_to_base64(pil_image):
+    """
+    Convert a pillow image to a base64 image
+    """
+    buf = BytesIO()
+    pil_image.save(buf, format="JPEG")
+    return base64.b64encode(buf.getvalue())
 
 def gen_pseudo_id(first_name, last_name, contact_phone_1):
-    contact_phone_1 = re.sub(r"[\s\-]", "", contact_phone_1)
+    first_name = remove_name_symbols(first_name)
+    last_name = remove_name_symbols(last_name)
+    contact_phone_1 = remove_contact_symbols(contact_phone_1)
     return f'{first_name}_{last_name}_{contact_phone_1[-9:]}'
 
 def save_incomplete_reg(data_dict):
@@ -57,6 +76,21 @@ def read_incomplete_reg(member_pseudo_id):
     decrypted_json_data = decrypt_json_data(encrypted_json_data)
     json_file.close()
     return json.loads(decrypted_json_data)
+
+def load_img_for_web(first_name, last_name, contact_phone_1):
+    # load image
+    pseudo_member_id = gen_pseudo_id(first_name, last_name, contact_phone_1)
+    img_name = None
+    imgs = os.listdir(PSEUDO_PROFILE_PHOTOS_DIR)
+    for name in imgs:
+        if name.startswith(pseudo_member_id):
+            img_name = name
+            break
+    img = Image.open(os.path.join(PSEUDO_PROFILE_PHOTOS_DIR, img_name))
+    # output_str is a base64 string in ascii
+    output_str = pil_image_to_base64(img)
+    # convert a base64 string in ascii to base64 string in _bytes_
+    return binascii.a2b_base64(output_str)
 
 def encrypt_json_data(json_data):
     f = FileEncrypter()

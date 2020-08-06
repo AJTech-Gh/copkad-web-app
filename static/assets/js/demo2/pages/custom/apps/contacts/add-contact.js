@@ -1,5 +1,6 @@
 "use strict";
 
+// https://keenthemes.com/keen/
 // Class definition
 var KTAppContactsAdd = function () {
 	// Base elements
@@ -25,10 +26,10 @@ var KTAppContactsAdd = function () {
 
 		// Change event
 		wizard.on('change', function(wizard) {
-			//KTUtil.scrollTop();	
+			KTUtil.scrollTop();	
 
-			// write form data to cookies
-			// writeAddUserCookies();
+			// set random password
+			setRandomPassword();
 
 			// set values for fullname in email in account settings
 			showFullName();
@@ -43,25 +44,72 @@ var KTAppContactsAdd = function () {
 		validator = formEl.validate({
 			// Validate only visible fields
 			ignore: ":hidden",
-
 			// Validation rules
 			rules: {
 				// Step 1
-				profile_avatar: {
-					//required: true 
+				kt_apps_contacts_add_avatar: {
+					required: false 
 				},
-				profile_first_name: {
+				first_name: {
 					required: true
 				},	   
-				profile_last_name: {
+				last_name: {
 					required: true
 				},
-				profile_phone: {
+				other_names: {
+					required: false
+				},
+				gender: {
+					required: true
+				},
+				occupation: {
+					required: false
+				},
+				contact_phone_1: {
 					required: true
 				},	 
-				profile_email: {
+				contact_phone_2: {
+					required: false
+				},
+				dob: {
+					required: true
+				},
+				email: {
 					required: true,
 					email: true
+				},
+				marital_status: {
+					required: true
+				},
+				assembly: {
+					required: true
+				},
+				ministry: {
+					required: true
+				},
+				assembly_groups: {
+					required: false
+				},
+				password: {
+					required: true
+				},
+				address_line_1: {
+					required: true
+				},
+				address_line_2: {
+					required: false
+				},
+				digital_address_code: {
+					required: true
+				},
+				region: {
+					required: true
+				},
+				district: {
+					required: true
+				},
+				country: {
+					required: true
 				}
 			},
 			
@@ -282,17 +330,22 @@ $("#save_exits").on('click', function(e) {
 //Receive data and print on review
 let reviewDetails = () => {
 
-	let ids_to_take = ["full_name_read_only", "contact_phone_1", "contact_phone_2", "email", "dob", "address_line_1", "address_line_2",
-						"digital_address_code", "district", "region", "country"];
+	let ids_to_take = ["full_name_read_only", "contact_phone_1", "contact_phone_2", "email", "dob", "address_line_1", 
+	"address_line_2", "digital_address_code", "district", "region", "country", "gender", "occupation", "marital_status"];
 	
-	let ids_to_fill = ["review_name", "review_phone", "review_mail", "review_dob", "review_address_lines", "review_digital_address", 
-	"review_dis_reg_country", ];
+	let ids_to_fill = ["review_name", "review_phone", "review_mail", "review_dob", "review_address_lines", 
+	"review_digital_address", "review_dis_reg_country", "review_gender", "review_occupation", "review_marital"];
 
 	let values = [];
-
+	let val;
 	for(let i = 0; i<ids_to_take.length; i++){
 		let id = ids_to_take[i];
-		let val = document.querySelector("#" + id).value;
+		if(id === "country" || id === "marital_status"){
+			val = document.querySelector("#" + id).selectedOptions[0].textContent;
+		}
+		else{
+	  		val = document.querySelector("#" + id).value;
+		}
 		values.push(val);
 	}
 
@@ -300,7 +353,7 @@ let reviewDetails = () => {
 
 	let phone;
 	if (values[2] === ""){
-		phone = values[1]
+		phone = values[1];
 	}else{
 		phone = values[1] + " , " + values[2];
 	}
@@ -310,7 +363,7 @@ let reviewDetails = () => {
 
 	let address;
 	if (values[6] === ""){
-		address = values[5]
+		address = values[5];
 	}
 	else{
 		address = values[5] + " , " +values[6];
@@ -318,8 +371,13 @@ let reviewDetails = () => {
 
 	let digital_address = values[7];
 	let dis_reg_country = values[8] +" , "+ values[9] +" , "+ values[10];
+
+	let gender = values[11];
+	let occupation = values[12];
+	let marital_status = values[13];
 	
-	let review_list = [name, phone.trim(), email.trim(), dob, address.trim(), digital_address.trim(), dis_reg_country];
+	let review_list = [name, phone.trim(), email.trim(), dob, address.trim(), 
+		digital_address.trim(), dis_reg_country, gender, occupation.trim(), marital_status];
 
 	for (let i = 0; i < ids_to_fill.length; i++){
 		let id = ids_to_fill[i];
@@ -378,6 +436,37 @@ let showEmail = () => {
 	document.querySelector("#email_readonly").value = email;
 }
 
+let getRandomUpperCase = () => {
+	return String.fromCharCode((Math.floor(Math.random() * 26) + 65));
+}
+
+let getRandomLowerCase = () => {
+	return String.fromCharCode((Math.floor(Math.random() * 26) + 97));
+}
+
+let getRandomNumber = () => {
+	return String.fromCharCode((Math.floor(Math.random() * 10) + 48));
+}
+
+let getRandomSymbol = () => {
+	let symbol = "!@#$%^&*(){}[]=<>/,.|~?";
+	return symbol[Math.floor(Math.random()*symbol.length)];
+}
+
+let genRandomPassword = () => {
+	let password = "COP_";
+	let funcs = [getRandomUpperCase, getRandomNumber, getRandomSymbol, getRandomLowerCase];
+	for (let i = 0; i < 4; i++) {
+		for (let j = 0; j < 2; j++) {
+			password = password.concat([funcs[i]()]);
+		}
+	}
+	return password;
+}
+
+let setRandomPassword = () => {
+	document.querySelector("#password").value = genRandomPassword();
+}
 
 // display the selected photo
 $("#kt_apps_contacts_add_avatar").on("change", function () {

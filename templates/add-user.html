@@ -333,7 +333,7 @@
                                                         <div class="kt-avatar__holder" style="background-image: url(/static/assets/media/users/thecopkadna-users.png)"></div>
                                                         <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
                                                             <i class="fa fa-pen"></i>
-                                                            <input type="file" id= "kt_apps_contacts_add_avatar" name="kt_apps_contacts_add_avatar" required>
+                                                            <input type="file" id= "kt_apps_contacts_add_avatar" name="kt_apps_contacts_add_avatar">
                                                         </label>
                                                         <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
                                                             <i class="fa fa-times"></i>
@@ -350,25 +350,25 @@
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">First Name</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="first_name" name="first_name" value="Prosper" required>
+                                                    <input class="form-control" type="text" id="first_name"  name="first_name" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Last Name</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="last_name" name="last_name" value="Martins" required>
+                                                    <input class="form-control" type="text" id="last_name" name="last_name" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Other Name(s)</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="other_names" value="" name="other_names">
+                                                    <input class="form-control" type="text" id="other_names" name="other_names">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Gender</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <select class="form-control"  name="gender" id="gender" required>
+                                                    <select class="form-control"  name="gender" id="gender" name="gender">
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
                                                     </select>
@@ -379,7 +379,7 @@
                                                     <div class="col-lg-9 col-xl-9">
                                                         <div class="input-group">
                                                             <div class="input-group-prepend"><span class="input-group-text"></span></div>
-                                                            <input type="text" class="form-control" id="occupation" name="occupation" value="Nurse" aria-describedby="basic-addon1">
+                                                            <input type="text" class="form-control" id="occupation" name="occupation" aria-describedby="basic-addon1">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -388,7 +388,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-phone"></i></span></div>
-                                                        <input type="text" class="form-control" id="contact_phone_1" value="+23320505462" name="contact_phone_1" required placeholder="+233 205..." aria-describedby="basic-addon1">
+                                                        <input type="tel" pattern="[\+]{1}[0-9]{1-3}-[0-9]{3}-[0-9]{3}-[0-9]{3}" class="form-control" id="contact_phone_1" name="contact_phone_1" placeholder="+233 (0) 205..." aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -397,7 +397,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-phone"></i></span></div>
-                                                        <input type="text" class="form-control" id="contact_phone_2" name="contact_phone_2" placeholder="+233 245..." aria-describedby="basic-addon1">
+                                                        <input type="text" class="form-control" id="contact_phone_2" name="contact_phone_2" placeholder="+233 (0) 245..." aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -406,7 +406,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="flaticon-calendar"></i></span></div>
-                                                        <input type="date" class="form-control" id="dob" value="1996-07-20" name="dob" required aria-describedby="basic-addon1">
+                                                        <input type="date" class="form-control" id="dob" name="dob" aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -415,14 +415,14 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
-                                                        <input type="text" class="form-control" id="email" value="prosper.m@gmail.com" name="email" placeholder="esimintim@gmail.com" aria-describedby="basic-addon1">
+                                                        <input type="text" class="form-control" id="email" name="email" placeholder="esimintim@gmail.com" aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Marital status</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <select class="form-control" id="marital_status" name="marital_status" required>
+                                                    <select class="form-control" id="marital_status" name="marital_status">
                                                         <option value="married">Single</option>
                                                         <option value="single">Married</option>
                                                         <option value="divorced">Divorced</option>
@@ -455,7 +455,7 @@
                                             <div class="form-group row">
                                                 <label class="col-form-label col-lg-3 col-sm-12">Church Affiliation</label>
                                                 <div class=" col-lg-9 col-md-9 col-sm-12">
-                                                    <select class="form-control kt-select2" id="kt_select2_3" name="assembly" required multiple>
+                                                    <select class="form-control kt-select2" id="kt_select2_3" name="assembly" multiple>
                                                         
                                                         <optgroup id ="assembly" label="Assembly">
                                                             <option value="EEA">Emmanuel English Assembly</option>
@@ -465,7 +465,7 @@
                                                         
                                                     </select>
                                                     <br/><br/>
-                                                    <select class="form-control kt-select2" id="kt_select2_4" name="ministry" required multiple>
+                                                    <select class="form-control kt-select2" id="kt_select2_4" name="ministry" multiple>
                                                     
                                                         <optgroup label="Ministry" id="ministry">
                                                             <option value="CM">Children</option>
@@ -554,21 +554,21 @@
                                                         <div class="input-group">
                                                  <div class="input-group-prepend"><span class="input-group-text"><i class="
                                                                 flaticon-security"></i></span></div>
-                                                            <input type="password" class="form-control" id="password" name="password" aria-describedby="basic-addon1">
+                                                            <input type="password" readonly class="form-control" id="password" name="password" aria-describedby="basic-addon1">
                                                         </div>
                                                         <!-- <span class="form-text text-muted">Email will not be publicly displayed. <a href="#" class="kt-link">Learn more</a>.</span> -->
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
+                                                <!-- <div class="form-group row" hidden>
                                                         <label class="col-xl-3 col-lg-3 col-form-label">Confirm password</label>
                                                         <div class="col-lg-9 col-xl-9">
                                                             <div class="input-group">
                                                      <div class="input-group-prepend"><span class="input-group-text"><i class="
                                                         flaticon-safe-shield-protection"></i></span></div>
-                                                                <input type="password" class="form-control" id="confirm_password" name="confirm_password" aria-describedby="basic-addon1">
+                                                                <input type="password" class="form-control" id="confirm_password"  name="confirm_password" aria-describedby="basic-addon1">
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
 
                                             <div class="form-group form-group-last row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Communication</label>
@@ -643,7 +643,7 @@
                             <div class="kt-wizard-v1__form">
                                 <div class="form-group">
                                     <label>Address Line 1</label>
-                                    <input type="text" class="form-control" id="address_line_1" name="address_line_1" placeholder="Sun Flower St. 4" value="Sun Flower St. 4" required>
+                                    <input type="text" class="form-control" id="address_line_1" name="address_line_1" placeholder="Sun Flower St. 4">
                                     <span class="form-text text-muted">Please enter your Address.</span>
                                 </div>
                                 <div class="form-group">
@@ -655,14 +655,14 @@
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Digital Address Code</label>
-                                            <input type="text" class="form-control" id="digital_address_code" name="digital_address_code" placeholder="AS-24343" value="AS-24343" required>
+                                            <input type="text" class="form-control" id="digital_address_code" name="digital_address_code" placeholder="AS-09323237R">
                                             <span class="form-text text-muted">Please enter your digital address code</span>
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Region</label>
-                                            <input type="text" class="form-control" id="region" name="region" placeholder="Ashanti" value="Ashanti" required>
+                                            <input type="text" class="form-control" id="region" name="region" placeholder="Ashanti">
                                             <span class="form-text text-muted">Please enter your region.</span>
                                         </div>
                                     </div>
@@ -671,7 +671,7 @@
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>District</label>
-                                            <input type="text" class="form-control" id="district" name="district" placeholder="Kwadaso South district" value="Kwadaso South district">
+                                            <input type="text" class="form-control" id="district" name="district" placeholder="Kwadaso South district" >
                                             <span class="form-text text-muted">Please enter district</span>
                                         </div>
                                     </div>
@@ -693,7 +693,7 @@
                                             <option value="AR">Argentina</option>
                                             <option value="AM">Armenia</option>
                                             <option value="AW">Aruba</option>
-                                            <option value="AU" selected="">Australia</option>
+                                            <option value="AU">Australia</option>
                                             <option value="AT">Austria</option>
                                             <option value="AZ">Azerbaijan</option>
                                             <option value="BS">Bahamas</option>
@@ -763,7 +763,7 @@
                                             <option value="GM">Gambia</option>
                                             <option value="GE">Georgia</option>
                                             <option value="DE">Germany</option>
-                                            <option value="GH">Ghana</option>
+                                            <option value="GH" selected="" >Ghana</option>
                                             <option value="GI">Gibraltar</option>
                                             <option value="GR">Greece</option>
                                             <option value="GL">Greenland</option>
@@ -945,13 +945,16 @@
                             <div class="kt-wizard-v1__review">
                                 <div class="kt-wizard-v1__review-item">
                                     <div class="kt-wizard-v1__review-title">
-                                        Account Details
+                                        Personal Information
                                     </div>
                                     <div class="kt-wizard-v1__review-content">
                                         Name: <label id="review_name"></label>
                                         <br/> Phone: <label id="review_phone"></label>
+                                        <br/> Gender: <label id="review_gender"></label>
                                         <br/> Email: <label id="review_mail"></label>
                                         <br/> Date of Birth: <label id="review_dob"></label>
+                                        <br/> Occupation: <label id="review_occupation"></label>
+                                        <br/> Marital Status: <label id="review_marital"></label>
                                     </div>
                                 </div>
                                 <div class="kt-wizard-v1__review-item">
@@ -960,7 +963,7 @@
                                     </div>
                                     <div class="kt-wizard-v1__review-content">
                                         Address: <label id="review_address_lines"></label>
-                                        <br/>Digital Address : <label id="review_digital_address"></label>
+                                        <br/>Digital Address: <label id="review_digital_address"></label>
                                         <br/>District | Region | Country: <label id="review_dis_reg_country"></label>
                                     </div>
                                 </div>
