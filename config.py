@@ -12,7 +12,7 @@ class Config(object):
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or ('sqlite:///' + os.path.join(base_dir, 'app.db'))
     # dialect+driver://username:password@host:port/database
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://root:@127.0.0.1:3306/copkad'
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://copkad_admin:copkad_admin@www.db4free.net/:3306/copkad'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://copkad_admin:copkad_admin@www.db4free.net:3306/copkad'
     UPLOAD_FOLDER = 'static'
 
     # EMAIL CONFIGURATIONS

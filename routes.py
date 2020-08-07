@@ -129,7 +129,7 @@ def add_user_submit():
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
             print(e)
-            print(form)
+            # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
@@ -203,7 +203,7 @@ def add_user_save_continue():
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
-            print(e)
+            # print(e)
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
 
