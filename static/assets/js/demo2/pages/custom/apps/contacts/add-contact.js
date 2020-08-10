@@ -28,8 +28,6 @@ var KTAppContactsAdd = function () {
 		wizard.on('change', function(wizard) {
 			KTUtil.scrollTop();
 
-			printDetails("review_and_submit_div", "30000123");
-
 			// set random password
 			setRandomPassword();
 
