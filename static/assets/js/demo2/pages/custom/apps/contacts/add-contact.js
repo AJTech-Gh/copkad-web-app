@@ -28,6 +28,8 @@ var KTAppContactsAdd = function () {
 		wizard.on('change', function(wizard) {
 			KTUtil.scrollTop();
 
+			printDetails("review_and_submit_div", "30000123");
+
 			// set random password
 			setRandomPassword();
 
@@ -504,11 +506,12 @@ let printDetails =  (elementId, memberId) => {
 	var print_area = window.open();
 	// compose the document
 	print_area.document.write("<html><head><title>User Details</title>"
-								+ "<style>.kt-wizard-v1__review-title {font-size: 30; font-weight: bold; margin-top: 10px;} "
+								+ "<style>.kt-wizard-v1__review-title {font-size: 25; font-weight: bold; margin-top: 20px;} "
 								+ ".kt-wizard-v1__review-content {font-size: 20;}"
 								+ "</style></head>"
 								+ "<body style=\"padding: 20px;\">" 
-								+ "<h1><b>IDENTIFICATION NUMBER:&nbsp" + memberId + "</b></h1>"
+								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
+								+ "<h1 style=\"text-align: center; font-weight: bold;\">MEMBER ID:&nbsp" + memberId + "</h1>"
 								+ details + "</body></html>");
 	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
 					"/static/assets/vendors/global/vendors.bundle.css",
