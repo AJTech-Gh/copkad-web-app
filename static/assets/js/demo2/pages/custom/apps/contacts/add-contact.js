@@ -26,7 +26,7 @@ var KTAppContactsAdd = function () {
 
 		// Change event
 		wizard.on('change', function(wizard) {
-			KTUtil.scrollTop();	
+			KTUtil.scrollTop();
 
 			// set random password
 			setRandomPassword();
@@ -170,12 +170,21 @@ var KTAppContactsAdd = function () {
 							"title": "", 
 							"text": "The application has been successfully submitted!", 
 							"type": "success",
-							"confirmButtonClass": "btn btn-secondary"
+							"showCancelButton": true,
+							"confirmButtonText": 'Print',
+							"confirmButtonClass": "btn btn-primary",
+							"cancelButtonText": 'Continue',
+							"cancelButtonClass": 'btn btn-success',
+							"reverseButtons": true
 						}).then((result) => {
 							if (result.value) {
+								// print the member's details
+								printDetails("review_and_submit_div", res.member_id);
 								// reset the form
 								location.href = "add_user";
-								// formEl[0].reset();
+							} else {
+								// reset the form
+								location.href = "add_user";
 							}
 						});
 					},
@@ -486,3 +495,36 @@ $("#kt_apps_contacts_add_avatar").on("change", function () {
         // $("#src-image-text").text("Unacceptable file format! Expected JPG(JPEG), PNG OR GIF");
     }
 });
+
+// print the user's details
+let printDetails =  (elementId, memberId) => {
+	// get the content to print
+	var details = document.querySelector("#" + elementId).innerHTML;
+	// open the print window
+	var print_area = window.open();
+	// compose the document
+	print_area.document.write("<html><head><title>User Details</title>"
+								+ "<style>.kt-wizard-v1__review-title {font-size: 30; font-weight: bold; margin-top: 10px;} "
+								+ ".kt-wizard-v1__review-content {font-size: 20;}"
+								+ "</style></head>"
+								+ "<body style=\"padding: 20px;\">" 
+								+ "<h1><b>IDENTIFICATION NUMBER:&nbsp" + memberId + "</b></h1>"
+								+ details + "</body></html>");
+	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
+					"/static/assets/vendors/global/vendors.bundle.css",
+					"/static/assets/css/demo2/style.bundle.css"];
+
+	for (let i = 0; i < cssPaths.length; i++) {
+		let style = print_area.document.createElement('link');
+		style.type = "text/css";
+		style.rel = "stylesheet";
+		style.href = location.origin + cssPaths[i];
+		style.media = "all";
+		print_area.document.getElementsByTagName("head")[0].appendChild(style);
+	}
+	// print details and return to page
+	print_area.document.close();
+	print_area.focus();
+	print_area.print();
+	print_area.close();
+  }

@@ -126,7 +126,7 @@ def add_user_submit():
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
-            return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+            return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
         except Exception as e:
             print(e)
             # print(form)
@@ -203,7 +203,7 @@ def add_user_save_continue():
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
-            # print(e)
+            print(e)
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
 
@@ -278,7 +278,7 @@ def add_user_save_new():
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
-            # print(e)
+            print(e)
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
 
@@ -353,6 +353,6 @@ def add_user_save_exit():
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
         except Exception as e:
-            # print(e)
+            print(e)
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
