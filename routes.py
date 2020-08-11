@@ -35,9 +35,29 @@ def index_2():
 def view_user():
     return render_template('member-datatable.html')
 
-@app.route('/user')
-def user():
-    return render_template('member-datatable.html')
+@app.route('/baptism_certificates')
+def baptism_certificates():
+    return render_template('baptism-certificates.html')
+
+@app.route('/load_user_by_id')
+def load_user_by_id():
+        
+
+@app.route('/overview')
+def overview():
+    return render_template('baptism-certificates.html')
+
+@app.route('/messages')
+def messages():
+    return render_template('baptism-certificates.html')
+
+@app.route('/my_activities')
+def my_activities():
+    return render_template('baptism-certificates.html')
+
+@app.route('/login_v2')
+def login_v2():
+    return render_template('baptism-certificates.html')
 
 @app.route('/office_of_the_district_pastor')
 def office_of_the_district_pastor():

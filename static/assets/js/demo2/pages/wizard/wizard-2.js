@@ -36,84 +36,88 @@ var KTWizard2 = function () {
             // Validation rules
             rules: {
                	//= Step 1
-				fname: {
+				first_name: {
 					required: true 
 				},
-				lname: {
+				assembly: {
 					required: true
 				},	   
-				phone: {
+				contacts: {
 					required: true
 				},	 
-				emaul: {
-					required: true,
+				email: {
+					required: false,
 					email: true
 				},	 
 
 				//= Step 2
-				address1: {
+				date_of_baptism: {
 					required: true 
 				},
-				postcode: {
+				place_of_baptism: {
 					required: true
 				},	   
-				city: {
+				officiating_minister: {
 					required: true
-				},	 
-				state: {
-					required: true
-				},	 
+                },	
+                area: {
+                    required: true
+                },
+                district: {
+                    required: true
+                },
 				country: {
 					required: true
-				},	 	   
+                },	 	  
+                 
 
 				//= Step 3
-				delivery: {
-					required: true
-				},
-				packaging: {
-					required: true
-				},	
-				preferreddelivery: {
-					required: true
-				},	
+				// delivery: {
+				// 	required: true
+				// },
+				// packaging: {
+				// 	required: true
+				// },	
+				// preferreddelivery: {
+				// 	required: true
+				// },	
 
-				//= Step 4
-				locaddress1: {
-					required: true 
-				},
-				locpostcode: {
-					required: true
-				},	   
-				loccity: {
-					required: true
-				},	 
-				locstate: {
-					required: true
-				},	 
-				loccountry: {
-					required: true
-				},
+				// //= Step 4
+				// locaddress1: {
+				// 	required: true 
+				// },
+				// locpostcode: {
+				// 	required: true
+				// },	   
+				// loccity: {
+				// 	required: true
+				// },	 
+				// locstate: {
+				// 	required: true
+				// },	 
+				// loccountry: {
+				// 	required: true
+				// },
 
-				//= Step 5
-				ccname: {
-					required: true 
-				},
-				ccnumber: {
-					required: true,
-					creditcard: true
-				},	   
-				ccmonth: {
-					required: true
-				},	 
-				ccyear: {
-					required: true
-				},	 
-				cccvv: {
-					required: true,					
-					minlength: 2,
-					maxlength: 3
-				},	
+				// //= Step 5
+				// ccname: {
+				// 	required: true 
+				// },
+				// ccnumber: {
+				// 	required: true,
+				// 	creditcard: true
+				// },	   
+				// ccmonth: {
+				// 	required: true
+				// },	 
+				// ccyear: {
+				// 	required: true
+				// },	 
+				// cccvv: {
+				// 	required: true,					
+				// 	minlength: 2,
+				// 	maxlength: 3
+				// },	
             },
             
             // Display error  
@@ -179,4 +183,9 @@ var KTWizard2 = function () {
 
 jQuery(document).ready(function() {    
     KTWizard2.init();
+});
+
+
+$("#member_id").on("change", function(e) {
+    
 });

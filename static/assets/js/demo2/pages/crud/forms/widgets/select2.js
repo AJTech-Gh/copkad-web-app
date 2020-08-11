@@ -54,7 +54,7 @@ var KTSelect2 = function() {
             placeholder: "Select assembly",
             allowClear: true,
             maximumSelectionLength: 1
-          });
+              });
 
         $("#kt_select2_4").select2({
             maximumSelectionLength: 3,
