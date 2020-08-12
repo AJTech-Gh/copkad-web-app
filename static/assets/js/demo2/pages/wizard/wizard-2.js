@@ -204,6 +204,7 @@ let reviewBaptismDetails = () => {
 $("#member_id").on("keyup", function(e) {
 
     if ($(this).val().length === 8) {
+
         $.ajax({
             method: "POST",
             url: "/load_user_by_id",
@@ -235,6 +236,8 @@ $("#member_id").on("keyup", function(e) {
                     document.querySelector("#email").value = "";
                 }
             } else {
+                let img_url = "/static/assets/media/users/thecopkadna-users.png"
+                $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
                 document.querySelector("#full_name").value = "";
                 document.querySelector("#assembly").value = "";
                 document.querySelector("#contacts").value = "";
@@ -242,6 +245,8 @@ $("#member_id").on("keyup", function(e) {
             }
         });
     } else {
+        let img_url = "/static/assets/media/users/thecopkadna-users.png"
+        $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
         document.querySelector("#full_name").value = "";
         document.querySelector("#assembly").value = "";
         document.querySelector("#contacts").value = "";
