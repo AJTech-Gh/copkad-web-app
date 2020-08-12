@@ -320,7 +320,7 @@
 			</div>
 			<div class="kt-grid__item kt-grid__item--fluid kt-wizard-v2__wrapper">
 				<!--begin: Form Wizard Form-->
-				<form class="kt-form" id="kt_form">
+				<form class="kt-form" id="kt_form" method="POST">
 					<!--begin: Form Wizard for account info-->
 					<div class="kt-wizard-v2__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
 						<div class="kt-heading kt-heading--md">Enter your Member's Details</div>
@@ -328,20 +328,20 @@
 							<div class="kt-wizard-v2__form">
 								<div class="form-group">
 									<label>Member ID</label>
-									<input type="text" class="form-control" name="member_id" id="member_id"  value="">
-									<span class="form-text text-muted">Please enter Member ID to sort out member database</span>
+									<input type="text" onkeypress="isNumber(event)" class="form-control" name="member_id" id="member_id">
+									<span class="form-text text-muted">Please enter Member ID (eg. 10000108) to sort out member database</span>
 									
                                 </div>
                                 <div class="form-group">
                                         <label>Full Name</label>
-										<input type="text" class="form-control" name="full_name" id="full_name" placeholder="" value="Proper Amewowo" readonly>
+										<input type="text" class="form-control" name="full_name" id="full_name" readonly>
                                     </div>
                                 <div class="form-group">
                                         <label>Assembly</label>
-                                        <input type="text" class="form-control" name="assembly" id="assembly" placeholder="" value="Emmanuel Assembly" readonly > <!--take data from members registration databse-->
+                                        <input type="text" class="form-control" name="assembly" id="assembly" readonly > 
 									</div>
 									<div class="form-group row">
-                                        <label class="col-xl-3 col-lg-3 col-form-label">User Image</label> <!--take data member's registation database-->
+                                        <label class="col-xl-3 col-lg-3 col-form-label">User Image</label>
                                         <div class="col-lg-9 col-xl-6">
                                             <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
                                                 <div class="kt-avatar__holder" ></div>
@@ -356,15 +356,15 @@
 									<div class="col-xl-6">
 										<div class="form-group">
 											<label>Phone</label>
-											<input type="tel" class="form-control" name="contacts" id="contacts" placeholder="" value="345674635" readonly> <!--take data from member's registration-->
-											<span class="form-text text-muted">SMS notification will be sent to this number</span>
+											<input type="tel" class="form-control" name="contacts" id="contacts" readonly>
+											<!-- <span class="form-text text-muted">SMS notification will be sent to this number</span> -->
 										</div>
 									</div>
 									<div class="col-xl-6">
 										<div class="form-group">
 											<label>Email</label>
-											<input type="email" class="form-control" name="email" id="email" placeholder="" readonly>
-											<span class="form-text text-muted">Email notification will be sent to this number</span> <!--take data from member's registration-->
+											<input type="email" class="form-control" name="email" id="email" readonly>
+											<!-- <span class="form-text text-muted">Email notification will be sent to this number</span> -->
 										</div>
 									</div>							   
 								</div>
@@ -693,15 +693,15 @@
 					<div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
 						<div class="kt-heading kt-heading--md">Review member's baptismal details</div>
 						<div class="kt-form__section kt-form__section--first">
-							<div class="kt-wizard-v2__review">
+							<div class="kt-wizard-v2__review" id="review_and_submit_div">
 								<div class="kt-wizard-v2__review-item">
 									<div class="kt-wizard-v2__review-title">
 										Account
 									</div>
 									<div class="kt-wizard-v2__review-content">
-										Prosper Ezekiel<br/> <!--put the member's fullname here-->
-										Phone: +233 570 364 383<br/> <!--put the member's phone contact here-->
-										Email: pkboateng@copkadna.com <!--put valid email address here-->
+										Name: <span id="review_name"></span><br/>
+										Contact: <span id="review_contact"></span><br/> 
+										Email: <span id="review_email"></span> 
 									</div>
 								</div>
 								<div class="kt-wizard-v2__review-item">
@@ -709,18 +709,20 @@
 										Church Info
 									</div>
 									<div class="kt-wizard-v2__review-content">
-										Emmanuel English Assembly<br/> <!--put assembly of member here-->
-										Youth Mnistry here<br/>
-										Kwadaso Agric District, Kwadaso Area
+										Assembly: <span id="review_assembly"></span><br/>
+										District: <span id="review_district"></span>
+										Area: <span id="review_area"></span>
 									</div>
 								</div>
 								<div class="kt-wizard-v2__review-item">
 									<div class="kt-wizard-v2__review-title">
-										Baptismal details
+										Baptismal Details
 									</div>
 									<div class="kt-wizard-v2__review-content">
-										Date of Baptism :<br/> <!--put date of baptism here-->
-										Officiating minister: <!--put officiating minister here-->
+										Date of Baptism: <span id="review_date_of_baptism"></span><br/>
+										Place of Baptism: <span id="review_place_of_baptism"></span><br/>
+										Officiating minister: <span id="review_off_minister"></span>
+										
 									</div>
 								</div>								
 							</div>

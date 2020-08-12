@@ -19,6 +19,7 @@ from file_encrypter import FileEncrypter
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 IMG_FILE_EXT = '.jpg'
 PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "profile_photos"
+BAPTISM_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "baptism_photos"
 PSEUDO_PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "profile_photos"
 PSEUDO_DATA_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "data"
 
@@ -154,9 +155,9 @@ def to_given_length(val, length):
     return ('0' * (length - len(val))) + val
 
 
-def upload_photo(member_id):
+def upload_profile_photo(member_id):
     """
-    Uploads an image file
+    Uploads an image file to profile_photos folder
     """
     # check if the post request has the file part
     img_file = request.files.get("kt_apps_contacts_add_avatar")
@@ -175,6 +176,32 @@ def upload_photo(member_id):
         img_name = member_id + "_" + get_timestamp() + IMG_FILE_EXT
         # save the source image
         img_file.save(os.path.join(PROFILE_PHOTOS_DIR, img_name))
+        return True
+    # return the index page if the form is not submitted rightly
+    return False
+
+
+def upload_baptism_photo(member_id):
+    """
+    Uploads an image file to baptism_photos folder
+    """
+    # check if the post request has the file part
+    img_file = request.files.get("kt_apps_contacts_add_avatar")
+    if not img_file:
+        return False
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if img_file.filename == '':
+        return False
+    if img_file and allowed_file(img_file.filename):
+        # remove existing src and result images
+        remove_existing_img(member_id)
+        # get secure filename
+        filename = secure_filename(img_file.filename)
+        # create unique src image name
+        img_name = member_id + "_" + get_timestamp() + IMG_FILE_EXT
+        # save the source image
+        img_file.save(os.path.join(BAPTISM_PHOTOS_DIR, img_name))
         return True
     # return the index page if the form is not submitted rightly
     return False
@@ -248,3 +275,21 @@ def compose_sms_msg(member_id, password):
 def send_sms(msg, recipient):
     t = Thread(target=async_send_sms, args=[msg, recipient])
     t.start()
+
+def read_by_member_id(id):
+    user = User.query.filter_by(member_id=id).first()
+    data = dict()
+    if (user):
+        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 'contact_2':user.contact_phone_2, 'email':user.email, 'img': get_img_path(id)}
+    return data
+
+def get_img_path(member_id, type='complete'):
+    """
+    Removes an already existing image
+    """
+    dest_dir = PSEUDO_PROFILE_PHOTOS_DIR if type=='incomplete' else PROFILE_PHOTOS_DIR
+    imgs = os.listdir(dest_dir)
+    for name in imgs:
+        if name.startswith(member_id):
+            return os.path.join(dest_dir, name)
+    return ""

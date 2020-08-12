@@ -2,7 +2,7 @@ from flask import render_template, request, make_response, jsonify, Response
 import json
 from datetime import datetime
 from app import app, db
-from models import User
+from models import User, Baptism
 import utils
 
 
@@ -14,10 +14,6 @@ def index():
 @app.route('/login')
 def login():
     return render_template('login.html')
-
-@app.route('/add_user')
-def add_user():
-    return render_template('add-user.html')
 
 @app.route('/member_datatable')
 def member_datatable():
@@ -35,20 +31,16 @@ def index_2():
 def view_user():
     return render_template('member-datatable.html')
 
-@app.route('/baptism_certificates')
-def baptism_certificates():
-    return render_template('baptism-certificates.html')
-
-@app.route('/load_user_by_id')
-def load_user_by_id():
-        
-
 @app.route('/overview')
 def overview():
     return render_template('baptism-certificates.html')
 
 @app.route('/messages')
 def messages():
+    return render_template('baptism-certificates.html')
+
+@app.route('/user')
+def user():
     return render_template('baptism-certificates.html')
 
 @app.route('/my_activities')
@@ -70,6 +62,60 @@ def office_of_the_district_secretary():
 @app.route('/records')
 def records():
     return render_template('add-user.html')
+
+@app.route('/rallies_and_conventions')
+def rallies_and_conventions():
+    return render_template('rallies-and-conventions.html')
+
+@app.route('/baptism_certificates')
+def baptism_certificates():
+    return render_template('baptism-certificates.html')
+
+@app.route('/baptism_certificates_submit', methods=['POST'])
+def baptism_certificates_submit():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        member_id = form.get('member_id')
+        date_of_baptism = form.get('date_of_baptism').strip()
+        place_of_baptism = form.get('place_of_baptism').strip()
+        officiating_minister = form.get('officiating_minister').strip() 
+        district = form.get('district')
+        area = form.get('area').strip()
+        country = form.get('country').strip()
+
+        try:
+            # if not utils.upload_baptism_photo(member_id):
+            #     return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
+            # create new baptism object
+            baptism = Baptism(member_id=member_id, place_of_baptism=place_of_baptism, officiating_minister=officiating_minister, \
+                district=district, area=area, country=country)
+            baptism.set_date_of_baptism(date_of_baptism)
+
+            # add the new baptism data to the database and save the changes
+            db.session.add(baptism)
+            db.session.commit()
+
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+        
+
+@app.route('/load_user_by_id', methods=['POST'])
+def load_user_by_id():
+    if request.method == 'POST':
+        member_id = request.form.get('member_id').strip()
+        return Response(json.dumps(utils.read_by_member_id(member_id)), status=200, mimetype='application/json')
+
+@app.route('/add_user')
+def add_user():
+    return render_template('add-user.html')    
 
 @app.route('/add_user_submit', methods=['POST'])
 def add_user_submit():
@@ -109,7 +155,7 @@ def add_user_submit():
             member_id = utils.gen_id(assembly, ministry)
             if not member_id:
                 return Response(json.dumps({'status':'FAIL', 'message': 'Invalid combination of ministries.'}), status=400, mimetype='application/json')
-            if not utils.upload_photo(member_id):
+            if not utils.upload_profile_photo(member_id):
                 return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
             if utils.check_email_duplicates(email):
                 return Response(json.dumps({'status':'FAIL', 'message': 'Email already exists.'}), status=400, mimetype='application/json')

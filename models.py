@@ -1,4 +1,5 @@
 from enum import unique
+from sqlalchemy.orm import backref
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from app import app, db
@@ -7,7 +8,7 @@ import re
 class User(db.Model):
     # personal info page
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    member_id = db.Column(db.String(20), primary_key=True, nullable=False, index=True)
+    member_id = db.Column(db.String(10), primary_key=True, nullable=False, index=True)
     first_name = db.Column(db.String(50), unique=False, nullable=False, index=True)
     last_name = db.Column(db.String(50), unique=False, nullable=False, index=True) 
     other_names = db.Column(db.String(50), unique=False, nullable=False, index=True)
@@ -34,8 +35,10 @@ class User(db.Model):
     region = db.Column(db.String(30), unique=False, nullable=False)
     district = db.Column(db.String(50), unique=False, nullable=False)
     country = db.Column(db.String(50), unique=False, nullable=False)
+    # relationships
+    baptism = db.relationship('Baptism', backref='user', lazy=True)
 
-
+#https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
     def set_gender(self, gender):
         self.gender = gender[0].upper()
 
@@ -87,3 +90,27 @@ class User(db.Model):
 
     def __repr__(self):
         return f'User: {self.member_id} - {self.last_name}, {self.first_name} {self.other_names}'
+
+
+class Baptism(db.Model):
+    # account info
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
+    # baptism records
+    date_of_baptism = db.Column(db.DateTime(), unique=False, nullable=False)
+    place_of_baptism = db.Column(db.String(50), unique=False, nullable=False)
+    officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
+    district = db.Column(db.String(50), unique=False, nullable=False)
+    area = db.Column(db.String(50), unique=False, nullable=False)
+    country = db.Column(db.String(50), unique=False, nullable=False)
+
+
+    def set_date_of_baptism(self, date_of_baptism):
+        date_of_baptism = date_of_baptism.split('-')
+        self.date_of_baptism = datetime(int(date_of_baptism[0]), int(date_of_baptism[1]), int(date_of_baptism[2]))
+
+    def get_date_of_baptism(self, date_of_baptism):
+        return '{}-{}-{}'.format(date_of_baptism.year, date_of_baptism.month, date_of_baptism.day)
+
+    def __repr__(self):
+        return f'User: {self.member_id}'
