@@ -79,7 +79,7 @@ var KTWizard2 = function () {
 
                 swal.fire({
                     "title": "", 
-                    "text": "There are some errors in your submission. Please correct them.", 
+                    "text": "Your form is incomplete, Please complete it!", 
                     "type": "error",
                     "confirmButtonClass": "btn btn-secondary"
                 });
@@ -125,7 +125,7 @@ var KTWizard2 = function () {
 
                         swal.fire({
                             "title": "", 
-                            "text": "The application has been successfully submitted!", 
+                            "text": "The data has been successfully submitted!", 
                             "type": "success",
 							"showCancelButton": true,
 							"confirmButtonText": 'Print',
@@ -207,7 +207,7 @@ $("#member_id").on("keyup", function(e) {
 
         $.ajax({
             method: "POST",
-            url: "/load_user_by_id",
+            url: "/load_user_by_id/member_id",
             data: $(this).serialize()
         }).done(function(res) {
             if (res.first_name) {
@@ -236,7 +236,7 @@ $("#member_id").on("keyup", function(e) {
                     document.querySelector("#email").value = "";
                 }
             } else {
-                let img_url = "/static/assets/media/users/thecopkadna-users.png"
+                let img_url = "/static/assets/media/users/thecopkadna-users.png";
                 $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
                 document.querySelector("#full_name").value = "";
                 document.querySelector("#assembly").value = "";
@@ -245,8 +245,8 @@ $("#member_id").on("keyup", function(e) {
             }
         });
     } else {
-        let img_url = "/static/assets/media/users/thecopkadna-users.png"
-        $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
+        let img_url = "/static/assets/media/users/thecopkadna-users.png";
+        $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ")
         document.querySelector("#full_name").value = "";
         document.querySelector("#assembly").value = "";
         document.querySelector("#contacts").value = "";

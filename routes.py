@@ -2,7 +2,7 @@ from flask import render_template, request, make_response, jsonify, Response
 import json
 from datetime import datetime
 from app import app, db
-from models import User, Baptism
+from models import User, Baptism, RalliesAndConventions, Dedication
 import utils
 
 
@@ -63,10 +63,119 @@ def office_of_the_district_secretary():
 def records():
     return render_template('add-user.html')
 
+@app.route('/admin_emmanuel')
+def admin_emmanuel():
+    return render_template('add-user.html')
+
+@app.route('/admin_glory')
+def admin_glory():
+    return render_template('add-user.html')
+
+@app.route('/all_datatables')
+def all_datatables():
+    return render_template('add-user.html')
+
+@app.route('/admin_hope')
+def admin_hope():
+    return render_template('baptism-certificates.html')
+
+@app.route('/dedication')
+def dedication():
+    return render_template('dedication.html')
+
+@app.route('/dedication_submit', methods=['POST'])
+def dedication_submit():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        # cr_id = form.get('cr_id')
+        member_id_father = form.get('member_id_father').strip()
+        member_id_mother = form.get('member_id_mother').strip()
+        child_name = form.get('child_name').strip()
+        child_dob = form.get('child_dob')
+        dedication_date_time = form.get('dedication_date_time')
+        officiating_minister = form.get('officiating_minister').strip()
+        assembly = form.get('assembly')
+        place_of_ceremony = form.get('place_of_ceremony').strip()
+
+        try:
+            dedication = Dedication(member_id_father=member_id_father, member_id_mother=member_id_mother, child_name=child_name,
+                                    officiating_minister=officiating_minister, assembly=assembly, place_of_ceremony=place_of_ceremony)
+
+            dedication.set_child_dob(child_dob)
+            dedication.set_dedication_date_time(dedication_date_time)
+
+            db.session.add(dedication)
+            db.session.commit()
+
+            data = {
+                "member_id_father": member_id_father,
+                "member_id_mother": member_id_mother,
+                "child_name": child_name,
+                "child_dob": child_dob,
+                "dedication_date_time": dedication_date_time,
+                "officiating_minister": officiating_minister,
+                "assembly": assembly,
+                "place_of_ceremony": place_of_ceremony
+            }
+
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
 @app.route('/rallies_and_conventions')
 def rallies_and_conventions():
     return render_template('rallies-and-conventions.html')
 
+@app.route('/rallies_and_conventions_submit', methods=['POST'])
+def rallies_and_conventions_submit():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        # cr_id = form.get('cr_id')
+        cr_type = form.get('cr_type')
+        start_date_time = form.get('start_date_time')
+        end_date_time = form.get('end_date_time')
+        assembly = form.get('assembly')
+        venue = form.get('venue').strip()
+        souls_won = form.get('souls_won')
+        head_count = form.get('head_count')
+        mode_of_count = form.get('mode_of_count')
+        try:
+            rallies_and_conventions = RalliesAndConventions(cr_type=cr_type, assembly=assembly, venue=venue, souls_won=souls_won, \
+            head_count=head_count, mode_of_count=mode_of_count)
+
+            rallies_and_conventions.set_start_date_time(start_date_time)
+            rallies_and_conventions.set_end_date_time(end_date_time)
+
+            db.session.add(rallies_and_conventions)
+            db.session.commit()
+
+            data = {
+                "cr_id": utils.get_rc_id(),
+                "cr_type": cr_type,
+                "start_date_time": start_date_time,
+                "end_date_time": end_date_time,
+                "assembly": assembly,
+                "venue": venue,
+                "souls_won": str(souls_won),
+                "head_count": str(head_count),
+                "mode_of_count": mode_of_count
+            }
+
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+        
 @app.route('/baptism_certificates')
 def baptism_certificates():
     return render_template('baptism-certificates.html')
@@ -102,15 +211,15 @@ def baptism_certificates_submit():
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
         except Exception as e:
-            print(e)
+            #print(e)
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
         
 
-@app.route('/load_user_by_id', methods=['POST'])
-def load_user_by_id():
+@app.route('/load_user_by_id/<src_id>', methods=['POST'])
+def load_user_by_id(src_id):
     if request.method == 'POST':
-        member_id = request.form.get('member_id').strip()
+        member_id = request.form.get(src_id).strip()
         return Response(json.dumps(utils.read_by_member_id(member_id)), status=200, mimetype='application/json')
 
 @app.route('/add_user')

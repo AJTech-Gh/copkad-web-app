@@ -37,7 +37,7 @@ class User(db.Model):
     country = db.Column(db.String(50), unique=False, nullable=False)
     # relationships
     baptism = db.relationship('Baptism', backref='user', lazy=True)
-
+#https://avacariu.me/writing/2019/composite-foreign-keys-and-many-to-many-relationships-in-sqlalchemy
 #https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
     def set_gender(self, gender):
         self.gender = gender[0].upper()
@@ -114,3 +114,69 @@ class Baptism(db.Model):
 
     def __repr__(self):
         return f'User: {self.member_id}'
+
+
+class RalliesAndConventions(db.Model):
+    cr_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    cr_type = db.Column(db.String(30), unique=False, nullable=False)
+    start_date_time = db.Column(db.DateTime(), unique=False, nullable=False)
+    end_date_time = db.Column(db.DateTime(), unique=False, nullable=False)
+    assembly = db.Column(db.String(30), unique=False, nullable=False)
+    venue = db.Column(db.String(50), unique=False, nullable=False)
+    souls_won = db.Column(db.Integer, unique=False, nullable=False)
+    head_count = db.Column(db.Integer, unique=False, nullable=False)
+    mode_of_count = db.Column(db.String(30), unique=False, nullable=False)
+
+
+    def set_start_date_time(self, start_date_time):
+        _date, _time = start_date_time.split()
+        _date = _date.split('-')
+        _time = _time.split(':')
+        self.start_date_time = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
+
+    def set_end_date_time(self, end_date_time):
+        _date, _time = end_date_time.split()
+        _date = _date.split('-')
+        _time = _time.split(':')
+        self.end_date_time = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
+
+    def get_start_date_time(self, start_date_time):
+        return '{}-{}-{} {}:{}'.format(start_date_time.year, start_date_time.month, start_date_time.day, start_date_time.hour, start_date_time.minute)
+
+    def get_end_date_time(self, end_date_time):
+        return '{}-{}-{} {}:{}'.format(end_date_time.year, end_date_time.month, end_date_time.day, end_date_time.hour, end_date_time.minute)
+
+    def __repr__(self):
+        return f'cr_id: {self.cr_id} \nFrom: {self.get_start_date_time(self.start_date_time)} \nTo: {self.get_end_date_time(self.end_date_time)}'
+
+
+class Dedication(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id_father = db.Column(db.String(20), nullable=False, index=True)
+    member_id_mother = db.Column(db.String(20), nullable=False, index=True)
+    child_name = db.Column(db.String(50), unique=False, nullable=False, index=True)
+    child_dob = db.Column(db.DateTime(), unique=False, nullable=False)
+    dedication_date_time = db.Column(db.DateTime(), unique=False, nullable=False)
+    officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
+    assembly = db.Column(db.String(30), unique=False, nullable=False)
+    place_of_ceremony = db.Column(db.String(50), unique=False, nullable=False)
+
+
+    def set_child_dob(self, child_dob):
+        child_dob = child_dob.split('-')
+        self.child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
+
+    def get_child_dob(self, child_dob):
+        return '{}-{}-{}'.format(child_dob.year, child_dob.month, child_dob.day)
+
+    def set_dedication_date_time(self, dedication_date_time):
+        _date, _time = dedication_date_time.split()
+        _date = _date.split('-')
+        _time = _time.split(':')
+        self.dedication_date_time = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
+
+    def get_dedication_date_time(self, dedication_date_time):
+        return '{}-{}-{} {}:{}'.format(dedication_date_time.year, dedication_date_time.month, dedication_date_time.day, dedication_date_time.hour, dedication_date_time.minute)
+
+    def __repr__(self):
+        return f'Name: {self.child_name}\nDate of Birth: {self.child_dob}'

@@ -71,3 +71,188 @@ var KTDatatablesBasicPaginations = function() {
 jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
+
+// submit the rallies and conventions form
+// $('#submit_rc_btn').click(function(e) {
+// 	e.preventDefault();
+
+// 	$.ajax({
+// 		url: "rallies_and_conventions",
+// 		method: "POST",
+// 		success: 
+// 	});
+// });
+
+// Class definition
+var KTForm = function () {
+    // Base elements
+    var formEl;
+    var validator;
+
+    var initValidation = function() {
+        validator = formEl.validate({
+            // Validate only visible fields
+            ignore: ":hidden",
+
+            // Validation rules
+            rules: {
+               	//= Step 1
+				rc_type: {
+					required: true 
+				},
+				kt_datetimepicker_1: {
+					required: true
+				},	   
+				kt_datetimepicker_2: {
+					required: true
+				},	 
+				assembly: {
+					required: true
+				},	 
+				venue: {
+					required: true
+				},
+				souls_won: {
+					required: true
+				},
+				head_count: {
+					required: true
+				},
+				mode_of_count: {
+					required: true
+				}
+                 
+            },
+            
+            // Display error  
+            invalidHandler: function(event, validator) {     
+                KTUtil.scrollTop();
+
+                swal.fire({
+                    "title": "", 
+                    "text": "Your form is incomplete, Please complete it!", 
+                    "type": "error",
+                    "confirmButtonClass": "btn btn-secondary"
+                });
+            },
+
+            // Submit valid form
+            submitHandler: function (form) {
+                
+            }
+        });   
+    }
+
+    var initSubmit = function() {
+        var btn = formEl.find('[id="submit_rc_btn"]');
+
+        btn.on('click', function(e) {
+            e.preventDefault();
+
+            if (validator.form()) {
+                // See: src\js\framework\base\app.js
+                KTApp.progress(btn);
+                //KTApp.block(formEl);
+
+                // See: http://malsup.com/jquery/form/#ajaxSubmit
+                formEl.ajaxSubmit({
+
+                    url: "/rallies_and_conventions_submit",
+
+                    error: function(res, err) {
+                        KTApp.unprogress(btn);
+            
+                        swal.fire({
+                            "title": "",
+                            "text": res.responseJSON.message, 
+                            "type": "error",
+                            "confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+                        });
+                    },
+
+                    success: function(res) {
+                        KTApp.unprogress(btn);
+                        //KTApp.unblock(formEl);
+
+                        swal.fire({
+                            "title": "", 
+                            "text": "The data has been successfully submitted!", 
+                            "type": "success",
+							"showCancelButton": true,
+							"confirmButtonText": 'Print',
+							"confirmButtonClass": "btn btn-primary",
+							"cancelButtonText": 'Continue',
+							"cancelButtonClass": 'btn btn-success',
+							"reverseButtons": true
+						}).then((result) => {
+							if (result.value) {
+								// print the member's details
+								printDetails(res);
+								// reset the form
+								location.href = "rallies_and_conventions";
+							} else {
+								// reset the form
+								location.href = "rallies_and_conventions";
+							}
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+			formEl = $('#rc_form');
+			
+            initValidation();
+            initSubmit();
+        }
+    };
+}();
+
+jQuery(document).ready(function() {    
+    KTForm.init();
+});
+
+// print the user's details
+let printDetails =  (data) => {
+	// open the print window
+	var print_area = window.open();
+	// compose the document
+	print_area.document.write("<html><head><title>User Details</title>"
+								+ "<style>.kt-wizard-v1__review-content {font-size: 20;}"
+								+ "</style></head>"
+								+ "<body style=\"padding: 20px; text-align: center;\">" 
+								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
+								+ "<h1 style=\"text-align: center; font-weight: bold;\">RALLIES AND CONVENTIONS</h1>"
+								+ '<div class="kt-wizard-v1__review-content">'
+								+ 'ID: <label>' + data.cr_id + '</label>'
+								+ '<br/>Type: <label>' + data.cr_type + '</label>'
+								+ '<br/>Start Date: <label>' + data.start_date_time + '</label>'
+								+ '<br/>End Date: <label>' + data.end_date_time + '</label>'
+								+ '<br/>Assembly: <label>' + data.assembly + '</label>'
+								+ '<br/>Venue: <label>' + data.venue + '</label>'
+								+ '<br/>Souls Won: <label>' + data.souls_won + '</label>'
+								+ '<br/>Head Count: <label>' + data.head_count + '</label>'
+								+ '<br/>Mode of Count: <label>' + data.mode_of_count + '</label>'
+								+ "</div></body></html>");
+	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
+					"/static/assets/vendors/global/vendors.bundle.css",
+					"/static/assets/css/demo2/style.bundle.css"];
+
+	for (let i = 0; i < cssPaths.length; i++) {
+		let style = print_area.document.createElement('link');
+		style.type = "text/css";
+		style.rel = "stylesheet";
+		style.href = location.origin + cssPaths[i];
+		style.media = "all";
+		print_area.document.getElementsByTagName("head")[0].appendChild(style);
+	}
+	// print details and return to page
+	print_area.document.close();
+	print_area.focus();
+	print_area.print();
+	print_area.close();
+  }

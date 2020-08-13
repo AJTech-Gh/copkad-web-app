@@ -1,7 +1,7 @@
 import os
 import time
 from app import db, app, mail
-from models import User
+from models import User, RalliesAndConventions
 from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
@@ -280,7 +280,7 @@ def read_by_member_id(id):
     user = User.query.filter_by(member_id=id).first()
     data = dict()
     if (user):
-        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 'contact_2':user.contact_phone_2, 'email':user.email, 'img': get_img_path(id)}
+        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 'contact_2':user.contact_phone_2, 'email':user.email, 'gender':user.gender, 'img': get_img_path(id)}
     return data
 
 def get_img_path(member_id, type='complete'):
@@ -293,3 +293,10 @@ def get_img_path(member_id, type='complete'):
         if name.startswith(member_id):
             return os.path.join(dest_dir, name)
     return ""
+
+
+def get_rc_id():
+    """
+    Get the rallies and conventions id for the most recently submitted data
+    """
+    return db.session.query(db.func.max(RalliesAndConventions.cr_id)).scalar()

@@ -168,7 +168,7 @@ var KTAppContactsAdd = function () {
 						// https://sweetalert2.github.io/
 						swal.fire({
 							"title": "", 
-							"text": "The application has been successfully submitted!", 
+							"text": "The data has been successfully submitted!", 
 							"type": "success",
 							"showCancelButton": true,
 							"confirmButtonText": 'Print',
