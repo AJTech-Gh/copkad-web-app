@@ -37,8 +37,10 @@ class User(db.Model):
     country = db.Column(db.String(50), unique=False, nullable=False)
     # relationships
     baptism = db.relationship('Baptism', backref='user', lazy=True)
+
 #https://avacariu.me/writing/2019/composite-foreign-keys-and-many-to-many-relationships-in-sqlalchemy
 #https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
+
     def set_gender(self, gender):
         self.gender = gender[0].upper()
 
@@ -119,6 +121,7 @@ class Baptism(db.Model):
 class RalliesAndConventions(db.Model):
     cr_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     cr_type = db.Column(db.String(30), unique=False, nullable=False)
+    cr_title = db.Column(db.String(100), unique=False, nullable=False)
     start_date_time = db.Column(db.DateTime(), unique=False, nullable=False)
     end_date_time = db.Column(db.DateTime(), unique=False, nullable=False)
     assembly = db.Column(db.String(30), unique=False, nullable=False)

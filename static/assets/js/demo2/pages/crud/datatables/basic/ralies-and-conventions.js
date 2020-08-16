@@ -16,7 +16,7 @@ var KTDatatablesBasicPaginations = function() {
 					render: function(data, type, full, meta) {
 						return `
                         <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
+                            <a href="#" onclick="printRowData(this.parentElement.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
                               <i class="la la-print"></i>
                             </a>
                         </span>
@@ -27,6 +27,7 @@ var KTDatatablesBasicPaginations = function() {
 				},
 				{
 					targets: 8,
+					title: 'Status',
 					render: function(data, type, full, meta) {
 						var status = {
 							1: {'title': 'Biometric', 'class': 'kt-badge--success'},
@@ -46,7 +47,7 @@ var KTDatatablesBasicPaginations = function() {
 							1: {'title': 'Biometric', 'state': 'success'},
 							2: {'title': 'Head count', 'state': 'primary'},
 						};
-						if (typeof status[data] === 'undefined') {
+						if (typeof status[data] == 'undefined') {
 							return data;
 						}
 						return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
@@ -71,6 +72,17 @@ var KTDatatablesBasicPaginations = function() {
 jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
+
+// print the row data
+let printRowData = (row) => {
+	let col_ids = ["cr_id", "cr_type", "cr_title", "start_date_time", "end_date_time", "venue", "assembly", "souls_won", "head_count", "mode_of_count"];
+	let jsonData = {};
+	let row_data = row.getElementsByTagName("td");
+	for (let i = 0; i < row_data.length - 1; i++) {
+		jsonData[col_ids[i]] = row_data[i].textContent;
+	}
+	printDetails(jsonData);
+}
 
 // submit the rallies and conventions form
 // $('#submit_rc_btn').click(function(e) {
@@ -224,12 +236,13 @@ let printDetails =  (data) => {
 	print_area.document.write("<html><head><title>User Details</title>"
 								+ "<style>.kt-wizard-v1__review-content {font-size: 20;}"
 								+ "</style></head>"
-								+ "<body style=\"padding: 20px; text-align: center;\">" 
+								+ "<body style=\"padding: 20px;\">" 
 								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
 								+ "<h1 style=\"text-align: center; font-weight: bold;\">RALLIES AND CONVENTIONS</h1>"
 								+ '<div class="kt-wizard-v1__review-content">'
 								+ 'ID: <label>' + data.cr_id + '</label>'
 								+ '<br/>Type: <label>' + data.cr_type + '</label>'
+								+ '<br/>Title: <label>' + data.cr_title + '</label>'
 								+ '<br/>Start Date: <label>' + data.start_date_time + '</label>'
 								+ '<br/>End Date: <label>' + data.end_date_time + '</label>'
 								+ '<br/>Assembly: <label>' + data.assembly + '</label>'

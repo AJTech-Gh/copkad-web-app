@@ -312,10 +312,10 @@
         <div class="kt-portlet__body">
             <div class="form-group row">
                 <!--Auto generate CR-ID. Field marked as readonly-->    
-                <!-- <label class="col-form-label col-lg-3 col-sm-12">CR-ID</label>
+                <label class="col-form-label col-lg-3 col-sm-12">Title</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" id="cr_id" name="cr_id"/>
-                </div> -->
+                    <input type="text" class="form-control" id="cr_title" name="cr_title"/>
+                </div>
             </div>
             <div class="form-group row">
             <!--Select from combobox.-->    <label class="col-form-label col-lg-3 col-sm-12">Type</label>
@@ -467,7 +467,8 @@
             <span class="kt-subheader__btn-daterange-date" id="kt_dashboard_daterangepicker_date">Aug 16</span>
             <i class="flaticon2-calendar-1"></i>
         </a>
-    </div>      </div>
+    </div>      
+</div>
         </div>
     
         <div class="kt-portlet__body">
@@ -475,7 +476,6 @@
               <table class="table table-striped- table-bordered table-hover table-checkable" id="kt_table_1">
                 <thead>
                   <tr>
-                                  <th>Record ID</th>
                                   <th>CR-ID</th>
                                   <th>Type</th>
                                   <th>Title</th>
@@ -491,24 +491,25 @@
     </thead>
 
             <tbody>
+                {% for cr in cr_data %}
                 <tr>
-                               <td>1</td> <!--auto number in increasing order-->
-                               <td>1001234</td> <!--auto generated code-->
-                                  <td>Rally</td> 
-                                  <td>Easter Convention</td>
-                                  <td>Sep 1, 2020</td>
-                                  <td>October, 2020</td>
-                                  <td>Nsema Market</td>
-                                  <td>All</td>
-                                  <td>5</td>
-                                  <td>300</td>
-                                  <td>Biometric</td>
-                                 <!--
-                                     generate button will print folder rallies-and-conventions-08012020449.docx
-                                     clicking view option will show details of the selected member
-                                 -->
-                                  <td nowrap></td>
-                      </tr>
+                    <td>{{cr.cr_id}}</td> <!--auto generated code-->
+                      <td>{{cr.cr_type}}</td> 
+                      <td>{{cr.cr_title}}</td>
+                      <td>{{cr.start_date_time}}</td>
+                      <td>{{cr.end_date_time}}</td>
+                      <td>{{cr.venue}}</td>
+                      <td>{{cr.assembly}}</td>
+                      <td>{{cr.souls_won}}</td>
+                      <td>{{cr.head_count}}</td>
+                      <td>{{cr.mode_of_count}}</td>
+                     <!--
+                         generate button will print folder rallies-and-conventions-08012020449.docx
+                         clicking view option will show details of the selected member
+                     -->
+                      <td nowrap></td>
+            </tr>
+                {% endfor %}
             
     
             </tbody>
@@ -560,7 +561,7 @@
                     <div class="kt-footer__content">
                         <form action="#" class="kt-footer__subscribe">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Enter Your Email">
+                                <input type="text" class="form-control" placeholder="Your Email">
                                 <div class="input-group-append">
                                     <button class="btn btn-brand" type="button">Join</button>
                                 </div>

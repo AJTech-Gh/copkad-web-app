@@ -76,10 +76,8 @@ jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
 
-// search for father's data when member id field value length is 8
 $("#member_id_father").on("keyup", function(e) {
-
-    if ($(this).val().length === 8) {
+	if ($(this).val().length === 8) {
 
         $.ajax({
             method: "POST",
@@ -131,14 +129,8 @@ $("#member_id_father").on("keyup", function(e) {
     }
 });
 
-$("#member_id_father").on("change", function(e) {
-	e.preventDefault();
-
-	$(this).trigger("");
-});
-
 // search for mother's data when member id field value length is 8
-$("#member_id_mother").on("keyup", function(e) {
+$("#member_id_mother").on("keyup", "change", function(e) {
 
     if ($(this).val().length === 8) {
 
@@ -199,7 +191,7 @@ var KTForm = function () {
     var validator;
 
 	let momOrDad = () => {
-		if (document.querySelector("#father_name").value || document.querySelector("#father_name").value){
+		if (document.querySelector("#father_name").value || document.querySelector("#mother_name").value){
 			return true;
 		}
 		else{

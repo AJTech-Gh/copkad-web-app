@@ -7,6 +7,9 @@ class Config(object):
     # GENERAL CONFIGURATIONS
     SECRET_KEY = b'On\xab\xf6j\nA\xe6cB.4\x97\x0e\xdb\x15'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+
+    # DO NOT CACHE
+    SEND_FILE_MAX_AGE_DEFAULT = 0
     
     # DATABASE CONFIGURATIONS
     # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URI') or ('sqlite:///' + os.path.join(base_dir, 'app.db'))

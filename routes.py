@@ -6,6 +6,18 @@ from models import User, Baptism, RalliesAndConventions, Dedication
 import utils
 
 
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -129,7 +141,8 @@ def dedication_submit():
 
 @app.route('/rallies_and_conventions')
 def rallies_and_conventions():
-    return render_template('rallies-and-conventions.html')
+    cr_data = RalliesAndConventions.query.all()
+    return render_template('rallies-and-conventions.html', cr_data=cr_data)
 
 @app.route('/rallies_and_conventions_submit', methods=['POST'])
 def rallies_and_conventions_submit():
@@ -138,7 +151,7 @@ def rallies_and_conventions_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
-        # cr_id = form.get('cr_id')
+        cr_title = form.get('cr_title')
         cr_type = form.get('cr_type')
         start_date_time = form.get('start_date_time')
         end_date_time = form.get('end_date_time')
@@ -149,7 +162,7 @@ def rallies_and_conventions_submit():
         mode_of_count = form.get('mode_of_count')
         try:
             rallies_and_conventions = RalliesAndConventions(cr_type=cr_type, assembly=assembly, venue=venue, souls_won=souls_won, \
-            head_count=head_count, mode_of_count=mode_of_count)
+            head_count=head_count, mode_of_count=mode_of_count, cr_title=cr_title)
 
             rallies_and_conventions.set_start_date_time(start_date_time)
             rallies_and_conventions.set_end_date_time(end_date_time)
@@ -159,6 +172,7 @@ def rallies_and_conventions_submit():
 
             data = {
                 "cr_id": utils.get_rc_id(),
+                "cr_title": cr_title,
                 "cr_type": cr_type,
                 "start_date_time": start_date_time,
                 "end_date_time": end_date_time,
