@@ -172,7 +172,7 @@
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
             <!--begin: Head -->
-    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(assets/media/misc/bg-1.jpg)">
+    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(/static/assets/media/misc/bg-1.jpg)">
         <div class="kt-user-card__avatar">
             <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" /> <!--put user pic here-->
             <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
@@ -436,10 +436,10 @@
                 <div class="kt-portlet__head-wrapper">
         <div class="kt-portlet__head-actions">
             <div class="dropdown dropdown-inline">
-                <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="la la-download"></i> Export   
+                <button type="button" class="btn btn-icon-sm btn-primary" aria-haspopup="true" aria-expanded="false" id="download_table_btn">
+                    <i class="la la-download"></i> Export Table
                 </button>
-                <div class="dropdown-menu dropdown-menu-right">
+                <!-- <div class="dropdown-menu dropdown-menu-right">
                     <ul class="kt-nav">
                         <li class="kt-nav__section kt-nav__section--first">
                             <span class="kt-nav__section-text">Choose an option</span>
@@ -447,26 +447,26 @@
                         <li class="kt-nav__item">
                             <a href="#" class="kt-nav__link">
                                 <i class="kt-nav__link-icon la la-print"></i>
-                                <span class="kt-nav__link-text">Print</span> <!--this will print the datatable-->
+                                <span class="kt-nav__link-text">Print</span>
                             </a>
                         </li>
                        
                         <li class="kt-nav__item">
                             <a href="#" class="kt-nav__link">
                                 <i class="kt-nav__link-icon la la-file-pdf-o"></i>
-                                <span class="kt-nav__link-text">PDF</span> <!--convert the datatable to pdf-->
+                                <span class="kt-nav__link-text">PDF</span> 
                             </a>
                         </li>
                     </ul>
-                </div>
+                </div> -->
             </div>
             &nbsp;
         </div>  
-        <a href="#" class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
-            <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
-            <span class="kt-subheader__btn-daterange-date" id="kt_dashboard_daterangepicker_date">Aug 16</span>
+        <button  class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
+            <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title"></span>&nbsp;
+            <span class="kt-subheader__btn-daterange-date" id="kt_dashboard_daterangepicker_date"></span>
             <i class="flaticon2-calendar-1"></i>
-        </a>
+        </button>
     </div>      
 </div>
         </div>
@@ -661,6 +661,7 @@
 
                     
             <!--begin::Page Scripts(used by this page) -->
+            <script src="{{ url_for('static', filename='custom_scripts/printThis.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/forms/widgets/transfers.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/components/extended/sweetalert2.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/datatables/basic/ralies-and-conventions.js') }}" type="text/javascript"></script>

@@ -27,7 +27,7 @@ var KTDatatablesBasicPaginations = function() {
 				},
 				{
 					targets: 8,
-					title: 'Status',
+					title: 'Souls Won',
 					render: function(data, type, full, meta) {
 						var status = {
 							1: {'title': 'Biometric', 'class': 'kt-badge--success'},
@@ -269,3 +269,59 @@ let printDetails =  (data) => {
 	print_area.print();
 	print_area.close();
   }
+
+// print table
+// https://jasonday.github.io/printThis/
+$('#download_table_btn').on("click", function () {
+	$('#kt_table_1').printThis({
+		importCSS: true,
+		importStyle: true,
+		pageTitle: "COP-KAD",
+		loadCSS: ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
+		"/static/assets/vendors/global/vendors.bundle.css",
+		"/static/assets/css/demo2/style.bundle.css"],
+		header: "<h1>Rallies and Conventions</h1>",
+		base: location.host
+	});
+});
+
+// compare dates: g means date1 greater than date2, l means date1 less than date2 and date1 equal to date2
+let compareDates = (date1, date2) => {
+	if (date1>date2) return ("g");
+	else if (date1<date2) return ("l");
+	else return ("e"); 
+}
+
+// search by date
+$("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picker) {
+	// let picker = document.querySelector("#kt_dashboard_daterangepicker");
+	// var startDate = $(this).data('daterangepicker').startDate._d;
+	// var endDate = $(this).data('daterangepicker').endDate._d;
+	let startDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+	let endDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+	let tableEl = document.querySelector("#kt_table_1");
+	let table_rows = tableEl.rows;
+	// handle equal dates and if startDate is less than endDate
+	let datesComp = compareDates(startDate, endDate);
+	if(datesComp === "e") {
+		console.log(table_rows.length);
+		for(let i = 1; i < table_rows.length; i++) {
+			let tr = table_rows[i].getElementsByTagName("td");
+			let sDate = new Date(tr[3].textContent.split(" ")[0]);
+			let eDate = new Date(tr[4].textContent.split(" ")[0]);
+			if (compareDates(sDate, startDate) === "e" || compareDates(sDate, endDate) || compareDates(eDate, startDate) || compareDates(eDate, endDate)) {
+				console.log(tr[3].textContent.split(" ")[0]);
+			}
+			tableEl.deleteRow(i);
+		}
+	} else if(datesComp === "l") {
+		console.log("different dates");
+	} else {
+		swal.fire({
+			"title": "",
+			"text": "Invalid date range", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
+});
