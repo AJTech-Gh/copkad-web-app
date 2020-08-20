@@ -5,7 +5,61 @@ var KTDatatablesBasicPaginations = function() {
 		var table = $('#kt_table_1');
 
 		// begin first table
+		// https://datatables.net/extensions/buttons/examples/html5/columns.html
 		table.DataTable({
+			dom: 'Bfrtip',
+			buttons: [
+				'colvis',
+				{
+					extend: 'copyHtml5',
+					title: 'COP',
+					messageTop: 'RALLIES AND CONVENTIONS',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] //[ 0, ':visible' ]
+					}
+				},
+				{
+					filename: 'COP_cr_csv',
+					extend: 'csv',
+					title: 'COP',
+					messageTop: 'RALLIES AND CONVENTIONS',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_cr_excel',
+					extend: 'excelHtml5',
+					title: 'COP',
+					messageTop: 'RALLIES AND CONVENTIONS',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_cr_pdf',
+					extend: 'pdfHtml5',
+					title: 'COP',
+					messageTop: 'RALLIES AND CONVENTIONS',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_cr_print',
+					extend: 'print',
+					title: 'COP',
+					messageTop: 'RALLIES AND CONVENTIONS',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] //[0, ':visible']
+					}
+				}
+			],
 			responsive: true,
 			pagingType: 'full_numbers',
 			columnDefs: [
@@ -23,35 +77,6 @@ var KTDatatablesBasicPaginations = function() {
                         <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
                           <i class="fa flaticon-search-magnifier-interface-symbol"></i>
                         </a>`;
-					},
-				},
-				{
-					targets: 8,
-					title: 'Souls Won',
-					render: function(data, type, full, meta) {
-						var status = {
-							1: {'title': 'Biometric', 'class': 'kt-badge--success'},
-							2: {'title': 'Facial Recognition', 'class': ' kt-badge--warning'},
-							3: {'title': 'Head Count', 'class': ' kt-badge--danger'},
-						};
-						if (typeof status[data] === 'undefined') {
-							return data;
-						}
-						return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-					},
-				},
-				{
-					targets: 9,
-					render: function(data, type, full, meta) {
-						var status = {
-							1: {'title': 'Biometric', 'state': 'success'},
-							2: {'title': 'Head count', 'state': 'primary'},
-						};
-						if (typeof status[data] == 'undefined') {
-							return data;
-						}
-						return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
-							'<span class="kt-font-bold kt-font-' + status[data].state + '">' + status[data].title + '</span>';
 					},
 				},
 			],
@@ -272,50 +297,72 @@ let printDetails =  (data) => {
 
 // print table
 // https://jasonday.github.io/printThis/
-$('#download_table_btn').on("click", function () {
-	$('#kt_table_1').printThis({
-		importCSS: true,
-		importStyle: true,
-		pageTitle: "COP-KAD",
-		loadCSS: ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
-		"/static/assets/vendors/global/vendors.bundle.css",
-		"/static/assets/css/demo2/style.bundle.css"],
-		header: "<h1>Rallies and Conventions</h1>",
-		base: location.host
-	});
-});
+// $('#download_table_btn').on("click", function () {
+// 	$('#kt_table_1').printThis({
+// 		importCSS: true,
+// 		importStyle: true,
+// 		pageTitle: "COP-KAD",
+// 		loadCSS: ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
+// 		"/static/assets/vendors/global/vendors.bundle.css",
+// 		"/static/assets/css/demo2/style.bundle.css"],
+// 		header: "<h1>Rallies and Conventions</h1>",
+// 		base: location.host
+// 	});
+// });
 
 // compare dates: g means date1 greater than date2, l means date1 less than date2 and date1 equal to date2
 let compareDates = (date1, date2) => {
-	if (date1>date2) return ("g");
-	else if (date1<date2) return ("l");
+	if (date1 > date2) return ("g");
+	else if (date1 < date2) return ("l");
 	else return ("e"); 
 }
 
 // search by date
+// https://keenthemes.com/metronic/?page=docs&section=html-components-datatable
+var tableData = -1;  // keep the full table content
 $("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picker) {
 	// let picker = document.querySelector("#kt_dashboard_daterangepicker");
 	// var startDate = $(this).data('daterangepicker').startDate._d;
 	// var endDate = $(this).data('daterangepicker').endDate._d;
 	let startDate = new Date(picker.startDate.format('YYYY-MM-DD'));
 	let endDate = new Date(picker.endDate.format('YYYY-MM-DD'));
-	let tableEl = document.querySelector("#kt_table_1");
-	let table_rows = tableEl.rows;
+	let datatable = $("#kt_table_1").DataTable();
+	// if the table data is not set, set it
+	// else reload the table data
+	if(tableData === -1) {
+		tableData = Object.assign({}, datatable.table().data());
+	} else {
+		datatable.clear();
+		datatable.rows.add(tableData);
+		datatable.draw(false);
+	}
+	let tableRowsLength = datatable.rows()[0].length;
 	// handle equal dates and if startDate is less than endDate
 	let datesComp = compareDates(startDate, endDate);
 	if(datesComp === "e") {
-		console.log(table_rows.length);
-		for(let i = 1; i < table_rows.length; i++) {
-			let tr = table_rows[i].getElementsByTagName("td");
-			let sDate = new Date(tr[3].textContent.split(" ")[0]);
-			let eDate = new Date(tr[4].textContent.split(" ")[0]);
-			if (compareDates(sDate, startDate) === "e" || compareDates(sDate, endDate) || compareDates(eDate, startDate) || compareDates(eDate, endDate)) {
-				console.log(tr[3].textContent.split(" ")[0]);
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[3].split(" ")[0]);
+			let eDate = new Date(tr_data[4].split(" ")[0]);
+			if (compareDates(sDate, startDate) === "e" && compareDates(sDate, endDate) === "e" && compareDates(eDate, startDate) === "e" && compareDates(eDate, endDate) === "e") {
+				continue;
 			}
-			tableEl.deleteRow(i);
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
 		}
 	} else if(datesComp === "l") {
-		console.log("different dates");
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[3].split(" ")[0]);
+			let eDate = new Date(tr_data[4].split(" ")[0]);
+			if (sDate >= startDate && eDate <= endDate) {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
 	} else {
 		swal.fire({
 			"title": "",
