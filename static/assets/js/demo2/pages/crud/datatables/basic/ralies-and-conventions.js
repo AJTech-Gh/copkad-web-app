@@ -70,7 +70,7 @@ var KTDatatablesBasicPaginations = function() {
 					render: function(data, type, full, meta) {
 						return `
                         <span class="dropdown">
-                            <a href="#" onclick="printRowData(this.parentElement.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
+                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
                               <i class="la la-print"></i>
                             </a>
                         </span>
@@ -356,7 +356,7 @@ $("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picke
 			let tr_data = datatable.row(i).data();
 			let sDate = new Date(tr_data[3].split(" ")[0]);
 			let eDate = new Date(tr_data[4].split(" ")[0]);
-			if (sDate >= startDate && eDate <= endDate) {
+			if ((sDate >= startDate && sDate <= endDate) || (eDate >= startDate && eDate <= endDate)) {
 				continue;
 			}
 			datatable.row(i).remove().draw(false);

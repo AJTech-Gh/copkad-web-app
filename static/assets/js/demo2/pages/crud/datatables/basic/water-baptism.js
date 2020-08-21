@@ -6,6 +6,59 @@ var KTDatatablesBasicPaginations = function() {
 
 		// begin first table
 		table.DataTable({
+			dom: 'Bfrtip',
+			buttons: [
+				'colvis',
+				{
+					extend: 'copyHtml5',
+					title: 'COP',
+					messageTop: 'BAPTISM',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[ 0, ':visible' ]
+					}
+				},
+				{
+					filename: 'COP_bc_csv',
+					extend: 'csv',
+					title: 'COP',
+					messageTop: 'BAPTISM',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_bc_excel',
+					extend: 'excelHtml5',
+					title: 'COP',
+					messageTop: 'BAPTISM',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_bc_pdf',
+					extend: 'pdfHtml5',
+					title: 'COP',
+					messageTop: 'BAPTISM',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_bc_print',
+					extend: 'print',
+					title: 'COP',
+					messageTop: 'BAPTISM',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				}
+			],
 			responsive: true,
 			pagingType: 'full_numbers',
 			columnDefs: [
@@ -34,22 +87,22 @@ var KTDatatablesBasicPaginations = function() {
                         </a>`;
 					},
 				},
+				// {
+				// 	targets: 8,
+				// 	render: function(data, type, full, meta) {
+				// 		var status = {
+				// 			1: {'title': 'Active', 'class': 'kt-badge--success'},
+				// 			2: {'title': 'Inactive', 'class': ' kt-badge--warning'},
+				// 			3: {'title': 'Backslider', 'class': ' kt-badge--danger'},
+				// 		};
+				// 		if (typeof status[data] === 'undefined') {
+				// 			return data;
+				// 		}
+				// 		return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
+				// 	},
+				// },
 				{
 					targets: 8,
-					render: function(data, type, full, meta) {
-						var status = {
-							1: {'title': 'Active', 'class': 'kt-badge--success'},
-							2: {'title': 'Inactive', 'class': ' kt-badge--warning'},
-							3: {'title': 'Backslider', 'class': ' kt-badge--danger'},
-						};
-						if (typeof status[data] === 'undefined') {
-							return data;
-						}
-						return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-					},
-				},
-				{
-					targets: 9,
 					render: function(data, type, full, meta) {
 						var status = {
 							1: {'title': 'Received', 'state': 'success'},

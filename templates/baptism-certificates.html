@@ -804,33 +804,34 @@
 															  <th>Member ID</th>
 															  <th>Full Name</th>
 															  <th>Assembly</th>
-															  <th>Date of Registration</th>
+															  <!-- <th>Date of Registration</th> -->
 															  <th>Date of Baptism</th>
 															  <th>Ordination Minister</th>
 															  <th>Venue</th>
-															  <th>Attendance</th>
+															  <!-- <th>Attendance</th> -->
 															  <th>Certificates</th>
 															  <th>Actions</th>
 												  </tr>
 								</thead>
 					
 										<tbody>
+											{% for bc in db_data %}
 											<tr>
-															 <!---->   <td>1</td>
-															 <!--Member ID--> <td>1001234</td>
-															  <!--Full Name-->  <td>Prosper Ezekiel</td>
-															 <!--Assembly--> <td>Emmanuel</td>
-															 <!--Date of Registration--> <td>Sep 1, 2020</td>
-															 <!--Date of water Baptism--> <td>August 1, 2012</td>
-															 <!--Ordination Minister--> <td>Rev Fred Obboh</td>
-															 <!--Venue of Event--> <td>Nsema</td>
+															 <!---->   <td>{{bc.record_id}}</td>
+															 <!--Member ID--> <td>{{bc.member_id}}</td>
+															  <!--Full Name-->  <td>{{bc.full_name}}</td>
+															 <!--Assembly--> <td>{{bc.assembly}}</td>
+															 <!--Date of Registration--> <td>{{bc.date_of_baptism}}</td>
+															 <!--Date of water Baptism--> <td>{{bc.officiating_minister}}</td>
+															 <!--Ordination Minister--> 
+															 <!--Venue of Event--> <td>{{bc.place_of_baptism}}</td>
 															 <!--
 																 take data from attendance-review.html
 																 1- Active
 																 2- Inactive
 																 3-backslider
 															 -->
-															  <td>1</td>
+															  <!-- <td>1</td> -->
 															 <!--
 																 *take reference from the baptism-certificates.html optio
 																 Notification will be sent to member's email address notifying of baptism certificate.
@@ -839,7 +840,7 @@
 																 1- delivered
 																 2-pending
 															 --> 
-															 <td>2</td>
+															 <td>{{bc.certificates}}</td>
 
 															 <!--
 																 Push notification - Open push notification modal, sends either email, sms or both 
@@ -848,6 +849,7 @@
 															 -->
 															  <td nowrap></td>
 												  </tr>
+												  {% endfor %}
 										
 								
 										</tbody>

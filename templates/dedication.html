@@ -528,9 +528,9 @@
                 <div class="kt-portlet__head-wrapper">
         <div class="kt-portlet__head-actions">
             <div class="dropdown dropdown-inline">
-                <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <!-- <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="la la-download"></i> Export   
-                </button>
+                </button> -->
                 <div class="dropdown-menu dropdown-menu-right">
                     <ul class="kt-nav">
                         <li class="kt-nav__section kt-nav__section--first">
@@ -568,33 +568,34 @@
                                         <thead>
                                           <tr>
                                                           <th>Record ID</th>
-                                                          <th>Name of Mother</th>
-                                                          <th>Name of Father</th>
+                                                          <th>Mother's ID</th>
+                                                          <th>Father's ID</th>
                                                           <th>Name of Child</th>
                                                           <th>Date of Birth</th>
                                                           <th>Date of Dedication</th>
                                                           <th>Ordination Minister</th>
                                                           <th>Assembly</th>
-                                                          <th>Attendance</th>
-                                                          <th>Status</th>
+                                                          <th>Venue of Event</th>
+                                                          <!-- <th>Status</th> -->
                                                           <th>Actions</th>
                                               </tr>
                             </thead>
                 
                                     <tbody>
+                                        {% for ded in ded_data %}
                                         <tr>
-                                                         <!---->   <td>1</td>
-                                                         <!--Member ID--> <td>Abena Abrefi</td>
-                                                          <!--Full Name-->  <td>John Abakah</td>
-                                                         <!--Assembly--> <td>Amoah Brobbey</td>
-                                                         <!--Date of Registration--> <td>Sep 1, 2013</td>
-                                                         <!--Date of Holy Ghost Baptism--> <td>Sep 1, 2020</td>
-                                                         <!--Ordination Minister--> <td>Rev Fred Obboh</td>
-                                                         <!--Venue of Event--> <td>Emmanuel</td>
-                                                         <!--Attendance: active / inactive / backslider--> <td>3</td>
-                                                          <td>2</td>
-                                                          <td nowrap></td>
-                                              </tr>
+                                                        <!---->   <td>{{ded.id}}</td>
+                                                        <!--Member ID--> <td>{{ded.member_id_mother}}</td>
+                                                        <!--Full Name-->  <td>{{ded.member_id_father}}</td>
+                                                        <!--Assembly--> <td>{{ded.child_name}}</td>
+                                                        <!--Date of Registration--> <td>{{ded.child_dob}}</td>
+                                                        <!--Date of Holy Ghost Baptism--> <td>{{ded.dedication_date_time}}</td>
+                                                        <!--Ordination Minister--> <td>{{ded.officiating_minister}}</td>
+                                                        <!--Venue of Event--> <td>{{ded.assembly}}</td>
+                                                        <td>{{ded.place_of_ceremony}}</td>
+                                                        <td nowrap></td>
+                                            </tr>
+                                        {% endfor %}
                                     
                             
                                     </tbody>

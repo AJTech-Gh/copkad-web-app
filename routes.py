@@ -93,7 +93,12 @@ def admin_hope():
 
 @app.route('/dedication')
 def dedication():
-    return render_template('dedication.html')
+    try:
+        ded_data = Dedication.query.all()
+        return render_template('dedication.html', ded_data=ded_data)
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/dedication_submit', methods=['POST'])
 def dedication_submit():
@@ -141,8 +146,12 @@ def dedication_submit():
 
 @app.route('/rallies_and_conventions')
 def rallies_and_conventions():
-    cr_data = RalliesAndConventions.query.all()
-    return render_template('rallies-and-conventions.html', cr_data=cr_data)
+    try:
+        cr_data = RalliesAndConventions.query.all()
+        return render_template('rallies-and-conventions.html', cr_data=cr_data)
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/rallies_and_conventions_submit', methods=['POST'])
 def rallies_and_conventions_submit():
@@ -192,7 +201,29 @@ def rallies_and_conventions_submit():
         
 @app.route('/baptism_certificates')
 def baptism_certificates():
-    return render_template('baptism-certificates.html')
+     try:
+        data_1 = db.session.query(Baptism, User).join(User).all()
+        bc_data = []
+        for baptism, user in data_1:
+            row_data = {
+                "record_id": str(baptism.id),
+                "member_id": baptism.member_id,
+                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                "assembly": user.assembly,
+                "date_of_baptism": baptism.get_date_of_baptism(baptism.date_of_baptism),
+                "place_of_baptism": baptism.place_of_baptism,
+                "officiating_minister": baptism.officiating_minister,
+                "district": baptism.district,
+                "area": baptism.area,
+                "country": baptism.country,
+                "certificates": 2
+            }
+        # print(bc_data[1])
+        return render_template('baptism-certificates.html', bc_data=bc_data)
+     except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
 
 @app.route('/baptism_certificates_submit', methods=['POST'])
 def baptism_certificates_submit():

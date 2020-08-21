@@ -6,6 +6,59 @@ var KTDatatablesBasicPaginations = function() {
 
 		// begin first table
 		table.DataTable({
+			dom: 'Bfrtip',
+			buttons: [
+				'colvis',
+				{
+					extend: 'copyHtml5',
+					title: 'COP',
+					messageTop: 'DEDICATION',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[ 0, ':visible' ]
+					}
+				},
+				{
+					filename: 'COP_ded_csv',
+					extend: 'csv',
+					title: 'COP',
+					messageTop: 'DEDICATION',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_ded_excel',
+					extend: 'excelHtml5',
+					title: 'COP',
+					messageTop: 'DEDICATION',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_ded_pdf',
+					extend: 'pdfHtml5',
+					title: 'COP',
+					messageTop: 'DEDICATION',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				},
+				{
+					filename: 'COP_ded_print',
+					extend: 'print',
+					title: 'COP',
+					messageTop: 'DEDICATION',
+					messageBottom: 'END OF DOCUMENT',
+					exportOptions: {
+						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+					}
+				}
+			],
 			responsive: true,
 			pagingType: 'full_numbers',
 			columnDefs: [
@@ -30,33 +83,28 @@ var KTDatatablesBasicPaginations = function() {
 					},
 				},
 				{
-					targets: 8,
+					targets: 7,
 					render: function(data, type, full, meta) {
-						var status = {
-							1: {'title': 'Active', 'class': 'kt-badge--success'},
-							2: {'title': 'Inactive', 'class': ' kt-badge--warning'},
-							3: {'title': 'Backslider', 'class': ' kt-badge--danger'},
-						};
-						if (typeof status[data] === 'undefined') {
+						
+						if(typeof status[data] === 'undefined') {
 							return data;
 						}
-						return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-					},
+					}
 				},
-				{
-					targets: 9,
-					render: function(data, type, full, meta) {
-						var status = {
-							1: {'title': 'Verified', 'state': 'success'},
-							2: {'title': 'Not Verified', 'state': 'primary'},
-						};
-						if (typeof status[data] === 'undefined') {
-							return data;
-						}
-						return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
-							'<span class="kt-font-bold kt-font-' + status[data].state + '">' + status[data].title + '</span>';
-					},
-				},
+				// {
+				// 	targets: 9,
+				// 	render: function(data, type, full, meta) {
+				// 		var status = {
+				// 			1: {'title': 'Verified', 'state': 'success'},
+				// 			2: {'title': 'Not Verified', 'state': 'primary'},
+				// 		};
+				// 		if (typeof status[data] === 'undefined') {
+				// 			return data;
+				// 		}
+				// 		return '<span class="kt-badge kt-badge--' + status[data].state + ' kt-badge--dot"></span>&nbsp;' +
+				// 			'<span class="kt-font-bold kt-font-' + status[data].state + '">' + status[data].title + '</span>';
+				// 	},
+				// },
 			],
 		});
 	};
@@ -369,3 +417,64 @@ let printDetails =  (data) => {
 	print_area.print();
 	print_area.close();
   }
+
+// compare dates: g means date1 greater than date2, l means date1 less than date2 and date1 equal to date2
+let compareDates = (date1, date2) => {
+	if (date1 > date2) return ("g");
+	else if (date1 < date2) return ("l");
+	else return ("e"); 
+}
+
+// search by date
+// https://keenthemes.com/metronic/?page=docs&section=html-components-datatable
+var tableData = -1;  // keep the full table content
+$("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picker) {
+	// let picker = document.querySelector("#kt_dashboard_daterangepicker");
+	// var startDate = $(this).data('daterangepicker').startDate._d;
+	// var endDate = $(this).data('daterangepicker').endDate._d;
+	let startDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+	let endDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+	let datatable = $("#kt_table_1").DataTable();
+	// if the table data is not set, set it
+	// else reload the table data
+	if(tableData === -1) {
+		tableData = Object.assign({}, datatable.table().data());
+	} else {
+		datatable.clear();
+		datatable.rows.add(tableData);
+		datatable.draw(false);
+	}
+	let tableRowsLength = datatable.rows()[0].length;
+	// handle equal dates and if startDate is less than endDate
+	let datesComp = compareDates(startDate, endDate);
+	if(datesComp === "e") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[5].split(" ")[0]);
+			if (compareDates(sDate, startDate) === "e" && compareDates(sDate, endDate) === "e") {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else if(datesComp === "l") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[5].split(" ")[0]);
+			if (sDate >= startDate && sDate <= endDate) {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else {
+		swal.fire({
+			"title": "",
+			"text": "Invalid date range", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
+});
