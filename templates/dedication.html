@@ -310,11 +310,17 @@
     <!--begin::Form-->
     <form class="kt-form kt-form--label-right" id="dedication_form" method="POST">
         <div class="kt-portlet__body">
-
+            <div class="form-group row" id="record_id_div" hidden>
+                <label class="col-form-label col-lg-3 col-sm-12">Record ID</label>
+                  <div class="col-lg-4 col-md-9 col-sm-12">
+                      <input type="text" class="form-control" name="record_id" id="record_id" readonly />
+                  </div>
+              </div>
                 <div class="form-group row">
-                  <label class="col-form-label col-lg-3 col-sm-12">Member ID of Father</label>
+                        <label class="col-form-label col-lg-3 col-sm-12">Member ID of Father</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <input type="text" class="form-control" placeholder="Enter ID of Father to Generate name" name="member_id_father" id="member_id_father" />
+                        <span><button class="btn" id="find_father_id"></button></span>
                     </div>
                 </div>
 
@@ -379,6 +385,7 @@
                 <label class="col-form-label col-lg-3 col-sm-12">Member ID of Mother</label>
                   <div class="col-lg-4 col-md-9 col-sm-12">
                       <input type="text" class="form-control" placeholder="Enter ID of Mother to Generate name" name="member_id_mother" id="member_id_mother" />
+                      <span><button class="btn" id="find_mother_id"></button></span>
                   </div>
               </div>
 
@@ -503,7 +510,7 @@
                       2. submit button will show a popup modal to send a notification
                       3. send an sms notification to members phone contact.
                     --> <button type="submit" class="btn btn-success"  id="submit_dedication_btn">Submit</button>
-                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="reset" class="btn btn-secondary" id="reset_dedication_btn">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -621,16 +628,16 @@
                     <div class="form-group">
                         <!--autogenerate notification ID-->
                           <label for="recipient-name" class="form-control-label">NID:</label>
-                         <input type="text" class="form-control" id="recipient-name" readonly>
+                         <input type="text" class="form-control" id="nid" name="nid" readonly>
                         <!--take details from member database-->
                        <label for="recipient-name" class="form-control-label">Recipient:</label>
-                        <input type="text" class="form-control" id="recipient-name">
+                        <input type="text" class="form-control" id="recipient_name" name="recipient_name">
                         <!--take phone contact from member database-->
                           <label for="recipient-name" class="form-control-label">Phone Contact:</label>
-                         <input type="text" class="form-control" id="recipient-name">
+                         <input type="text" class="form-control" id="recipient_contact" name="recipient_contact">
                              <!--take email from member database-->
                           <label for="recipient-name" class="form-control-label">Email:</label>
-                         <input type="email" class="form-control" id="recipient-name">
+                         <input type="email" class="form-control" id="recipient_email" name="recipient_email">
                     </div>
                     <div class="form-group">
                         <label for="message-text" class="form-control-label">Message:</label>

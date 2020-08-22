@@ -70,11 +70,11 @@ var KTDatatablesBasicPaginations = function() {
 					render: function(data, type, full, meta) {
 						return `
                         <span class="dropdown">
-                            <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">
+                            <a onclick="printRowData(this.parentElement.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true" title="Print">
                               <i class="la la-print"></i>
                             </a>
                         </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
+                        <a onclick="viewRowData(this.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
                           <i class="fa flaticon-search-magnifier-interface-symbol"></i>
                         </a>`;
 					},
@@ -108,6 +108,37 @@ let printRowData = (row) => {
 	}
 	printDetails(jsonData);
 }
+
+//Method to load row back into form
+let viewRowData = (row) => {
+	let colIds = ["cr_id", "cr_type", "cr_title", "start_date_time", "end_date_time", "venue", "assembly", "souls_won", "head_count", "mode_of_count"];
+	let rowData = row.getElementsByTagName("td");
+	let jsonRowData = {}
+
+	for (let i = 0; i < rowData.length - 1; i++ ){
+		jsonRowData[colIds[i]] = rowData[i].textContent;
+	}
+
+	$("#cr_id_div").attr("hidden", false);
+
+	//console.log(jsonRowData);
+	document.querySelector("#cr_id").value = jsonRowData.cr_id;
+	document.querySelector("#cr_type").value = jsonRowData.cr_type;
+	document.querySelector("#cr_title").value = jsonRowData.cr_title;
+	document.querySelector("#kt_datetimepicker_1").value = jsonRowData.start_date_time;
+	document.querySelector("#kt_datetimepicker_2").value = jsonRowData.end_date_time;
+	document.querySelector("#venue").value = jsonRowData.venue;
+	document.querySelector("#assembly").value = jsonRowData.assembly;
+	document.querySelector("#souls_won").value = jsonRowData.souls_won;
+	document.querySelector("#head_count").value = jsonRowData.head_count;
+	document.querySelector("#mode_of_count").value = jsonRowData.mode_of_count;
+
+	KTUtil.scrollTop();
+};
+
+$("#cancel_rc_btn").on("click", function(e) {
+	$("#cr_id_div").attr("hidden", true);	
+});
 
 // submit the rallies and conventions form
 // $('#submit_rc_btn').click(function(e) {
@@ -316,6 +347,7 @@ let compareDates = (date1, date2) => {
 	else if (date1 < date2) return ("l");
 	else return ("e"); 
 }
+
 
 // search by date
 // https://keenthemes.com/metronic/?page=docs&section=html-components-datatable

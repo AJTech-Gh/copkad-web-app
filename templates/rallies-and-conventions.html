@@ -310,8 +310,14 @@
     <!--begin::Form-->
     <form class="kt-form kt-form--label-right" id="rc_form" method="POST">
         <div class="kt-portlet__body">
-            <div class="form-group row">
+            <div class="form-group row" id="cr_id_div" hidden>
                 <!--Auto generate CR-ID. Field marked as readonly-->    
+                <label class="col-form-label col-lg-3 col-sm-12">CR-ID</label>
+                <div class="col-lg-4 col-md-9 col-sm-12">
+                    <input type="text" class="form-control" id="cr_id" name="cr_id" readonly/>
+                </div>
+            </div>
+            <div class="form-group row">    
                 <label class="col-form-label col-lg-3 col-sm-12">Title</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
                     <input type="text" class="form-control" id="cr_title" name="cr_title"/>
@@ -411,7 +417,7 @@
                       2. submit button will show a popup modal to send a notification
                       3. send an sms notification to members phone contact.
                     --> <button type="submit" class="btn btn-success"  id="submit_rc_btn">Submit</button>
-                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="reset" class="btn btn-secondary" id="cancel_rc_btn">Cancel</button>
                     </div>
                 </div>
             </div>

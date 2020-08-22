@@ -107,7 +107,7 @@ def dedication_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
-        # cr_id = form.get('cr_id')
+        record_id = form.get('record_id').strip()
         member_id_father = form.get('member_id_father').strip()
         member_id_mother = form.get('member_id_mother').strip()
         child_name = form.get('child_name').strip()
@@ -118,14 +118,32 @@ def dedication_submit():
         place_of_ceremony = form.get('place_of_ceremony').strip()
 
         try:
-            dedication = Dedication(member_id_father=member_id_father, member_id_mother=member_id_mother, child_name=child_name,
-                                    officiating_minister=officiating_minister, assembly=assembly, place_of_ceremony=place_of_ceremony)
+            if record_id == "":
+                dedication = Dedication(member_id_father=member_id_father, member_id_mother=member_id_mother, child_name=child_name,
+                                        officiating_minister=officiating_minister, assembly=assembly, place_of_ceremony=place_of_ceremony)
 
-            dedication.set_child_dob(child_dob)
-            dedication.set_dedication_date_time(dedication_date_time)
+                dedication.set_child_dob(child_dob)
+                dedication.set_dedication_date_time(dedication_date_time)
 
-            db.session.add(dedication)
-            db.session.commit()
+                db.session.add(dedication)
+                db.session.commit()
+            else:
+                record_id = int(id)
+                child_dob = child_dob.split('-')
+                child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
+                row_dict = {
+                    "id": record_id,
+                    "member_id_father": member_id_father,
+                    "member_id_mother": member_id_mother,
+                    "child_name": child_name,
+                    "officiating_minister": officiating_minister,
+                    "assembly": assembly,
+                    "place_of_ceremony": place_of_ceremony,
+                    "child_dob": child_dob,
+                    "dedication_date_time": utils.set_date_time(dedication_date_time)
+                }
+                Dedication.query.filter_by(id=record_id).update(row_dict)
+                db.session.commit()
 
             data = {
                 "member_id_father": member_id_father,
@@ -160,6 +178,7 @@ def rallies_and_conventions_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
+        cr_id = form.get("cr_id").strip()
         cr_title = form.get('cr_title')
         cr_type = form.get('cr_type')
         start_date_time = form.get('start_date_time')
@@ -169,15 +188,34 @@ def rallies_and_conventions_submit():
         souls_won = form.get('souls_won')
         head_count = form.get('head_count')
         mode_of_count = form.get('mode_of_count')
+
         try:
-            rallies_and_conventions = RalliesAndConventions(cr_type=cr_type, assembly=assembly, venue=venue, souls_won=souls_won, \
-            head_count=head_count, mode_of_count=mode_of_count, cr_title=cr_title)
+            if cr_id == "":
+                rallies_and_conventions = RalliesAndConventions(cr_type=cr_type, assembly=assembly, venue=venue, souls_won=souls_won, \
+                head_count=head_count, mode_of_count=mode_of_count, cr_title=cr_title)
 
-            rallies_and_conventions.set_start_date_time(start_date_time)
-            rallies_and_conventions.set_end_date_time(end_date_time)
+                rallies_and_conventions.set_start_date_time(start_date_time)
+                rallies_and_conventions.set_end_date_time(end_date_time)
 
-            db.session.add(rallies_and_conventions)
-            db.session.commit()
+                db.session.add(rallies_and_conventions)
+                db.session.commit()
+            else:
+                # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
+                # https://docs.sqlalchemy.org/en/13/core/dml.html
+                cr_id = int(cr_id)
+                row_dict = {
+                    "cr_type": cr_type,
+                    "assembly": assembly,
+                    "venue": venue,
+                    "souls_won": souls_won,
+                    "head_count": head_count,
+                    "mode_of_count": mode_of_count,
+                    "cr_title": cr_title,
+                    "start_date_time": utils.set_date_time(start_date_time),
+                    "end_date_time": utils.set_date_time(end_date_time)
+                }
+                RalliesAndConventions.query.filter_by(cr_id=cr_id).update(row_dict)
+                db.session.commit()
 
             data = {
                 "cr_id": utils.get_rc_id(),
@@ -218,7 +256,8 @@ def baptism_certificates():
                 "country": baptism.country,
                 "certificates": 2
             }
-        # print(bc_data[1])
+            bc_data.append(row_data)
+        #print(bc_data[0])
         return render_template('baptism-certificates.html', bc_data=bc_data)
      except Exception as e:
         print(e)

@@ -13,6 +13,7 @@ import binascii
 import base64
 from io import BytesIO
 from PIL import Image
+from datetime import datetime
 from file_encrypter import FileEncrypter
 
 
@@ -300,3 +301,10 @@ def get_rc_id():
     Get the rallies and conventions id for the most recently submitted data
     """
     return db.session.query(db.func.max(RalliesAndConventions.cr_id)).scalar()
+
+
+def set_date_time(start_date_time):
+    _date, _time = start_date_time.split()
+    _date = _date.split('-')
+    _time = _time.split(':')
+    return datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))

@@ -87,6 +87,23 @@ var KTDatatablesBasicPaginations = function() {
                         </a>`;
 					},
 				},
+				{
+					targets: 3,
+					render: function(data, type, full, meta) {
+
+						var assembly = {
+							EEA: {'title': 'Emmanuel'},
+							GA: {'title': 'Glory'},
+							HA: {'title': 'Hope'}
+						}
+						
+						if(typeof assembly[data] === 'undefined') {
+							return data;
+						}
+
+						return assembly[data].title;
+					}
+				},
 				// {
 				// 	targets: 8,
 				// 	render: function(data, type, full, meta) {
@@ -102,7 +119,7 @@ var KTDatatablesBasicPaginations = function() {
 				// 	},
 				// },
 				{
-					targets: 8,
+					targets: 7,
 					render: function(data, type, full, meta) {
 						var status = {
 							1: {'title': 'Received', 'state': 'success'},

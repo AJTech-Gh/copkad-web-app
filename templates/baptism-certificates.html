@@ -761,9 +761,9 @@
 					<div class="kt-portlet__head-wrapper">
 			<div class="kt-portlet__head-actions">
 				<div class="dropdown dropdown-inline">
-					<button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<!-- <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						<i class="la la-download"></i> Export  	
-					</button>
+					</button> -->
 					<div class="dropdown-menu dropdown-menu-right">
 						<ul class="kt-nav">
 							<li class="kt-nav__section kt-nav__section--first">
@@ -815,7 +815,7 @@
 								</thead>
 					
 										<tbody>
-											{% for bc in db_data %}
+											{% for bc in bc_data %}
 											<tr>
 															 <!---->   <td>{{bc.record_id}}</td>
 															 <!--Member ID--> <td>{{bc.member_id}}</td>
