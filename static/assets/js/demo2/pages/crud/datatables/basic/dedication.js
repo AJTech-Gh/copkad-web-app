@@ -146,8 +146,8 @@ let viewRowData = (row) => {
 
 	//console.log(jsonRowData);
 	document.querySelector("#record_id").value = jsonRowData.record_id;
-	document.querySelector("#member_id_father").value = jsonRowData.member_id_mother;
-	document.querySelector("#member_id_mother").value = jsonRowData.member_id_father;
+	document.querySelector("#member_id_mother").value = jsonRowData.member_id_mother;
+	document.querySelector("#member_id_father").value = jsonRowData.member_id_father;
 	document.querySelector("#child_name").value = jsonRowData.name_of_child;
 	document.querySelector("#child_dob").value = jsonRowData.child_dob.split(" ")[0];
 	document.querySelector("#kt_datetimepicker_2").value = jsonRowData.date_of_dedication;
@@ -172,9 +172,9 @@ $("#reset_dedication_btn").on("click", function(e) {
 });
 
 
-$("#member_id_father").on("keyup", "change", function(e) {
+$("#member_id_father").on("keyup", function(e) {
 	if ($(this).val().length === 8) {
-		let progBtn = formEl.find('[id="find_father_id"]');
+		let progBtn = $("#find_father_id");
 		KTApp.progress(progBtn);
 		
         $.ajax({
@@ -235,10 +235,10 @@ $("#member_id_father").on("keyup", "change", function(e) {
 });
 
 // search for mother's data when member id field value length is 8
-$("#member_id_mother").on("keyup", "change", function(e) {
+$("#member_id_mother").on("keyup", function(e) {
 
     if ($(this).val().length === 8) {
-        let progBtn = formEl.find('[id="find_mother_id"]');;
+        let progBtn = $("#find_mother_id");
 		KTApp.progress(progBtn);
 
         $.ajax({
@@ -296,6 +296,16 @@ $("#member_id_mother").on("keyup", "change", function(e) {
         //document.querySelector("#modal_mother_id").textContent = "";
         document.querySelector("#modal_mother_assembly").textContent = "";
     }
+});
+
+$("#member_id_father").on("change", function(e){
+	e.preventDefault();
+	$("#member_id_father").trigger("keyup");
+});
+
+$("#member_id_mother").on("change", function(e){
+	e.preventDefault();
+	$("#member_id_mother").trigger("keyup");
 });
 
 // Class definition

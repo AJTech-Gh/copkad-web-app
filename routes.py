@@ -128,9 +128,9 @@ def dedication_submit():
                 db.session.add(dedication)
                 db.session.commit()
             else:
-                record_id = int(id)
-                child_dob = child_dob.split('-')
-                child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
+                record_id = int(record_id)
+                # child_dob = child_dob.split('-')
+                # child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
                 row_dict = {
                     "id": record_id,
                     "member_id_father": member_id_father,
