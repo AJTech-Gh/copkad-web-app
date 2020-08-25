@@ -281,21 +281,23 @@ def read_user_by_member_id(id):
     user = User.query.filter_by(member_id=id).first()
     data = dict()
     if (user):
-        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 'contact_2':user.contact_phone_2, 'email':user.email, 'gender':user.gender, 'img': get_user_img_path(id)}
+        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 'contact_2':user.contact_phone_2, 'email':user.email, 'gender':user.gender, 'img': get_img_path(id)}
     return data
 
 def read_baptism_by_member_id(id):
     user = Baptism.query.filter_by(member_id=id).first()
     data = dict()
     if (user):
-        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': place_of_baptism, 'officiating_minister': officiating_minister, 'district': district, 'area': area, 'country': country}
+        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': place_of_baptism, 'officiating_minister': officiating_minister, 'district': district, 'area': area, 'country': country, 'img': get_img_path(id)}
     return data
 
-def get_user_img_path(member_id, type='complete'):
+def get_img_path(member_id, type='complete', model="user"):
     """
     Removes an already existing image
     """
     dest_dir = PSEUDO_PROFILE_PHOTOS_DIR if type=='incomplete' else PROFILE_PHOTOS_DIR
+    if model == "baptism":
+        dest_dir = BAPTISM_PHOTOS_DIR
     imgs = os.listdir(dest_dir)
     for name in imgs:
         if name.startswith(member_id):
