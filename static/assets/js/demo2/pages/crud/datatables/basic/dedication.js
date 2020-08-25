@@ -132,7 +132,13 @@ jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
 
+// allow the select option to be clearable
+let resetSelect2 = () => {
+	$("#kt_select2_3").select2('data', {}); // clear out values selected
+	$("#kt_select2_3").select2({ allowClear: true }); // re-init to show default status
+}
 
+// load the row data into the form for viewing and updating
 let viewRowData = (row) => {
 	let colIds = ["record_id", "member_id_mother", "member_id_father", "name_of_child", "child_dob", "date_of_dedication", "officiating_minister", "assembly", "place_of_ceremony"];
 	let rowData = row.getElementsByTagName("td");
@@ -141,6 +147,8 @@ let viewRowData = (row) => {
 	for(let i = 0; i < rowData.length - 1; i++) {
 		jsonRowData[colIds[i]] = rowData[i].textContent;
 	}
+
+	$("#dedication_form")[0].reset();
 
 	$("#record_id_div").attr("hidden", false);
 
@@ -158,12 +166,13 @@ let viewRowData = (row) => {
 		"Hope": "HA"
 	};
 	document.querySelector("#kt_select2_3").value = assemblies[jsonRowData.assembly];
+	$("#kt_select2_3").trigger("change");
 	document.querySelector("#place_of_ceremony").value = jsonRowData.place_of_ceremony;
 
 	KTUtil.scrollTop();
 
-	// $("#member_id_father").trigger("keyup");
-	// $("#member_id_mother").trigger("keyup");
+	$("#member_id_father").trigger("change");
+	$("#member_id_mother").trigger("change");
 }
 
 
@@ -174,15 +183,13 @@ $("#reset_dedication_btn").on("click", function(e) {
 
 $("#member_id_father").on("keyup", function(e) {
 	if ($(this).val().length === 8) {
-		let progBtn = $("#find_father_id");
-		KTApp.progress(progBtn);
-		
+		$("#find_father_id").attr("hidden", false);		
         $.ajax({
             method: "POST",
             url: "/load_user_by_id/member_id_father",
             data: $(this).serialize()
         }).done(function(res) {
-			KTApp.unprogress(progBtn);
+			$("#find_father_id").attr("hidden", true);
 			if(res.gender==="M"){
 				if (res.first_name) {
 					let img_url = "/" + res.img;
@@ -202,6 +209,7 @@ $("#member_id_father").on("keyup", function(e) {
 					//document.querySelector("#modal_father_id").textContent = res.member_id;
 				} else {
 					let img_url = "/static/assets/media/users/thecopkadna-users.png";
+					$("#find_father_id").attr("hidden", true);
 					$('#modal_father_image').attr("src", img_url);
 					document.querySelector("#father_name").value = "";
 					document.querySelector("#modal_father_name").textContent = "";
@@ -217,6 +225,7 @@ $("#member_id_father").on("keyup", function(e) {
 				}
 			} else {
 				let img_url = "/static/assets/media/users/thecopkadna-users.png";
+				$("#find_father_id").attr("hidden", true);
 				$('#modal_father_image').attr("src", img_url);
 				document.querySelector("#father_name").value = "";
 				document.querySelector("#modal_father_name").textContent = "ID must belong to a male member";
@@ -225,7 +234,8 @@ $("#member_id_father").on("keyup", function(e) {
 			}
         });
     } else {
-        let img_url = "/static/assets/media/users/thecopkadna-users.png";
+		let img_url = "/static/assets/media/users/thecopkadna-users.png";
+		$("#find_father_id").attr("hidden", true);
         $('#modal_father_image').attr("src", img_url);
 		document.querySelector("#father_name").value = "";
 		document.querySelector("#modal_father_name").textContent = "";
@@ -236,17 +246,14 @@ $("#member_id_father").on("keyup", function(e) {
 
 // search for mother's data when member id field value length is 8
 $("#member_id_mother").on("keyup", function(e) {
-
     if ($(this).val().length === 8) {
-        let progBtn = $("#find_mother_id");
-		KTApp.progress(progBtn);
-
+		$("#find_mother_id").attr("hidden", false);
         $.ajax({
             method: "POST",
             url: "/load_user_by_id/member_id_mother",
             data: $(this).serialize()
         }).done(function(res) {
-			KTApp.unprogress(progBtn)
+			$("#find_mother_id").attr("hidden", true);
 			if(res.gender === "F"){
 				if (res.first_name) {
 					let img_url = "/" + res.img;
@@ -265,6 +272,7 @@ $("#member_id_mother").on("keyup", function(e) {
 					document.querySelector("#modal_mother_assembly").textContent = assemblies[res.assembly];
 					//document.querySelector("#modal_mother_id").textContent = res.member_id;
 				} else {
+					$("#find_mother_id").attr("hidden", true);
 					let img_url = "/static/assets/media/users/thecopkadna-users.png";
 					$('#modal_mother_image').attr("src", img_url);
 					document.querySelector("#mother_name").value = "";
@@ -279,6 +287,7 @@ $("#member_id_mother").on("keyup", function(e) {
 					});
 				}
 			}else{
+				$("#find_mother_id").attr("hidden", true);
 				let img_url = "/static/assets/media/users/thecopkadna-users.png";
 				$('#modal_mother_image').attr("src", img_url);
 				document.querySelector("#mother_name").value = "";
@@ -289,6 +298,7 @@ $("#member_id_mother").on("keyup", function(e) {
             
         });
     } else {
+		$("#find_mother_id").attr("hidden", true);
         let img_url = "/static/assets/media/users/thecopkadna-users.png";
         $('#modal_mother_image').attr("src", img_url);
 		document.querySelector("#mother_name").value = "";
@@ -370,7 +380,7 @@ var KTForm = function () {
                 
             }
         });   
-    }
+	}
 
     var initSubmit = function() {
         var btn = formEl.find('[id="submit_dedication_btn"]');
@@ -444,8 +454,8 @@ var KTForm = function () {
         init: function() {
 			formEl = $('#dedication_form');
 			
-            initValidation();
-            initSubmit();
+			initValidation();
+			initSubmit();
         }
     };
 }();

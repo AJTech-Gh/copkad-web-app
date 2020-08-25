@@ -32,6 +32,7 @@
         <!--begin::Global Theme Styles(used by all pages) -->
                     <link href="{{ url_for('static', filename='assets/vendors/global/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
                     <link href="{{ url_for('static', filename='assets/css/demo2/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                 <!--end::Global Theme Styles -->
 
         <!--begin::Layout Skins(used by all pages) -->
@@ -320,14 +321,20 @@
                         <label class="col-form-label col-lg-3 col-sm-12">Member ID of Father</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <input type="text" class="form-control" placeholder="Enter ID of Father to Generate name" name="member_id_father" id="member_id_father" />
-                        <span><button class="btn" id="find_father_id"></button></span>
                     </div>
                 </div>
 
             <div class="form-group row">   
               <label class="col-form-label col-lg-3 col-sm-12">Name of father</label>
-                <div class="col-lg-4 col-md-9 col-sm-12">
+              <div class="col-lg-4 col-md-9 col-sm-12">
+                <div class="input-group">
                     <input type="text" class="form-control" name="father_name" id="father_name" readonly/> 
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="find_father_id" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+                    </div>
+                    
+                </div>
+                <!-- https://www.w3schools.com/icons/fontawesome_icons_spinner.asp --> 
                     <span class="form-text text-muted"><a href="" data-toggle="modal" data-target="#father_view" >Click to view membership of father</a></span>
                 </div>
 
@@ -384,15 +391,20 @@
             <div class="form-group row">
                 <label class="col-form-label col-lg-3 col-sm-12">Member ID of Mother</label>
                   <div class="col-lg-4 col-md-9 col-sm-12">
-                      <input type="text" class="form-control" placeholder="Enter ID of Mother to Generate name" name="member_id_mother" id="member_id_mother" />
-                      <span><button class="btn" id="find_mother_id"></button></span>
+                      <input type="text" class="form-control" placeholder="Enter ID of Mother to Generate name" name="member_id_mother" id="member_id_mother" />                  
                   </div>
               </div>
 
             <div class="form-group row">
             <label class="col-form-label col-lg-3 col-sm-12">Name of mother</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" name="mother_name" id="mother_name" readonly/>
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="mother_name" id="mother_name" readonly/>
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="find_mother_id" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color:blue;" ></i></span>
+                        </div>
+                    </div>
+                    
                     <span class="form-text text-muted"><a href="" data-toggle="modal" data-target="#mother_view" >Click to view membership of mother</a></span>
                 </div>
             </div>
