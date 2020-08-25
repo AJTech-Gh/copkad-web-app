@@ -52,7 +52,7 @@ var KTWizard2 = function () {
 				},	 
 
 				//= Step 2
-				date_of_baptism: {
+				kt_datetimepicker_6: {
 					required: true 
 				},
 				place_of_baptism: {
@@ -178,7 +178,7 @@ function isNumber(evt) {
 
 let reviewBaptismDetails = () => {
     let ids_to_take = ["full_name", "contacts", "email", "assembly", "district", "area", 
-    "date_of_baptism", "place_of_baptism", "officiating_minister"];
+    "kt_datetimepicker_6", "place_of_baptism", "officiating_minister"];
 
     let ids_to_fill = ["review_name", "review_contact", "review_email", "review_assembly", 
     "review_district", "review_area", "review_date_of_baptism", "review_place_of_baptism", "review_off_minister"];
@@ -199,6 +199,10 @@ let reviewBaptismDetails = () => {
     
 }
 
+// replace all in a string
+let replaceAll = (string, search, replace) => {
+    return string.split(search).join(replace);
+}
 
 // search for user's data when member id field value length is 8
 $("#member_id").on("keyup", function(e) {
@@ -211,7 +215,7 @@ $("#member_id").on("keyup", function(e) {
             data: $(this).serialize()
         }).done(function(res) {
             if (res.first_name) {
-                let img_url = "/" + res.img;
+                let img_url = "/" + replaceAll(res.img, "\\", "/");
                 $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
                 let fullName = res.last_name + ", " + res.first_name
                 if (res.other_names) {

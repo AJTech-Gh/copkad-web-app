@@ -1,7 +1,7 @@
 import os
 import time
 from app import db, app, mail
-from models import User, RalliesAndConventions
+from models import User, RalliesAndConventions, Baptism
 from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
@@ -285,10 +285,12 @@ def read_user_by_member_id(id):
     return data
 
 def read_baptism_by_member_id(id):
-    user = Baptism.query.filter_by(member_id=id).first()
+    baptism = Baptism.query.filter_by(member_id=id).first()
     data = dict()
-    if (user):
-        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': place_of_baptism, 'officiating_minister': officiating_minister, 'district': district, 'area': area, 'country': country, 'img': get_img_path(id, model='baptism')}
+    if (baptism):
+        date_of_baptism = baptism.date_of_baptism
+        date_of_baptism = '{}-{}-{}'.format(date_of_baptism.year, date_of_baptism.month, date_of_baptism.day)
+        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': baptism.place_of_baptism, 'officiating_minister': baptism.officiating_minister, 'district': baptism.district, 'area': baptism.area, 'country': baptism.country, 'img': get_img_path(id, model='baptism')}
     return data
 
 def get_img_path(member_id, type='complete', model="user"):

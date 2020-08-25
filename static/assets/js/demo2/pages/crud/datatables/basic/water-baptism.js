@@ -166,18 +166,19 @@ let viewRowData = (row) => {
 
 	$.ajax({
 		method: "POST",
-		url: "/load_baptism_by_id/" + rowData[1].textContent,
-		data: $(this).serialize()
+		url: "/load_baptism_by_id/" + rowData[1].textContent
 	}).done(function(res) {
-		console.log(res);
 		if (res.place_of_baptism) {
-			document.querySelector("#date_of_baptism").value = res.date_of_baptism;
+			let img_url = "/" + replaceAll(res.img, "\\", "/");
+			// TODO: set the certificate image
+			document.querySelector("#kt_datetimepicker_6").value = res.date_of_baptism;
 			document.querySelector("#place_of_baptism").value = res.place_of_baptism;
 			document.querySelector("#officiating_minister").value = res.officiating_minister;
 			document.querySelector("#district").value = res.district;
 			document.querySelector("#area").value = res.area;
 			document.querySelector("#country").value = res.country;
 		} else {
+			// TODO: clear the certificate image and use default
 			document.querySelector("#date_of_baptism").value = "";
 			document.querySelector("#place_of_baptism").value = "";
 			document.querySelector("#officiating_minister").value = "";
