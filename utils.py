@@ -288,7 +288,7 @@ def read_baptism_by_member_id(id):
     user = Baptism.query.filter_by(member_id=id).first()
     data = dict()
     if (user):
-        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': place_of_baptism, 'officiating_minister': officiating_minister, 'district': district, 'area': area, 'country': country, 'img': get_img_path(id)}
+        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': place_of_baptism, 'officiating_minister': officiating_minister, 'district': district, 'area': area, 'country': country, 'img': get_img_path(id, model='baptism')}
     return data
 
 def get_img_path(member_id, type='complete', model="user"):
