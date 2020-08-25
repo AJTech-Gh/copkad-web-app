@@ -15,7 +15,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BAPTISM',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[ 0, ':visible' ]
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[ 0, ':visible' ]
 					}
 				},
 				{
@@ -25,7 +25,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BAPTISM',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				},
 				{
@@ -35,7 +35,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BAPTISM',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				},
 				{
@@ -45,7 +45,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BAPTISM',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				},
 				{
@@ -55,7 +55,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BAPTISM',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				}
 			],
@@ -81,7 +81,7 @@ var KTDatatablesBasicPaginations = function() {
                                 <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
                             </div>
                         </span>
-                        <a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
+                        <a onclick="viewRowData(this.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
                           <i class="fa 
 						  flaticon-search-magnifier-interface-symbol"></i>
                         </a>`;
@@ -149,4 +149,108 @@ var KTDatatablesBasicPaginations = function() {
 
 jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
+});
+
+
+
+// load the row data into the form for viewing and updating
+let viewRowData = (row) => {
+	let rowData = row.getElementsByTagName("td");
+
+	$("#kt_form")[0].reset();
+
+	$("#record_id_div").attr("hidden", false);
+	
+	document.querySelector("#record_id").value = rowData[0].textContent;
+	document.querySelector("#member_id").value = rowData[1].textContent;
+
+	$.ajax({
+		method: "POST",
+		url: "/load_baptism_by_id/" + rowData[1].textContent,
+		data: $(this).serialize()
+	}).done(function(res) {
+		console.log(res);
+		if (res.place_of_baptism) {
+			document.querySelector("#date_of_baptism").value = res.date_of_baptism;
+			document.querySelector("#place_of_baptism").value = res.place_of_baptism;
+			document.querySelector("#officiating_minister").value = res.officiating_minister;
+			document.querySelector("#district").value = res.district;
+			document.querySelector("#area").value = res.area;
+			document.querySelector("#country").value = res.country;
+		} else {
+			document.querySelector("#date_of_baptism").value = "";
+			document.querySelector("#place_of_baptism").value = "";
+			document.querySelector("#officiating_minister").value = "";
+			document.querySelector("#district").value = "";
+			document.querySelector("#area").value = "";
+			document.querySelector("#country").value = "";
+		}
+	});
+
+
+	$("#member_id").trigger("change");
+
+	KTUtil.scrollTop();
+}
+
+
+// compare dates: g means date1 greater than date2, l means date1 less than date2 and date1 equal to date2
+let compareDates = (date1, date2) => {
+	if (date1 > date2) return ("g");
+	else if (date1 < date2) return ("l");
+	else return ("e"); 
+}
+
+// search by date
+// https://keenthemes.com/metronic/?page=docs&section=html-components-datatable
+var tableData = -1;  // keep the full table content
+$("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picker) {
+	// let picker = document.querySelector("#kt_dashboard_daterangepicker");
+	// var startDate = $(this).data('daterangepicker').startDate._d;
+	// var endDate = $(this).data('daterangepicker').endDate._d;
+	let startDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+	let endDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+	let datatable = $("#kt_table_1").DataTable();
+	// if the table data is not set, set it
+	// else reload the table data
+	if(tableData === -1) {
+		tableData = Object.assign({}, datatable.table().data());
+	} else {
+		datatable.clear();
+		datatable.rows.add(tableData);
+		datatable.draw(false);
+	}
+	let tableRowsLength = datatable.rows()[0].length;
+	// handle equal dates and if startDate is less than endDate
+	let datesComp = compareDates(startDate, endDate);
+	if(datesComp === "e") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[4]);
+			if (compareDates(sDate, startDate) === "e" && compareDates(sDate, endDate) === "e") {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else if(datesComp === "l") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[4]);
+			if (sDate >= startDate && sDate <= endDate) {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else {
+		swal.fire({
+			"title": "",
+			"text": "Invalid date range", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
 });

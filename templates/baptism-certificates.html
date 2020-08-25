@@ -326,6 +326,10 @@
 						<div class="kt-heading kt-heading--md">Enter your Member's Details</div>
 						<div class="kt-form__section kt-form__section--first">
 							<div class="kt-wizard-v2__form">
+								<div class="form-group" id="record_id_div" hidden>
+									<label>Record ID</label>
+									<input type="text" class="form-control" name="record_id" id="record_id" readonly>
+								</div>
 								<div class="form-group">
 									<label>Member ID</label>
 									<input type="text" onkeypress="isNumber(event)" class="form-control" name="member_id" id="member_id">
@@ -787,11 +791,11 @@
 				</div>
 				&nbsp;
 			</div>	
-			<a href="#" class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
+			<button class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
 				<span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
 				<span class="kt-subheader__btn-daterange-date" id="kt_dashboard_daterangepicker_date">Aug 16</span>
 				<i class="flaticon2-calendar-1"></i>
-			</a>
+			</button>
 		</div>		</div>
 			</div>
 		

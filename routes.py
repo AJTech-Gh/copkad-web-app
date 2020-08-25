@@ -236,6 +236,16 @@ def rallies_and_conventions_submit():
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
+
+@app.route('/load_baptism_by_id/<src_id>', methods=['POST'])
+def load_baptism_by_id(src_id):
+    try:
+        if request.method == 'POST':
+            member_id = src_id
+            return Response(json.dumps(utils.read_baptism_by_member_id(member_id)), status=200, mimetype='application/json')
+    except Exception as e:
+            print(e)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
         
 @app.route('/baptism_certificates')
 def baptism_certificates():
@@ -302,9 +312,13 @@ def baptism_certificates_submit():
 
 @app.route('/load_user_by_id/<src_id>', methods=['POST'])
 def load_user_by_id(src_id):
-    if request.method == 'POST':
-        member_id = request.form.get(src_id).strip()
-        return Response(json.dumps(utils.read_by_member_id(member_id)), status=200, mimetype='application/json')
+    try:
+        if request.method == 'POST':
+            member_id = request.form.get(src_id).strip()
+            return Response(json.dumps(utils.read_user_by_member_id(member_id)), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/add_user')
 def add_user():

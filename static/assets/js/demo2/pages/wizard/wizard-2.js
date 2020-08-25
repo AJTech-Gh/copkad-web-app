@@ -254,6 +254,10 @@ $("#member_id").on("keyup", function(e) {
     }
 });
 
+$("#member_id").on("change", function(e) {
+    $("#member_id").trigger("keyup");
+});
+
 // print the user's details
 let printDetails =  (elementId, memberId) => {
 	// get the content to print

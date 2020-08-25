@@ -564,3 +564,59 @@ $("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picke
 		});
 	}
 });
+
+// search by date
+// https://keenthemes.com/metronic/?page=docs&section=html-components-datatable
+var tableData = -1;  // keep the full table content
+$("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picker) {
+	// let picker = document.querySelector("#kt_dashboard_daterangepicker");
+	// var startDate = $(this).data('daterangepicker').startDate._d;
+	// var endDate = $(this).data('daterangepicker').endDate._d;
+	let startDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+	let endDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+	let datatable = $("#kt_table_1").DataTable();
+	// if the table data is not set, set it
+	// else reload the table data
+	if(tableData === -1) {
+		tableData = Object.assign({}, datatable.table().data());
+	} else {
+		datatable.clear();
+		datatable.rows.add(tableData);
+		datatable.draw(false);
+	}
+	let tableRowsLength = datatable.rows()[0].length;
+	// handle equal dates and if startDate is less than endDate
+	let datesComp = compareDates(startDate, endDate);
+	if(datesComp === "e") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[4].split(" ")[0]);
+			let eDate = new Date(tr_data[5].split(" ")[0]);
+			if (compareDates(sDate, startDate) === "e" && compareDates(sDate, endDate) === "e" && compareDates(eDate, startDate) === "e" && compareDates(eDate, endDate) === "e") {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else if(datesComp === "l") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[4].split(" ")[0]);
+			let eDate = new Date(tr_data[5].split(" ")[0]);
+			if ((sDate >= startDate && sDate <= endDate) || (eDate >= startDate && eDate <= endDate)) {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else {
+		swal.fire({
+			"title": "",
+			"text": "Invalid date range", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
+});
