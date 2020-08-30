@@ -479,7 +479,7 @@ let setRandomPassword = () => {
 
 // display the selected photo
 $("#kt_apps_contacts_add_avatar").on("change", function () {
-    var acceptedImgExt = ["jpg", "jpeg", "png", "gif"];
+    var acceptedImgExt = ["jpg", "jpeg", "png"];
     var filePath = $(this).val();
     var fileName = filePath.split("\\").pop();
     var fileNameExt = fileName.split(".");

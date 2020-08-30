@@ -206,48 +206,70 @@ let replaceAll = (string, search, replace) => {
 
 // search for user's data when member id field value length is 8
 $("#member_id").on("keyup", function(e) {
-
     if ($(this).val().length === 8) {
-
+        $(".spin").attr("hidden", false);
         $.ajax({
             method: "POST",
+
             url: "/load_user_by_id/member_id",
-            data: $(this).serialize()
-        }).done(function(res) {
-            if (res.first_name) {
-                let img_url = "/" + replaceAll(res.img, "\\", "/");
-                $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
-                let fullName = res.last_name + ", " + res.first_name
-                if (res.other_names) {
-                    fullName = fullName + " " + res.other_names;
-                }
-                document.querySelector("#full_name").value = fullName;
-                let assemblies = {
-                    EEA: "Emmanuel English Assembly",
-                    GA: "Glory Assembly",
-                    HA: "Hope Assembly"
-                }
-                document.querySelector("#assembly").value = assemblies[res.assembly];
-                let contacts = res.contact_1;
-                if (res.contact_2) {
-                    contacts = contacts + ", " + res.contact_2;
-                }
-                document.querySelector("#contacts").value = contacts;
-        
-                if(res.email){
-                    document.querySelector("#email").value = res.email;
-                }else{
+
+            data: $(this).serialize(),
+
+            success: function(res) {
+                $(".spin").attr("hidden", true);
+                if (res.first_name) {
+                    let img_url = "/" + replaceAll(res.img, "\\", "/");
+                    if (img_url === "/") {
+                        img_url = "/static/assets/media/users/thecopkadna-users.png";
+                    }
+                    $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
+                    let fullName = res.last_name + ", " + res.first_name;
+                    if (res.other_names) {
+                        fullName = fullName + " " + res.other_names;
+                    }
+                    document.querySelector("#full_name").value = fullName;
+                    let assemblies = {
+                        EEA: "Emmanuel English Assembly",
+                        GA: "Glory Assembly",
+                        HA: "Hope Assembly"
+                    }
+                    document.querySelector("#assembly").value = assemblies[res.assembly];
+                    let contacts = res.contact_1;
+                    if (res.contact_2) {
+                        contacts = contacts + ", " + res.contact_2;
+                    }
+                    document.querySelector("#contacts").value = contacts;
+            
+                    if(res.email){
+                        document.querySelector("#email").value = res.email;
+                    }else{
+                        document.querySelector("#email").value = "";
+                    }
+                } else {
+                    let img_url = "/static/assets/media/users/thecopkadna-users.png";
+                    $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
+                    document.querySelector("#full_name").value = "";
+                    document.querySelector("#assembly").value = "";
+                    document.querySelector("#contacts").value = "";
                     document.querySelector("#email").value = "";
+                    $(".spin").attr("hidden", true);
+                    $("#record_id_div").attr("hidden", true);
                 }
-            } else {
-                let img_url = "/static/assets/media/users/thecopkadna-users.png";
-                $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
-                document.querySelector("#full_name").value = "";
-                document.querySelector("#assembly").value = "";
-                document.querySelector("#contacts").value = "";
-                document.querySelector("#email").value = "";
-            }
+            },
+
+            error: function(res, status, error) {
+				$(".spin").attr("hidden", true);
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
+			}
+
         });
+
     } else {
         let img_url = "/static/assets/media/users/thecopkadna-users.png";
         $('.kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ")
@@ -255,6 +277,9 @@ $("#member_id").on("keyup", function(e) {
         document.querySelector("#assembly").value = "";
         document.querySelector("#contacts").value = "";
         document.querySelector("#email").value = "";
+        $(".spin").attr("hidden", true);
+        $("#record_id_div").attr("hidden", true);
+
     }
 });
 
@@ -295,3 +320,27 @@ let printDetails =  (elementId, memberId) => {
 	print_area.print();
 	print_area.close();
   }
+
+// handle scanned file upload
+// $(".custom-file-input").on("change", function() {
+//     var fileName = $(this).val().split("\\").pop();
+//     $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+// });
+
+$("#certImagInput").on("change", function () {
+    var acceptedImgExt = ["jpg", "jpeg", "png"];
+    var filePath = $(this).val();
+    var fileName = filePath.split("\\").pop();
+    var fileNameExt = fileName.split(".");
+    var fileExt = fileNameExt[fileNameExt.length - 1].toLowerCase()
+    if (acceptedImgExt.indexOf(fileExt) > -1) {
+        try {
+			$('#certImagDisplay').attr("src", window.URL.createObjectURL(this.files[0]));
+        } catch (error) {
+            // do nothing  
+            // console.log(error)
+        }
+    } else {
+        // $("#src-image-text").text("Unacceptable file format! Expected JPG(JPEG), PNG OR GIF");
+    }
+});

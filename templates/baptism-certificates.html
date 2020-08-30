@@ -31,7 +31,8 @@
         
         <!--begin::Global Theme Styles(used by all pages) -->
                     <link href="{{ url_for('static', filename='assets/vendors/global/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
-                    <link href="{{ url_for('static', filename='assets/css/demo2/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+					<link href="{{ url_for('static', filename='assets/css/demo2/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+					<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                 <!--end::Global Theme Styles -->
 
         <!--begin::Layout Skins(used by all pages) -->
@@ -51,7 +52,7 @@
 	<!-- begin:: Header Mobile -->
 <div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed " >
 	<div class="kt-header-mobile__logo">
-		<a href="../../{{ url_for('index') }}">
+		<a href="{{ url_for('index') }}">
 			<img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-1.png') }}"/>
 		</a>
 	</div>
@@ -318,6 +319,7 @@
 				<!--end: Form Wizard Nav -->
 
 			</div>
+
 			<div class="kt-grid__item kt-grid__item--fluid kt-wizard-v2__wrapper">
 				<!--begin: Form Wizard Form-->
 				<form class="kt-form" id="kt_form" method="POST">
@@ -327,22 +329,30 @@
 						<div class="kt-form__section kt-form__section--first">
 							<div class="kt-wizard-v2__form">
 								<div class="form-group" id="record_id_div" hidden>
-									<label>Record ID</label>
+									<label for="record_id">Record ID</label>
 									<input type="text" class="form-control" name="record_id" id="record_id" readonly>
 								</div>
-								<div class="form-group">
-									<label>Member ID</label>
-									<input type="text" onkeypress="isNumber(event)" class="form-control" name="member_id" id="member_id">
+								<div class="form-group row">
+									<div class="input-group">
+										<label class="col-form-label col-lg-3 col-sm-12">Member ID</label>
+										<input type="text" onkeypress="isNumber(event)" class="form-control" name="member_id" id="member_id">
+									</div>
 									<span class="form-text text-muted">Please enter Member ID (eg. 10000108) to sort out member database</span>
-									
-                                </div>
-                                <div class="form-group">
-                                        <label>Full Name</label>
+								</div>
+								
+                                <div class="form-group input-group row">
+                                        <label class="col-form-label col-lg-3 col-sm-12">Full Name</label>
 										<input type="text" class="form-control" name="full_name" id="full_name" readonly>
+										<div class="input-group-append">
+											<span class="input-group-text spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+										</div>
                                     </div>
-                                <div class="form-group">
-                                        <label>Assembly</label>
-                                        <input type="text" class="form-control" name="assembly" id="assembly" readonly > 
+                                <div class="form-group input-group row">
+                                        <label class="col-form-label col-lg-3 col-sm-12">Assembly</label>
+										<input type="text" class="form-control" name="assembly" id="assembly" readonly >
+										<div class="input-group-append">
+											<span class="input-group-text spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+										</div> 
 									</div>
 									<div class="form-group row">
                                         <label class="col-xl-3 col-lg-3 col-form-label">User Image</label>
@@ -358,17 +368,23 @@
                                     </div>
 								<div class="row">
 									<div class="col-xl-6">
-										<div class="form-group">
-											<label>Phone</label>
+										<div class="form-group input-group">
+											<label class="col-form-label col-lg-3 col-sm-12">Phone</label>
 											<input type="tel" class="form-control" name="contacts" id="contacts" readonly>
 											<!-- <span class="form-text text-muted">SMS notification will be sent to this number</span> -->
+											<div class="input-group-append">
+												<span class="input-group-text spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+											</div>
 										</div>
 									</div>
 									<div class="col-xl-6">
-										<div class="form-group">
-											<label>Email</label>
+										<div class="form-group input-group">
+											<label class="col-form-label col-lg-3 col-sm-12">Email</label>
 											<input type="email" class="form-control" name="email" id="email" readonly>
 											<!-- <span class="form-text text-muted">Email notification will be sent to this number</span> -->
+											<div class="input-group-append">
+												<span class="input-group-text spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+											</div>
 										</div>
 									</div>							   
 								</div>
@@ -692,12 +708,27 @@
 					<!--end: Form Wizard Step baptismal records-->
 
 					<!--begin: Form Wizard Step scan certificates-->
+					  
+
+
 					<div class="kt-wizard-v2__content" data-ktwizard-type="step-content">
 						<div class="kt-heading kt-heading--md">Scan to upload certificates here</div>
-						<div class="kt-form__section kt-form__section--first">
-							<picture>
-								<source media="(min-width:650px)" srcset="" style="width:auto">
-							</picture>
+						<div class="row">
+							<div class="col-xl-6">
+								<div class="form-group">
+									<div class="custom-file">
+										<input type="file" class="custom-file-input" name="certImagInput" id="certImagInput" accept="image/jpeg,image/png">
+										<label class="custom-file-label" for="certImagInput">Choose image</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xl-6">
+								<div class="form-group">
+									<img id="certImagDisplay" src="" alt="No Image Selected" style="vertical-align:middle;max-height:640px;max-width:480px;" />
+								</div>
+							</div>
 						</div>
 					</div>
 					<!--end: Form Wizard Step scan certificates-->
@@ -723,7 +754,7 @@
 									</div>
 									<div class="kt-wizard-v2__review-content">
 										Assembly: <span id="review_assembly"></span><br/>
-										District: <span id="review_district"></span>
+										District: <span id="review_district"></span><br/>
 										Area: <span id="review_area"></span>
 									</div>
 								</div>
@@ -887,42 +918,45 @@
 					<form>
 						<div class="form-group">
 							<!--autogenerate notification ID-->
-							  <label for="recipient-name" class="form-control-label">NID:</label>
-							 <input type="text" class="form-control" id="recipient-name" readonly>
+							  <label for="message_id" class="form-control-label">Message ID:</label>
+							 <input type="text" class="form-control" name="message_id" id="message_id" readonly>
+
+							 <label for="msg_record_id" class="form-control-label">Record ID</label>
+							<input type="text" class="form-control" name="msg_record_" id="msg_record_id" readonly>
 							<!--take details from member database-->
-						   <label for="recipient-name" class="form-control-label">Recipient:</label>
-							<input type="text" class="form-control" id="recipient-name">
+						   <!-- <label for="recipient-name" class="form-control-label">Recipient:</label>
+							<input type="text" class="form-control" id="recipient-name"> -->
 							<!--take phone contact from member database-->
-							  <label for="recipient-name" class="form-control-label">Phone Contact:</label>
-							 <input type="text" class="form-control" id="recipient-name">
+							  <!-- <label for="recipient-name" class="form-control-label">Phone Contact:</label>
+							 <input type="text" class="form-control" id="recipient-name"> -->
 								 <!--take email from member database-->
-							  <label for="recipient-name" class="form-control-label">Email:</label>
-							 <input type="email" class="form-control" id="recipient-name">
+							  <!-- <label for="recipient-name" class="form-control-label">Email:</label>
+							 <input type="email" class="form-control" id="recipient-name"> -->
 						</div>
 						<div class="form-group">
-							<label for="message-text" class="form-control-label">Message:</label>
-							<textarea class="form-control" id="message-text"></textarea>
+							<label for="message_body" class="form-control-label">Message:</label>
+							<textarea class="form-control" id="message_body" name="message_body"></textarea>
 						</div>
-						<div class="form-group form-group-last row">
+						<!-- <div class="form-group form-group-last row">
 							<label class="col-xl-3 col-lg-3 col-form-label">Push Option</label>
 							<div class="col-lg-9 col-xl-6">
 								<div class="kt-checkbox-inline">
 									<label class="kt-checkbox">
-									<!--selecting this option will send message to the email of member-->    <input type="checkbox" checked=""> Email
+									   <input type="checkbox" checked=""> Email
 										<span></span>
 									</label>
 									<label class="kt-checkbox">
-									  <!--selecting this option will send sms to contact of member-->  <input type="checkbox" checked=""> SMS
+									    <input type="checkbox" checked=""> SMS
 										<span></span>
 									</label>
 								</div>
 							</div>
-						</div>
+						</div> -->
 					</form>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary">Send message</button>
+					<button type="button" class="btn btn-primary" name="send" id="send" disabled>Send message</button>
 				</div>
 			</div>
 		</div>

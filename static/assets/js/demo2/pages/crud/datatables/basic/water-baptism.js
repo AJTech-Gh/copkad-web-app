@@ -73,12 +73,8 @@ var KTDatatablesBasicPaginations = function() {
                               <i class="la la-ellipsis-h"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#kt_modal_4"><i class="fa flaticon2-email"></i> Push Notification</a>
-								
-                                <a class="dropdown-item" href="#"><i class="
-								fa flaticon2-user-1"></i> Update Status</a>
-								
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
+                                <button class="dropdown-item" onclick="getNotifId(this.parentElement.parentElement.parentElement.parentElement)" data-toggle="modal" data-target="#kt_modal_4"><i class="fa flaticon2-email"></i> Push Notification</button>								
+                                <button class="dropdown-item" ><i class="la la-print"></i> Generate Report</button>
                             </div>
                         </span>
                         <a onclick="viewRowData(this.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
@@ -151,7 +147,89 @@ jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
 
+// load the notification
+let getNotifId = (row) => {
+	document.querySelector("#send").disabled = true;
 
+	$("#messag_id").val("");
+	$("#msg_record_id").val("");
+	
+	$.ajax({
+		method: "POST",
+
+		url: "/load_baptism_cert_msg_id",
+
+		success: function(res) {
+			$("#message_id").val(res.msg_id);
+
+			let rec_id = row.getElementsByTagName("td")[0].textContent;
+			document.querySelector("#msg_record_id").value = rec_id;
+
+			document.querySelector("#send").disabled = false;
+		},
+
+		error: function(res, status, error) {
+			swal.fire({
+				"title": "",
+				"text": res.responseJSON.message, 
+				"type": "error",
+				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+			}).then((result) => {
+				if (result.value) {
+					$("#kt_modal_4").modal("toggle");
+					document.querySelector("#send").disabled = true;
+				}
+			});
+		}
+	});
+
+}
+
+$("#send").on("click", function(e){
+	KTApp.progress($(this));
+
+	$.ajax({
+		method: "POST",
+
+		url: "/send_baptism_cert_notif_msg",
+
+		data: {
+			message_id: $("#message_id").val(),
+			msg_record_id: $("#msg_record_id").val(),
+			message_body: $("#message_body").val()
+		},
+
+		success: function(res) {
+			KTApp.unprogress($("#send"));
+
+			swal.fire({
+				"title": "", 
+				"text": "Notification Sent Successfully!", 
+				"type": "success",
+				"confirmButtonClass": "btn btn-secondary"
+			}).then((result) => {
+				if (result.value) {
+					$("#kt_modal_4").modal("toggle");
+					$("#message_id").val("");
+					$("#msg_record_id").val("");
+					$("#message_body").val("");
+					document.querySelector("#send").disabled = true;
+				}
+			});
+		},
+
+		error: function(res, status, error) {
+			KTApp.unprogress($("#send"));
+
+			swal.fire({
+				"title": "",
+				"text": res.responseJSON.message, 
+				"type": "error",
+				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+			});
+		}
+	});
+});
 
 // load the row data into the form for viewing and updating
 let viewRowData = (row) => {
@@ -164,42 +242,57 @@ let viewRowData = (row) => {
 	document.querySelector("#record_id").value = rowData[0].textContent;
 	document.querySelector("#member_id").value = rowData[1].textContent;
 
+	KTUtil.scrollTop();
+
 	$.ajax({
 		method: "POST",
-		url: "/load_baptism_by_id/" + rowData[1].textContent
-	}).done(function(res) {
-		if (res.place_of_baptism) {
-			let img_url = "/" + replaceAll(res.img, "\\", "/");
-			// TODO: set the certificate image
-			document.querySelector("#kt_datetimepicker_6").value = res.date_of_baptism;
-			document.querySelector("#place_of_baptism").value = res.place_of_baptism;
-			document.querySelector("#officiating_minister").value = res.officiating_minister;
-			document.querySelector("#district").value = res.district;
-			document.querySelector("#area").value = res.area;
-			document.querySelector("#country").value = res.country;
-		} else {
-			// TODO: clear the certificate image and use default
-			document.querySelector("#date_of_baptism").value = "";
-			document.querySelector("#place_of_baptism").value = "";
-			document.querySelector("#officiating_minister").value = "";
-			document.querySelector("#district").value = "";
-			document.querySelector("#area").value = "";
-			document.querySelector("#country").value = "";
+
+		url: "/load_baptism_by_id/" + rowData[1].textContent,
+
+		success: function(res) {
+			if (res.place_of_baptism) {
+				let img_url = "/" + replaceAll(res.img, "\\", "/");
+				document.querySelector("#certImagDisplay").src = img_url;
+				document.querySelector("#kt_datetimepicker_6").value = res.date_of_baptism;
+				document.querySelector("#place_of_baptism").value = res.place_of_baptism;
+				document.querySelector("#officiating_minister").value = res.officiating_minister;
+				document.querySelector("#district").value = res.district;
+				document.querySelector("#area").value = res.area;
+				document.querySelector("#country").value = res.country;
+			} else {
+				document.querySelector("#certImagDisplay").src = "";
+				document.querySelector("#date_of_baptism").value = "";
+				document.querySelector("#place_of_baptism").value = "";
+				document.querySelector("#officiating_minister").value = "";
+				document.querySelector("#district").value = "";
+				document.querySelector("#area").value = "";
+				document.querySelector("#country").value = "";
+				document.querySelector("#record_id").value = "";
+				$("#record_id_div").attr("hidden", true);
+			}
+	
+			$("#member_id").trigger("change");
+
+		},
+
+		error: function(res, status, error) {
+			$("#record_id_div").attr("hidden", true);
+
+			swal.fire({
+				"title": "",
+				"text": res.responseJSON.message, 
+				"type": "error",
+				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+			});
 		}
 	});
-
-
-	$("#member_id").trigger("change");
-
-	KTUtil.scrollTop();
 }
 
-
-// compare dates: g means date1 greater than date2, l means date1 less than date2 and date1 equal to date2
+//compare dates: g means date1 greater than date2, l means date1 less than date2 and date1 equal to date2
 let compareDates = (date1, date2) => {
 	if (date1 > date2) return ("g");
 	else if (date1 < date2) return ("l");
-	else return ("e"); 
+	else return ("e");
 }
 
 // search by date

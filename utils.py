@@ -19,10 +19,11 @@ from file_encrypter import FileEncrypter
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 IMG_FILE_EXT = '.jpg'
-PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "profile_photos"
-BAPTISM_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "baptism_photos"
-PSEUDO_PROFILE_PHOTOS_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "profile_photos"
-PSEUDO_DATA_DIR = app.config['UPLOAD_FOLDER'] + os.sep + "incomplete_reg_acc" + os.sep + "data"
+PROFILE_PHOTOS_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "profile_photos")
+BAPTISM_PHOTOS_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "baptism_photos")
+PSEUDO_PROFILE_PHOTOS_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplete_reg_acc", "profile_photos")
+PSEUDO_DATA_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplete_reg_acc", "data")
+PUSH_NOTIF_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'push_notifications')
 
 def remove_contact_symbols(contact):
     return re.sub(r"\D+", "", contact)
@@ -187,7 +188,7 @@ def upload_baptism_photo(member_id):
     Uploads an image file to baptism_photos folder
     """
     # check if the post request has the file part
-    img_file = request.files.get("kt_apps_contacts_add_avatar")
+    img_file = request.files.get("certImagInput")
     if not img_file:
         return False
     # if user does not select file, browser also
@@ -319,3 +320,32 @@ def set_date_time(start_date_time):
     _date = _date.split('-')
     _time = _time.split(':')
     return datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
+
+
+def get_notif_msg_id(dir_name):
+    """
+    Gets the next push notification message id
+    """
+    return len(os.listdir(os.path.join(PUSH_NOTIF_BASE_DIR, dir_name))) + 1
+
+
+def save_notif_msg(msg_data, dir_name):
+    # double check message id
+    msg_data["message_id"] = get_notif_msg_id(dir_name)
+    # get the save the json data
+    json_data = json.dumps(msg_data)
+    encrypted_json_data = encrypt_json_data(json_data)
+    json_filename = f'{msg_data["message_id"]}.json'
+    json_file = open(os.path.join(PUSH_NOTIF_BASE_DIR, dir_name, json_filename), 'wb')
+    json_file.write(encrypted_json_data)
+    json_file.close()
+
+
+def read_notif_msg(message_id, dir_name):
+    # load the data
+    json_filename = f'{message_id}.json'
+    json_file = open(os.path.join(PUSH_NOTIF_BASE_DIR, dir_name, json_filename), 'rb')
+    encrypted_json_data = json_file.read()
+    decrypted_json_data = decrypt_json_data(encrypted_json_data)
+    json_file.close()
+    return json.loads(decrypted_json_data)

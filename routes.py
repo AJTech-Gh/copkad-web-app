@@ -6,17 +6,17 @@ from models import User, Baptism, RalliesAndConventions, Dedication
 import utils
 
 
-@app.after_request
-def add_header(r):
-    """
-    Add headers to both force latest IE rendering engine or Chrome Frame,
-    and also to cache the rendered page for 10 minutes.
-    """
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
+# @app.after_request
+# def add_header(r):
+#     """
+#     Add headers to both force latest IE rendering engine or Chrome Frame,
+#     and also to cache the rendered page for 10 minutes.
+#     """
+#     r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+#     r.headers["Pragma"] = "no-cache"
+#     r.headers["Expires"] = "0"
+#     r.headers['Cache-Control'] = 'public, max-age=0'
+#     return r
 
 @app.route('/')
 @app.route('/index')
@@ -33,19 +33,31 @@ def member_datatable():
 
 @app.route('/publications')
 def publications():
-    return render_template('member-datatable.html')
+    return render_template('publications.html')
+
+@app.route('/death')
+def death():
+    return render_template('death.html')
 
 @app.route('/index_2')
 def index_2():
-    return render_template('member-datatable.html')
+    return render_template('birth.html')
+
+@app.route('/birth')
+def birth():
+    return render_template('birth.html')
 
 @app.route('/view_user')
 def view_user():
     return render_template('member-datatable.html')
 
+@app.route('/promotion_and_transfer')
+def promotion_and_transfer():
+    return render_template('promotion-and-transfer.html')
+
 @app.route('/overview')
 def overview():
-    return render_template('baptism-certificates.html')
+    return render_template('promotion-and-transfer.html')
 
 @app.route('/messages')
 def messages():
@@ -90,6 +102,38 @@ def all_datatables():
 @app.route('/admin_hope')
 def admin_hope():
     return render_template('baptism-certificates.html')
+
+@app.route('/send_dedication_notif_msg', methods=['POST'])
+def send_dedication_notif_msg():
+    try:
+        if request.method == 'POST':
+            form = request.form
+            message_id = form.get('message_id')
+            msg_record_id = form.get('msg_cr_id')
+            message_body = form.get('message_body')
+
+            msg_data = {
+                "message_id": message_id,
+                "msg_cr_id": msg_record_id,
+                "message_body": message_body
+            }
+
+            utils.save_notif_msg(msg_data, 'dedication')
+
+            return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to send message'}), status=400, mimetype='application/json')
+
+@app.route('/load_dedication_msg_id', methods=['POST'])
+def load_dedication_msg_id():
+    try:
+        if request.method == 'POST':
+            msg_id = utils.get_notif_msg_id(dir_name="dedication")
+            return Response(json.dumps({'msg_id': msg_id}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to load Message ID'}), status=400, mimetype='application/json')
 
 @app.route('/dedication')
 def dedication():
@@ -237,6 +281,40 @@ def rallies_and_conventions_submit():
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
+@app.route('/send_baptism_cert_notif_msg', methods=['POST'])
+def send_baptism_cert_notif_msg():
+    try:
+        if request.method == 'POST':
+            form = request.form
+            message_id = form.get('message_id')
+            msg_record_id = form.get('msg_record_id')
+            message_body = form.get('message_body')
+
+            msg_data = {
+                "message_id": message_id,
+                "msg_record_id": msg_record_id,
+                "message_body": message_body
+            }
+
+            utils.save_notif_msg(msg_data, 'baptism_certificates')
+
+            return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to send message'}), status=400, mimetype='application/json')
+
+
+@app.route('/load_baptism_cert_msg_id', methods=['POST'])
+def load_baptism_cert_msg_id():
+    try:
+        if request.method == 'POST':
+            msg_id = utils.get_notif_msg_id(dir_name="baptism_certificates")
+            return Response(json.dumps({'msg_id': msg_id}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to load Message ID'}), status=400, mimetype='application/json')
+
+
 @app.route('/load_baptism_by_id/<src_id>', methods=['POST'])
 def load_baptism_by_id(src_id):
     try:
@@ -264,7 +342,7 @@ def baptism_certificates():
                 "district": baptism.district,
                 "area": baptism.area,
                 "country": baptism.country,
-                "certificates": 2
+                "certificates": 2 if utils.get_img_path(baptism.member_id) == "" else 1
             }
             bc_data.append(row_data)
         #print(bc_data[0])
@@ -281,6 +359,7 @@ def baptism_certificates_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
+        record_id = form.get("record_id").strip()
         member_id = form.get('member_id')
         date_of_baptism = form.get('date_of_baptism').strip()
         place_of_baptism = form.get('place_of_baptism').strip()
@@ -290,22 +369,37 @@ def baptism_certificates_submit():
         country = form.get('country').strip()
 
         try:
-            # if not utils.upload_baptism_photo(member_id):
-            #     return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
-            # create new baptism object
-            baptism = Baptism(member_id=member_id, place_of_baptism=place_of_baptism, officiating_minister=officiating_minister, \
-                district=district, area=area, country=country)
-            baptism.set_date_of_baptism(date_of_baptism)
+            if record_id == "":
+                if not utils.upload_baptism_photo(member_id):
+                    return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
+                # create new baptism object
+                baptism = Baptism(member_id=member_id, place_of_baptism=place_of_baptism, officiating_minister=officiating_minister, \
+                    district=district, area=area, country=country)
+                baptism.set_date_of_baptism(date_of_baptism)
 
-            # add the new baptism data to the database and save the changes
-            db.session.add(baptism)
-            db.session.commit()
+                # add the new baptism data to the database and save the changes
+                db.session.add(baptism)
+                db.session.commit()
+            else: 
+                # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
+                # https://docs.sqlalchemy.org/en/13/core/dml.html
+                member_id = int(member_id)
+                row_dict = {
+                    "date_of_baptism": date_of_baptism,
+                    "place_of_baptism": place_of_baptism,
+                    "officiating_minister": officiating_minister,
+                    "district": district,
+                    "area": area,
+                    "country": country
+                }
+                Baptism.query.filter_by(id=record_id).update(row_dict)
+                db.session.commit()
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
         except Exception as e:
-            #print(e)
+            print(e)
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
         

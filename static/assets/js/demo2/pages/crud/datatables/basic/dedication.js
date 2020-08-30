@@ -73,7 +73,7 @@ var KTDatatablesBasicPaginations = function() {
                               <i class="la la-ellipsis-h"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#kt_modal_4"><i class="fa flaticon2-email"></i> Push Notification</a>
+                                <button class="dropdown-item" onclick="getNotifId(this.parentElement.parentElement.parentElement.parentElement)" data-toggle="modal" data-target="#kt_modal_4"><i class="fa flaticon2-email"></i> Push Notification</button>
                                 <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
                             </div>
                         </span>
@@ -132,6 +132,93 @@ jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
 
+// load the notification
+let getNotifId = (row) => {
+	document.querySelector("#send").disabled = true;
+
+	$("#message_id").val("");
+	$("#msg_cr_id").val("");
+	
+	$.ajax({
+		method: "POST",
+
+		url: "/load_dedication_msg_id",
+
+		success: function(res) {
+			$("#message_id").val(res.msg_id);
+
+			let rec_id = row.getElementsByTagName("td")[0].textContent;
+			document.querySelector("#msg_cr_id").value = rec_id;
+
+			document.querySelector("#send").disabled = false;
+		},
+
+		error: function(res, status, error) {
+			swal.fire({
+				"title": "",
+				"text": res.responseJSON.message, 
+				"type": "error",
+				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+			}).then((result) => {
+				if (result.value) {
+					$("#kt_modal_4").modal("toggle");
+					document.querySelector("#send").disabled = true;
+				}
+			});
+		}
+	});
+
+}
+
+
+//send Push notification
+$("#send").on("click", function(e){
+	KTApp.progress($(this));
+
+	$.ajax({
+		method: "POST",
+
+		url: "/send_dedication_notif_msg",
+
+		data: {
+			message_id: $("#message_id").val(),
+			msg_record_id: $("#msg_cr_id").val(),
+			message_body: $("#message_body").val()
+		},
+
+		success: function(res) {
+			KTApp.unprogress($("#send"));
+
+			swal.fire({
+				"title": "", 
+				"text": "Notification Sent Successfully!", 
+				"type": "success",
+				"confirmButtonClass": "btn btn-secondary"
+			}).then((result) => {
+				if (result.value) {
+					$("#kt_modal_4").modal("toggle");
+					$("#message_id").val("");
+					$("#msg_cr_id").val("");
+					$("#message_body").val("");
+					document.querySelector("#send").disabled = true;
+				}
+			});
+		},
+
+		error: function(res, status, error) {
+			KTApp.unprogress($("#send"));
+
+			swal.fire({
+				"title": "",
+				"text": res.responseJSON.message, 
+				"type": "error",
+				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+			});
+		}
+	});
+});
+
+
 // allow the select option to be clearable
 let resetSelect2 = () => {
 	$("#kt_select2_3").select2('data', {}); // clear out values selected
@@ -185,54 +272,72 @@ $("#member_id_father").on("keyup", function(e) {
 	if ($(this).val().length === 8) {
 		$("#find_father_id").attr("hidden", false);		
         $.ajax({
-            method: "POST",
-            url: "/load_user_by_id/member_id_father",
-            data: $(this).serialize()
-        }).done(function(res) {
-			$("#find_father_id").attr("hidden", true);
-			if(res.gender==="M"){
-				if (res.first_name) {
-					let img_url = "/" + res.img;
-					$('#modal_father_image').attr("src", img_url);
-					let fullName = res.last_name + ", " + res.first_name
-					if (res.other_names) {
-						fullName = fullName + " " + res.other_names;
+			method: "POST",
+			
+			url: "/load_user_by_id/member_id_father",
+			
+			data: $(this).serialize(),
+			
+			success: function(res) {
+				$("#find_father_id").attr("hidden", true);
+				if(res.gender==="M"){
+					if (res.first_name) {
+						let img_url = "/" + res.img;
+						$('#modal_father_image').attr("src", img_url);
+						let fullName = res.last_name + ", " + res.first_name
+						if (res.other_names) {
+							fullName = fullName + " " + res.other_names;
+						}
+						document.querySelector("#modal_father_name").textContent = fullName;
+						document.querySelector("#father_name").value = fullName;
+						let assemblies = {
+							EEA: "Emmanuel English Assembly",
+							GA: "Glory Assembly",
+							HA: "Hope Assembly"
+						}
+						document.querySelector("#modal_father_assembly").textContent = assemblies[res.assembly];
+						//document.querySelector("#modal_father_id").textContent = res.member_id;
+					} else {
+						let img_url = "/static/assets/media/users/thecopkadna-users.png";
+						$("#find_father_id").attr("hidden", true);
+						$('#modal_father_image').attr("src", img_url);
+						document.querySelector("#father_name").value = "";
+						document.querySelector("#modal_father_name").textContent = "";
+						//document.querySelector("#modal_father_id").textContent = "";
+						document.querySelector("#modal_father_assembly").textContent = "";
+						swal.fire({
+							"title": "", 
+							"text": "Father ID Not Found!", 
+							"type": "error",
+							"confirmButtonClass": "btn btn-secondary"
+						});
+						$("#record_id_div").attr("hidden", true);
+						
 					}
-					document.querySelector("#modal_father_name").textContent = fullName;
-					document.querySelector("#father_name").value = fullName;
-					let assemblies = {
-						EEA: "Emmanuel English Assembly",
-						GA: "Glory Assembly",
-						HA: "Hope Assembly"
-					}
-					document.querySelector("#modal_father_assembly").textContent = assemblies[res.assembly];
-					//document.querySelector("#modal_father_id").textContent = res.member_id;
 				} else {
 					let img_url = "/static/assets/media/users/thecopkadna-users.png";
 					$("#find_father_id").attr("hidden", true);
 					$('#modal_father_image').attr("src", img_url);
 					document.querySelector("#father_name").value = "";
-					document.querySelector("#modal_father_name").textContent = "";
+					document.querySelector("#modal_father_name").textContent = "ID must belong to a male member";
 					//document.querySelector("#modal_father_id").textContent = "";
 					document.querySelector("#modal_father_assembly").textContent = "";
-					swal.fire({
-						"title": "", 
-						"text": "Father ID Not Found!", 
-						"type": "error",
-						"confirmButtonClass": "btn btn-secondary"
-					});
-					
+					$("#record_id_div").attr("hidden", true);
 				}
-			} else {
-				let img_url = "/static/assets/media/users/thecopkadna-users.png";
+			},
+
+			error: function(res, status, error) {
 				$("#find_father_id").attr("hidden", true);
-				$('#modal_father_image').attr("src", img_url);
-				document.querySelector("#father_name").value = "";
-				document.querySelector("#modal_father_name").textContent = "ID must belong to a male member";
-				//document.querySelector("#modal_father_id").textContent = "";
-				document.querySelector("#modal_father_assembly").textContent = "";
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
 			}
-        });
+		});
+		
     } else {
 		let img_url = "/static/assets/media/users/thecopkadna-users.png";
 		$("#find_father_id").attr("hidden", true);
@@ -240,7 +345,9 @@ $("#member_id_father").on("keyup", function(e) {
 		document.querySelector("#father_name").value = "";
 		document.querySelector("#modal_father_name").textContent = "";
         //document.querySelector("#modal_father_id").textContent = "";
-        document.querySelector("#modal_father_assembly").textContent = "";
+		document.querySelector("#modal_father_assembly").textContent = "";
+		$("#record_id_div").attr("hidden", true);
+		
     }
 });
 
@@ -249,54 +356,73 @@ $("#member_id_mother").on("keyup", function(e) {
     if ($(this).val().length === 8) {
 		$("#find_mother_id").attr("hidden", false);
         $.ajax({
-            method: "POST",
-            url: "/load_user_by_id/member_id_mother",
-            data: $(this).serialize()
-        }).done(function(res) {
-			$("#find_mother_id").attr("hidden", true);
-			if(res.gender === "F"){
-				if (res.first_name) {
-					let img_url = "/" + res.img;
-					$('#modal_mother_image').attr("src", img_url);
-					let fullName = res.last_name + ", " + res.first_name
-					if (res.other_names) {
-						fullName = fullName + " " + res.other_names;
+			method: "POST",
+			
+			url: "/load_user_by_id/member_id_mother",
+			
+			data: $(this).serialize(),
+			
+			success: function(res) {
+				$("#find_mother_id").attr("hidden", true);
+				if(res.gender === "F"){
+					if (res.first_name) {
+						let img_url = "/" + res.img;
+						$('#modal_mother_image').attr("src", img_url);
+						let fullName = res.last_name + ", " + res.first_name
+						if (res.other_names) {
+							fullName = fullName + " " + res.other_names;
+						}
+						document.querySelector("#modal_mother_name").textContent = fullName;
+						document.querySelector("#mother_name").value = fullName;
+						let assemblies = {
+							EEA: "Emmanuel English Assembly",
+							GA: "Glory Assembly",
+							HA: "Hope Assembly"
+						}
+						document.querySelector("#modal_mother_assembly").textContent = assemblies[res.assembly];
+						//document.querySelector("#modal_mother_id").textContent = res.member_id;
+					} else {
+						$("#find_mother_id").attr("hidden", true);
+						let img_url = "/static/assets/media/users/thecopkadna-users.png";
+						$('#modal_mother_image').attr("src", img_url);
+						document.querySelector("#mother_name").value = "";
+						document.querySelector("#modal_mother_name").textContent = "";
+						//document.querySelector("#modal_mother_id").textContent = "";
+						document.querySelector("#modal_mother_assembly").textContent = "";
+						swal.fire({
+							"title": "", 
+							"text": "Mother ID Not Found!", 
+							"type": "error",
+							"confirmButtonClass": "btn btn-secondary"
+						});
+						$("#record_id_div").attr("hidden", true);
+
 					}
-					document.querySelector("#modal_mother_name").textContent = fullName;
-					document.querySelector("#mother_name").value = fullName;
-					let assemblies = {
-						EEA: "Emmanuel English Assembly",
-						GA: "Glory Assembly",
-						HA: "Hope Assembly"
-					}
-					document.querySelector("#modal_mother_assembly").textContent = assemblies[res.assembly];
-					//document.querySelector("#modal_mother_id").textContent = res.member_id;
-				} else {
+				}else{
 					$("#find_mother_id").attr("hidden", true);
 					let img_url = "/static/assets/media/users/thecopkadna-users.png";
 					$('#modal_mother_image').attr("src", img_url);
 					document.querySelector("#mother_name").value = "";
-					document.querySelector("#modal_mother_name").textContent = "";
+					document.querySelector("#modal_mother_name").textContent = "ID must belong to a female member";
 					//document.querySelector("#modal_mother_id").textContent = "";
 					document.querySelector("#modal_mother_assembly").textContent = "";
-					swal.fire({
-						"title": "", 
-						"text": "Mother ID Not Found!", 
-						"type": "error",
-						"confirmButtonClass": "btn btn-secondary"
-					});
+					$("#record_id_div").attr("hidden", true);
 				}
-			}else{
+			},
+
+			error: function(res, status, error) {
 				$("#find_mother_id").attr("hidden", true);
-				let img_url = "/static/assets/media/users/thecopkadna-users.png";
-				$('#modal_mother_image').attr("src", img_url);
-				document.querySelector("#mother_name").value = "";
-				document.querySelector("#modal_mother_name").textContent = "ID must belong to a female member";
-				//document.querySelector("#modal_mother_id").textContent = "";
-				document.querySelector("#modal_mother_assembly").textContent = "";
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
 			}
-            
-        });
+			
+		});
+		
     } else {
 		$("#find_mother_id").attr("hidden", true);
         let img_url = "/static/assets/media/users/thecopkadna-users.png";
@@ -304,7 +430,8 @@ $("#member_id_mother").on("keyup", function(e) {
 		document.querySelector("#mother_name").value = "";
 		document.querySelector("#modal_mother_name").textContent = "";
         //document.querySelector("#modal_mother_id").textContent = "";
-        document.querySelector("#modal_mother_assembly").textContent = "";
+		document.querySelector("#modal_mother_assembly").textContent = "";
+		$("#record_id_div").attr("hidden", true);
     }
 });
 
