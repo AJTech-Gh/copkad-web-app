@@ -12,7 +12,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!--begin::Fonts -->
-        <script src="{{ url_for('static', filename='../../../../../../../ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/ajax/libs/webfont/1.6.16/webfont.js') }}"></script>
         <script>
             WebFont.load({
                 google: {"families":["Poppins:300,400,500,600,700"]},
@@ -31,6 +31,7 @@
         
         <!--begin::Global Theme Styles(used by all pages) -->
                     <link href="{{ url_for('static', filename='assets/vendors/global/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                     <link href="{{ url_for('static', filename='assets/css/demo2/style.bundle.css') }}" rel="stylesheet" type="text/css" />
                 <!--end::Global Theme Styles -->
 
@@ -237,9 +238,9 @@
         
         <span class="kt-subheader__desc">#COPKADNA-45675</span>
         
-        <a href="#" class="btn btn-label-primary btn-bold btn-icon-h kt-margin-l-10">
+        <!-- <a href="#" class="btn btn-label-primary btn-bold btn-icon-h kt-margin-l-10">
             Add New
-        </a>
+        </a> -->
     </div>
     <div class="kt-subheader__toolbar">
         <div class="kt-subheader__wrapper">
@@ -286,10 +287,16 @@
     <!--begin::Form-->
     <form class="kt-form kt-form--label-right">
         <div class="kt-portlet__body">
-            <div class="form-group row">
-            <!--pick Member ID data from database. Textbox marked as readonly-->    <label class="col-form-label col-lg-3 col-sm-12">Member ID</label>
+            <div class="form-group row" id="record_id_div" hidden>
+                <label class="col-form-label col-lg-3 col-sm-12">Record ID</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" />
+                    <input type="text" class="form-control" id="record_id" name="record_id" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3 col-sm-12">Member ID</label>
+                <div class="col-lg-4 col-md-9 col-sm-12">
+                    <input type="text" class="form-control" id="member_id" name="member_id"/>
                 </div>
             </div>
             <div class="form-group row">
@@ -305,21 +312,36 @@
                 </div>
             </div>
             <div class="form-group row">
-            <!--pick  first name, last name and other namesdata from the database. Textbox marked as readonly-->    <label class="col-form-label col-lg-3 col-sm-12">Full Name</label>
+                <label class="col-form-label col-lg-3 col-sm-12">Full Name</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" readonly/>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="full_name" name="full_name" readonly/>
+                        <div class="input-group-append">
+                            <span class="input-group-text spin" hiddene><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group row">
-            <!--pick age data from database. Textbox marked as readonly-->  <label class="col-form-label col-lg-3 col-sm-12">Assembly</label>
+                <label class="col-form-label col-lg-3 col-sm-12">Assembly</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" readonly/>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="assembly" name="assembly" readonly/>
+                        <div class="input-group-append">
+                            <span class="input-group-text spin" hiddene><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group row">
                     <label class="col-form-label col-lg-3 col-sm-12">Ministry</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
-                        <input type="text" class="form-control" readonly/>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="ministry" name="ministry" readonly/>
+                            <div class="input-group-append">
+                                <span class="input-group-text spin" hiddene><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
            
@@ -327,26 +349,22 @@
                 <!--select data of promotion here-->    <label class="col-form-label col-lg-3 col-sm-12">Date of Birth</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <div class="input-group date">
-                            <input type="text" class="form-control" readonly placeholder="Select date & time" id="kt_datetimepicker_2"/>
+                            <input type="text" class="form-control" placeholder="Member Date of Birth" id="date_of_birth" name="date_of_birth" readonly />
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="la la-calendar-check-o glyphicon-th"></i></span>
+                            </div>
+                            <div class="input-group-append">
+                                <span class="input-group-text spin" hiddene><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label class="col-form-label col-lg-3 col-sm-12">Aged</label>
-                    <div class="col-lg-4 col-md-9 col-sm-12">
-                        <input type="text" class="form-control" readonly />
-                    </div>
-                </div>
-
             <div class="form-group row">
-            <!--select data of promotion here-->    <label class="col-form-label col-lg-3 col-sm-12">Date of Death</label>
+                <label class="col-form-label col-lg-3 col-sm-12">Date of Death</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
                     <div class="input-group date">
-                        <input type="text" class="form-control" readonly placeholder="Select date & time" id="kt_datetimepicker_2"/>
+                        <input type="text" class="form-control" id="kt_datetimepicker_c1" name="kt_datetimepicker_c1"/>
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="la la-calendar-check-o glyphicon-th"></i></span>
                         </div>
@@ -355,10 +373,22 @@
             </div>   
 
             <div class="form-group row">
-                <!--select data of promotion here-->    <label class="col-form-label col-lg-3 col-sm-12">Burial Date</label>
+                <label class="col-form-label col-lg-3 col-sm-12">Aged</label>
+                <div class="col-lg-4 col-md-9 col-sm-12">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="aged" name="aged"  readonly />
+                        <div class="input-group-append">
+                            <span class="input-group-text spin" hiddene><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                    <label class="col-form-label col-lg-3 col-sm-12">Burial Date</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <div class="input-group date">
-                            <input type="text" class="form-control" readonly placeholder="Select date & time" id="kt_datetimepicker_2"/>
+                            <input type="text" class="form-control" placeholder="Select date & time" id="kt_datetimepicker_c2" name="kt_datetimepicker_c2"/>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="la la-calendar-check-o glyphicon-th"></i></span>
                             </div>
@@ -366,9 +396,9 @@
                     </div>
                 </div>   
             <div class="form-group row">
-            <!--input name of ordination minister here-->   <label class="col-form-label col-lg-3 col-sm-12">Officiating Minister</label>
+                <label class="col-form-label col-lg-3 col-sm-12">Officiating Minister</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control"   />
+                    <input type="text" class="form-control" id="officiating_minister" name="officiating_minister"/>
                 </div>
             </div>
         
@@ -382,7 +412,7 @@
                       2. submit button will show a popup modal to send a notification
                       3. send an sms notification to members phone contact.
                     --> <button type="submit" class="btn btn-success"  id="kt_sweetalert_demo_3_3">Submit</button>
-                        <button type="submit" class="btn btn-secondary">Cancel</button>
+                        <button type="reset" class="btn btn-secondary">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -400,13 +430,13 @@
                     <i class="kt-font-brand flaticon2-line-chart"></i>
                 </span>
                 <h3 class="kt-portlet__head-title">
-                    Rallies and convention
+                    Death Registry
                 </h3>
             </div>
             <div class="kt-portlet__head-toolbar">
                 <div class="kt-portlet__head-wrapper">
         <div class="kt-portlet__head-actions">
-            <div class="dropdown dropdown-inline">
+            <!-- <div class="dropdown dropdown-inline">
                 <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="la la-download"></i> Export   
                 </button>
@@ -418,24 +448,24 @@
                         <li class="kt-nav__item">
                             <a href="#" class="kt-nav__link">
                                 <i class="kt-nav__link-icon la la-print"></i>
-                                <span class="kt-nav__link-text">Print</span> <!--this will print the datatable-->
+                                <span class="kt-nav__link-text">Print</span>
                             </a>
                         </li>
                        
                         <li class="kt-nav__item">
                             <a href="#" class="kt-nav__link">
                                 <i class="kt-nav__link-icon la la-file-pdf-o"></i>
-                                <span class="kt-nav__link-text">PDF</span> <!--convert the datatable to pdf-->
+                                <span class="kt-nav__link-text">PDF</span>
                             </a>
                         </li>
                     </ul>
                 </div>
-            </div>
-            &nbsp;
+            </div> -->
+            <!-- &nbsp;
             <a href="#" class="btn btn-brand btn-elevate btn-icon-sm">
                 <i class="la la-plus"></i>
                 New Record
-            </a>
+            </a> -->
         </div>  
         <a href="#" class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
             <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
@@ -451,7 +481,8 @@
                 <thead>
                   <tr>
                                   <th>Record ID</th>
-                                  <th>Father's Name</th>
+                                  <th>Member ID</th>
+                                  <th>Full Name</th>
                                   <th>Assembly</th>
                                   <th>Ministry</th>
                                   <th>Date of Birth</th>
@@ -467,6 +498,7 @@
             <tbody>
                 <tr>
                                  <!---->   <td>1</td>
+                                 <td>10000108</td>
                                <td>kjldjfkjskdjf</td>
                                   <td>fhdfjkshdjfh</td>
                                   <td>Nsema</td>

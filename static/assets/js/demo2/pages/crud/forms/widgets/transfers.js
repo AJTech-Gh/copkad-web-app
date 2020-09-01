@@ -4,6 +4,25 @@ var KTBootstrapDatetimepicker = function () {
     
     // Private functions
     var demos = function () {
+
+        $('#kt_datetimepicker_c1').datetimepicker({
+            todayHighlight: true,
+            autoclose: true,
+            format: 'yyyy-mm-dd'
+        });
+
+        $('#kt_datetimepicker_c2').datetimepicker({
+            todayHighlight: true,
+            autoclose: true,
+            format: 'yyyy-mm-dd'
+        });
+
+        $('#kt_datetimepicker_c3').datetimepicker({
+            todayHighlight: true,
+            autoclose: true,
+            format: 'yyyy-mm-dd'
+        });
+
         // minimal setup
         $('#kt_datetimepicker_1').datetimepicker({
             todayHighlight: true,

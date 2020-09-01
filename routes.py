@@ -35,10 +35,6 @@ def member_datatable():
 def publications():
     return render_template('publications.html')
 
-@app.route('/death')
-def death():
-    return render_template('death.html')
-
 @app.route('/index_2')
 def index_2():
     return render_template('birth.html')
@@ -102,6 +98,15 @@ def all_datatables():
 @app.route('/admin_hope')
 def admin_hope():
     return render_template('baptism-certificates.html')
+
+@app.route('/death')
+def death():
+    try:
+        #ded_data = Death.query.all()
+        return render_template('death.html')
+    except Exception as e:
+        print(e)
+        #return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/send_dedication_notif_msg', methods=['POST'])
 def send_dedication_notif_msg():
