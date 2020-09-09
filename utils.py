@@ -282,7 +282,13 @@ def read_user_by_member_id(id):
     user = User.query.filter_by(member_id=id).first()
     data = dict()
     if (user):
-        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 'contact_2':user.contact_phone_2, 'email':user.email, 'gender':user.gender, 'img': get_img_path(id)}
+        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names,
+        'gender':user.gender, 'occupation':user.occupation, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 
+        'contact_2':user.contact_phone_2, 'dob':'{}-{}-{}'.format(user.dob.year, user.dob.month, user.dob.day), 
+        'email':user.email, 'marital_status':user.marital_status, 'ministry':user.ministry, 'group':user.group, 
+        'comm_email':user.comm_email,'comm_sms':user.comm_sms, 'comm_phone':user.comm_phone, 
+        'address_line_1':user.address_line_1,'address_line_2':user.address_line_2, 'digital_address_code':user.digital_address_code, 
+        'region':user.region, 'district':user.district, 'country':user.country, 'img': get_img_path(id)}
     return data
 
 def read_baptism_by_member_id(id):
@@ -291,7 +297,9 @@ def read_baptism_by_member_id(id):
     if (baptism):
         date_of_baptism = baptism.date_of_baptism
         date_of_baptism = '{}-{}-{}'.format(date_of_baptism.year, date_of_baptism.month, date_of_baptism.day)
-        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': baptism.place_of_baptism, 'officiating_minister': baptism.officiating_minister, 'district': baptism.district, 'area': baptism.area, 'country': baptism.country, 'img': get_img_path(id, model='baptism')}
+        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': baptism.place_of_baptism, 
+        'officiating_minister': baptism.officiating_minister, 'district': baptism.district, 'area': baptism.area, 
+        'country': baptism.country, 'img': get_img_path(id, model='baptism')}
     return data
 
 def get_img_path(member_id, type='complete', model="user"):
@@ -309,6 +317,12 @@ def get_img_path(member_id, type='complete', model="user"):
 
 
 def get_rc_id():
+    """
+    Get the rallies and conventions id for the most recently submitted data
+    """
+    return db.session.query(db.func.max(RalliesAndConventions.cr_id)).scalar()
+
+def get_death_id():
     """
     Get the rallies and conventions id for the most recently submitted data
     """

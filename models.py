@@ -93,6 +93,32 @@ class User(db.Model):
     def __repr__(self):
         return f'User: {self.member_id} - {self.last_name}, {self.first_name} {self.other_names}'
 
+class Death(db.Model):
+    #Deceased member info
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
+    #Death records
+    death_date = db.Column(db.DateTime(), unique=False, nullable=False)
+    burial_date = db.Column(db.DateTime(), unique=False, nullable=False)
+    place_of_burial = db.Column(db.String(50), unique=False, nullable=False)
+    officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
+
+    def set_death_date(self, death_date):
+        death_date = death_date.split('-')
+        self.death_date = datetime(int(death_date[0]), int(death_date[1]), int(death_date[2]))
+
+    def get_death_date(self, death_date):
+        return '{}-{}-{}'.format(death_date.year, death_date.month, death_date.day)
+
+    def set_burial_date(self, burial_date):
+        burial_date = burial_date.split('-')
+        self.burial_date = datetime(int(burial_date[0]), int(burial_date[1]), int(burial_date[2]))
+
+    def get_burial_date(self, burial_date):
+        return '{}-{}-{}'.format(burial_date.year, burial_date.month, burial_date.day)
+
+    def __repr__(self):
+        return f'User: {self.member_id}'
 
 class Baptism(db.Model):
     # account info

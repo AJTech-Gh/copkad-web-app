@@ -2,7 +2,7 @@ from flask import render_template, request, make_response, jsonify, Response
 import json
 from datetime import datetime
 from app import app, db
-from models import User, Baptism, RalliesAndConventions, Dedication
+from models import User, Baptism, RalliesAndConventions, Dedication, Death
 import utils
 
 
@@ -102,11 +102,95 @@ def admin_hope():
 @app.route('/death')
 def death():
     try:
-        #ded_data = Death.query.all()
-        return render_template('death.html')
+        data_1 = db.session.query(Death, User).join(User).all()
+        death_data = []
+        for death, user in data_1:
+            row_data = {
+                "record_id": str(death.id),
+                "member_id": death.member_id,
+                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                "assembly": user.assembly,
+                "ministry": user.ministry,
+                "aged": str(death.death_date.year - user.dob.year),
+                "date_of_birth": '{}-{}-{}'.format(user.dob.year, user.dob.month, user.dob.day),
+                "death_date": '{}-{}-{}'.format(death.death_date.year, death.death_date.month, death.death_date.day),
+                "burial_date": '{}-{}-{}'.format(death.burial_date.year, death.burial_date.month, death.burial_date.day),
+                "place_of_burial": death.place_of_burial,
+                "officiating_minister": death.officiating_minister
+            }
+            death_data.append(row_data)
+        #print(death_data[0])
+        return render_template('death.html', death_data=death_data)
     except Exception as e:
         print(e)
-        #return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route('/death_submit', methods=['POST'])
+def death_submit():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        record_id = form.get("record_id").strip()
+        member_id = form.get('member_id')
+        death_date = form.get('death_date').strip()
+        assembly = form.get("assembly")
+        ministry = form.get("ministry")
+        date_of_birth = form.get('date_of_birth')
+        aged = form.get("aged")
+        burial_date = form.get('burial_date').strip()
+        place_of_burial = form.get('place_of_burial').strip()
+        officiating_minister = form.get('officiating_minister').strip() 
+
+        try:
+            if record_id == "":
+                # create new baptism object
+                death = Death(member_id=member_id, place_of_burial=place_of_burial, officiating_minister=officiating_minister)
+
+                death.set_death_date(death_date)
+                death.set_burial_date(burial_date)
+
+                # add the new baptism data to the database and save the changes
+                db.session.add(death)
+                db.session.commit()
+            else: 
+                # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
+                # https://docs.sqlalchemy.org/en/13/core/dml.html
+                member_id = int(member_id)
+                row_dict = {
+                    "death_date": death_date,
+                    "burial_date": burial_date,
+                    "place_of_burial": place_of_burial,
+                    "officiating_minister": officiating_minister
+                }
+                Death.query.filter_by(id=record_id).update(row_dict)
+                db.session.commit()
+
+            data = {
+            "death_id": utils.get_death_id(),
+            "member_id": member_id,
+            "date_of_birth": date_of_birth,
+            "death_date": death_date,
+            "aged": aged,
+            'assembly':assembly,
+            'ministry':ministry,
+            "burial_date": burial_date,
+            "place_of_burial": place_of_burial,
+            "officiating_minister": officiating_minister
+            }
+
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            #return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
 
 @app.route('/send_dedication_notif_msg', methods=['POST'])
 def send_dedication_notif_msg():
@@ -413,11 +497,20 @@ def baptism_certificates_submit():
 def load_user_by_id(src_id):
     try:
         if request.method == 'POST':
-            member_id = request.form.get(src_id).strip()
+            member_id = request.form.get(src_id).strip()           
             return Response(json.dumps(utils.read_user_by_member_id(member_id)), status=200, mimetype='application/json')
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+@app.route('/load_user_img/<member_id>', methods=['POST'])
+def load_user_img(member_id):
+    try:
+        if request.method == 'POST':        
+            return Response(json.dumps({"img": utils.get_img_path(member_id)}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to load profile photo'}), status=400, mimetype='application/json')
 
 @app.route('/add_user')
 def add_user():
