@@ -1,7 +1,7 @@
 import os
 import time
 from app import db, app, mail
-from models import User, RalliesAndConventions, Baptism
+from models import User, RalliesAndConventions, Baptism, Death
 from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
@@ -363,3 +363,11 @@ def read_notif_msg(message_id, dir_name):
     decrypted_json_data = decrypt_json_data(encrypted_json_data)
     json_file.close()
     return json.loads(decrypted_json_data)
+
+def member_id_exists(member_id, table="user"):
+    #Tables involved: death, baptism
+    if table == 'death' and Death.query.filter_by(member_id=member_id).first():
+        return True
+    if table == 'baptism' and Baptism.query.filter_by(member_id=member_id).first():
+        return True
+    return False

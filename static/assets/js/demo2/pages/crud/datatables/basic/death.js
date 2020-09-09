@@ -84,9 +84,9 @@ var KTDatatablesBasicPaginations = function() {
 					render: function(data, type, full, meta) {
 
 						var assembly = {
-							EEA: {'title': 'Emmanuel English Assembly'},
-							GA: {'title': 'Glory Assembly'},
-							HA: {'title': 'Hope Assembly'}
+							EEA: {'title': 'Emmanuel'},
+							GA: {'title': 'Glory'},
+							HA: {'title': 'Hope'}
 						}
 						
 						if(typeof assembly[data] === 'undefined') {
@@ -94,6 +94,12 @@ var KTDatatablesBasicPaginations = function() {
 						}
 
 						return assembly[data].title;
+					}
+				},
+				{
+					targets: 4,
+					render: function(data, type, full, meta) {
+						return translateMinistries(data);
 					}
 				},
 			],
@@ -140,9 +146,9 @@ $("#member_id").on("keyup", function(e) {
                     }
                     document.querySelector("#full_name").value = fullName;
                     let assemblies = {
-                        EEA: "Emmanuel English Assembly",
-                        GA: "Glory Assembly",
-                        HA: "Hope Assembly"
+                        EEA: "Emmanuel",
+                        GA: "Glory",
+                        HA: "Hope"
                     }
 				   
 					document.querySelector("#assembly").value = assemblies[res.assembly];
@@ -202,6 +208,22 @@ let printRowData = (row) => {
 	printDetails(jsonData);
 }
 
+let translateMinistries = (initials) => {
+	let initialsArr = initials.split(",");
+	let translatedMinistries = "";
+	let ministries = {
+		C: 'Children', 
+		E: 'Evangelism', 
+		P: 'Pemem', 
+		W: 'Women', 
+		Y: 'Youth'
+	}
+	for (let i = 0; i < initialsArr.length; i++) {
+		translatedMinistries += ministries[initialsArr[i]] + ", ";
+	}
+	return translatedMinistries.substring(0, translatedMinistries.length - 2);
+}
+
 //Method to load row back into form
 let viewRowData = (row) => {
 	let colIds = ["record_id", "member_id", "full_name", "assembly", "ministry", "date_of_birth", "aged", "death_date", 
@@ -210,6 +232,10 @@ let viewRowData = (row) => {
 	let jsonRowData = {}
 
 	for (let i = 0; i < rowData.length - 1; i++ ){
+		// if (colIds[i] === "ministry") {
+		// 	jsonRowData[colIds[i]] = translateMinistries(rowData[i].textContent);
+		// 	continue;
+		// }
 		jsonRowData[colIds[i]] = rowData[i].textContent;
 	}
 

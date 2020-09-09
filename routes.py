@@ -142,9 +142,11 @@ def death_submit():
         aged = form.get("aged")
         burial_date = form.get('burial_date').strip()
         place_of_burial = form.get('place_of_burial').strip()
-        officiating_minister = form.get('officiating_minister').strip() 
+        officiating_minister = form.get('officiating_minister').strip()
 
         try:
+            if utils.member_id_exists(member_id, table="death"):
+                return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
             if record_id == "":
                 # create new baptism object
                 death = Death(member_id=member_id, place_of_burial=place_of_burial, officiating_minister=officiating_minister)
@@ -458,6 +460,8 @@ def baptism_certificates_submit():
         country = form.get('country').strip()
 
         try:
+            if utils.member_id_exists(member_id, table="baptism"):
+                return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
             if record_id == "":
                 if not utils.upload_baptism_photo(member_id):
                     return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
