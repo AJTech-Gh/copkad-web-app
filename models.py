@@ -93,6 +93,49 @@ class User(db.Model):
     def __repr__(self):
         return f'User: {self.member_id} - {self.last_name}, {self.first_name} {self.other_names}'
 
+class Transfer(db.Model):
+    #Transfered member info
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
+    #Transfer records
+    transformed_from = db.Column(db.String(50), unique=False, nullable=False)
+    transfered_to = db.Column(db.String(50), unique=False, nullable=False)
+    present_portfolio = db.Column(db.String(50), unique=False, nullable=False)
+    transfered_specification = db.Column(db.String(100), unique=False, nullable=False)
+    transfer_date = db.Column(db.DateTime(), unique=False, nullable=False)
+    officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
+
+    def set_transfer_date(self, transfer_date):
+        death_date = transfer_date.split('-')
+        self.death_date = datetime(int(transfer_date[0]), int(transfer_date[1]), int(transfer_date[2]))
+
+    def get_promotion_date(self, transfer_date):
+        return '{}-{}-{}'.format(transfer_date.year, transfer_date.month, transfer_date.day)
+
+    def __repr__(self):
+        return f'User: {self.member_id}'
+
+class Promotion(db.Model):
+    #Promoted member info
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
+    #Promotion records
+    present_portfolio = db.Column(db.String(50), unique=False, nullable=False)
+    promoted_portfolio = db.Column(db.String(50), unique=False, nullable=False)
+    portfolio_specification = db.Column(db.String(80), unique=False, nullable=False)
+    promotion_date = db.Column(db.DateTime(), unique=False, nullable=False)
+    officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
+
+    def set_promotion_date(self, promotion_date):
+        death_date = promotion_date.split('-')
+        self.death_date = datetime(int(promotion_date[0]), int(promotion_date[1]), int(promotion_date[2]))
+
+    def get_promotion_date(self, promotion_date):
+        return '{}-{}-{}'.format(promotion_date.year, promotion_date.month, promotion_date.day)
+
+    def __repr__(self):
+        return f'User: {self.member_id}'
+
 class Death(db.Model):
     #Deceased member info
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

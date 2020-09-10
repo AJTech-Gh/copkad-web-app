@@ -2,7 +2,7 @@ from flask import render_template, request, make_response, jsonify, Response
 import json
 from datetime import datetime
 from app import app, db
-from models import User, Baptism, RalliesAndConventions, Dedication, Death
+from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer
 import utils
 
 
@@ -46,10 +46,6 @@ def birth():
 @app.route('/view_user')
 def view_user():
     return render_template('member-datatable.html')
-
-@app.route('/promotion_and_transfer')
-def promotion_and_transfer():
-    return render_template('promotion-and-transfer.html')
 
 @app.route('/overview')
 def overview():
@@ -98,6 +94,197 @@ def all_datatables():
 @app.route('/admin_hope')
 def admin_hope():
     return render_template('baptism-certificates.html')
+
+@app.route('/promotion_and_transfer')
+def promotion_and_transfer():
+    return render_template('promotion-and-transfer.html')
+
+# @app.route('/promotion_and_transfer')
+# def promotion_and_transfer():
+#     try:
+#         data_1 = db.session.query(Promotion, User).join(User).all()
+#         promotion_data = []
+#         for promotion, user in data_1:
+#             row_data = {
+#                 "record_id": str(promotion.id),
+#                 "member_id": promotion.member_id,
+#                 "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+#                 "assembly": user.assembly,
+#                 #"ministry": user.ministry,
+#                 "age": promotion.age,
+#                 "present_portfolio": promotion.present_portfolio,
+#                 "promoted_portfolio": promotion.promoted_portfolio,
+#                 "portfolio_specification": promotion.portfolio_specification,
+#                 "promotion_date": '{}-{}-{}'.format(promotion.promotion_date.year, promotion.promotion_date.month, promotion.promotion_date.day),
+#                 "officiating_minister": promotion.officiating_minister
+#             }
+#             promotion_data.append(row_data)
+
+#         data_2 = db.session.query(Transfer, User).join(User).all()
+#         transfer_data = []
+#         for transfer, user in data_2:
+#             row_data = {
+#                 "record_id": str(transfer.id),
+#                 "member_id": transfer.member_id,
+#                 "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+#                 "assembly": user.assembly,
+#                 #"ministry": user.ministry,
+#                 "age": transfer.age,
+#                 "present_portfolio": transfer.present_portfolio,
+#                 "transfered_from": transfer.transfered_from,
+#                 "transfered_to": transfer.transfered_to,
+#                 "transfer_specification": transfer.transfer_specification,
+#                 "promotion_date": '{}-{}-{}'.format(transfer.transfer_date.year, transfer.transfer_date.month, transfer.transfer_date.day),
+#                 "officiating_minister": transfer.officiating_minister
+#             }
+#             transfer_data.append(row_data)
+#         #print(death_data[0])
+#         return render_template('promotion-and-transfer.html', promotion_data=promotion_data, transfer_data=transfer_data)
+#     except Exception as e:
+#         print(e)
+#         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+@app.route('/transfer_submit', methods=['POST'])
+def transfer_submit():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        record_id = form.get("trans_record_id").strip()
+        member_id = form.get('trans_member_id')
+        full_name = form.ger('trans_full_name')
+        age = form.get('trans_age').strip()
+        assembly = form.get('trans_assembly'),
+        transfered_from = form.get("trans_transfered_from").strip()
+        transfered_to = form.get('trans_transfered_to').strip()
+        present_portfolio = form.get("trans_present_portfolio").strip()
+        transfer_specification = form.get('trans_specify_transfer').strip()
+        transfer_date = form.get('trans_transfer_date').strip()
+        officiating_minister = form.get('trans_officiating_minister').strip()
+
+        try:
+            # if utils.member_id_exists(member_id, table="promotion"):
+            #     return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
+            if record_id == "":
+                # create new baptism object
+                transfer = Transfer(member_id=member_id, age=age, present_portfolio=present_portfolio, transfered_from=transfered_from, transfered_to=transfered_to,
+                transfer_specification=transfer_specification, officiating_minister=officiating_minister)
+
+                transfer.set_transfer_date(transfer_date)
+
+                # add the new baptism data to the database and save the changes
+                db.session.add(transfer)
+                db.session.commit()
+            else: 
+                # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
+                # https://docs.sqlalchemy.org/en/13/core/dml.html
+                member_id = int(member_id)
+                row_dict = {
+                    'age':age,
+                    'present_portfolio':present_portfolio,
+                    'transfered_from':transfered_from,
+                    'transfered_to':transfered_to,
+                    'transfer_specification':transfer_specification,
+                    'transfer_date':transfer_date,
+                    'officiating_minister': officiating_minister
+                }
+                Transfer.query.filter_by(id=record_id).update(row_dict)
+                db.session.commit()
+
+            data = {
+            "transfer_id": utils.get_transfer_id(),
+            "member_id": member_id,
+            "transfer_date": transfer_date,
+            "full_name":full_name,
+            "age": age,
+            "assembly": assembly,
+            'present_portfolio':present_portfolio,
+            "transfered_from": transfered_from,
+            "transfered_to": transfered_to,
+            "transfer_specification": transfer_specification,
+            "officiating_minister": officiating_minister
+            }
+
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            #return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route('/promotion_submit', methods=['POST'])
+def promotion_submit():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        record_id = form.get("pro_record_id").strip()
+        member_id = form.get('pro_member_id')
+        full_name = form.ger('pro_full_name')
+        age = form.get('pro_age').strip()
+        assembly = form.get('pro_assembly'),
+        present_portfolio = form.get("pro_present_portfolio").strip()
+        promoted_portfolio = form.get('pro_promoted_portfolio')
+        portfolio_specification = form.get('pro_specify_portfolio').strip()
+        promotion_date = form.get('pro_promotion_date').strip()
+        officiating_minister = form.get('pro_officiating_minister').strip()
+
+        try:
+            # if utils.member_id_exists(member_id, table="promotion"):
+            #     return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
+            if record_id == "":
+                # create new baptism object
+                promotion = Promotion(member_id=member_id, age=age, present_portfolio=present_portfolio, promoted_portfolio=promoted_portfolio, 
+                portfolio_specification=portfolio_specification, officiating_minister=officiating_minister)
+
+                promotion.set_promotion_date(promotion_date)
+
+                # add the new baptism data to the database and save the changes
+                db.session.add(promotion)
+                db.session.commit()
+            else: 
+                # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
+                # https://docs.sqlalchemy.org/en/13/core/dml.html
+                member_id = int(member_id)
+                row_dict = {
+                    'age':age,
+                    'present_portfolio':present_portfolio,
+                    'promoted_portfolio':promoted_portfolio,
+                    'portfolio_specification':portfolio_specification,
+                    'promotion_date':promotion_date,
+                    'officiating_minister': officiating_minister
+                }
+                Promotion.query.filter_by(id=record_id).update(row_dict)
+                db.session.commit()
+
+            data = {
+            "promotion_id": utils.get_promotion_id(),
+            "member_id": member_id,
+            "promotion_date": promotion_date,
+            "full_name":full_name,
+            "age": age,
+            "assembly": assembly,
+            "present_portfolio":present_portfolio,
+            "promoted_portfolio": promoted_portfolio,
+            "portfolio_specification": portfolio_specification,
+            "officiating_minister": officiating_minister
+            }
+
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+
+            # return the success response to Ajax
+            # return json.dumps({'status':'OK', 'message': 'successful'})
+            #return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/death')
 def death():

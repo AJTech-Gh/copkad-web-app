@@ -195,7 +195,6 @@ $("#member_id").on("change", function(e) {
     $("#member_id").trigger("keyup");
 });
 
-
 // print the row data
 let printRowData = (row) => {
 	let col_ids = ["record_id", "member_id", "full_name", "assembly", "ministry", "date_of_birth", "aged", 
@@ -307,15 +306,6 @@ var KTForm = function () {
     // Base elements
     var formEl;
     var validator;
-
-	let momOrDad = () => {
-		if (document.querySelector("#father_name").value || document.querySelector("#mother_name").value){
-			return true;
-		}
-		else{
-			return false;
-		}
-	};
 
     var initValidation = function() {
 		

@@ -1,7 +1,7 @@
 import os
 import time
 from app import db, app, mail
-from models import User, RalliesAndConventions, Baptism, Death
+from models import User, RalliesAndConventions, Baptism, Death, Promotion, Transfer
 from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
@@ -324,10 +324,21 @@ def get_rc_id():
 
 def get_death_id():
     """
-    Get the rallies and conventions id for the most recently submitted data
+    Get the death id for the most recently submitted data
     """
-    return db.session.query(db.func.max(RalliesAndConventions.cr_id)).scalar()
+    return db.session.query(db.func.max(Death.id)).scalar()
 
+def get_promotion_id():
+    """
+    Get the promotion id for the most recently submitted data
+    """
+    return db.session.query(db.func.max(Promotion.id)).scalar()
+
+def get_transfer_id():
+    """
+    Get the Transfer id for the most recently submitted data
+    """
+    return db.session.query(db.func.max(Transfer.id)).scalar()
 
 def set_date_time(start_date_time):
     _date, _time = start_date_time.split()
