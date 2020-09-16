@@ -309,7 +309,7 @@
         </div>
     </div>
     <!--begin::Form-->
-    <form class="kt-form kt-form--label-right" id="dedication_form" method="POST">
+    <form class="kt-form kt-form--label-right" id="dedication_form" method="POST" action="dedication_submit">
         <div class="kt-portlet__body">
             <div class="form-group row" id="record_id_div" hidden>
                 <label class="col-form-label col-lg-3 col-sm-12">Record ID</label>
@@ -587,8 +587,8 @@
                                         <thead>
                                           <tr>
                                                           <th>Record ID</th>
-                                                          <th>Mother's ID</th>
-                                                          <th>Father's ID</th>
+                                                          <th>Mother's ID - Name</th>
+                                                          <th>Father's ID - Name</th>
                                                           <th>Name of Child</th>
                                                           <th>Date of Birth</th>
                                                           <th>Date of Dedication</th>
@@ -604,8 +604,8 @@
                                         {% for ded in ded_data %}
                                         <tr>
                                                         <!---->   <td>{{ded.id}}</td>
-                                                        <!--Member ID--> <td>{{ded.member_id_mother}}</td>
-                                                        <!--Full Name-->  <td>{{ded.member_id_father}}</td>
+                                                        <!--Member ID--> <td>{{ded.member_id_mother + " - " + user_data_dict[ded.member_id_mother]}}</td>
+                                                        <!--Full Name-->  <td>{{ded.member_id_father + " - " + user_data_dict[ded.member_id_father]}}</td>
                                                         <!--Assembly--> <td>{{ded.child_name}}</td>
                                                         <!--Date of Registration--> <td>{{ded.child_dob}}</td>
                                                         <!--Date of Holy Ghost Baptism--> <td>{{ded.dedication_date_time}}</td>

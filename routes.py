@@ -2,7 +2,7 @@ from flask import render_template, request, make_response, jsonify, Response
 import json
 from datetime import datetime
 from app import app, db
-from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer
+from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth
 import utils
 
 
@@ -37,10 +37,6 @@ def publications():
 
 @app.route('/index_2')
 def index_2():
-    return render_template('birth.html')
-
-@app.route('/birth')
-def birth():
     return render_template('birth.html')
 
 @app.route('/view_user')
@@ -95,54 +91,125 @@ def all_datatables():
 def admin_hope():
     return render_template('baptism-certificates.html')
 
+@app.route('/birth')
+def birth():
+    try:
+        birth_data = Birth.query.all()
+        user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
+        user_data_dict = {"": ""}
+        # print(user_data)
+        for user in user_data:
+            user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
+        return render_template('birth.html', birth_data=birth_data, user_data_dict=user_data_dict)
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+@app.route('/birth_submit', methods=['POST'])
+def birth_submit():
+    if request.method == 'POST':
+        # get the form data transmitted by Ajax
+        # form is an ImmutableMultiDict object
+        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        record_id = form.get('record_id').strip()
+        member_id_father = form.get('member_id_father').strip()
+        member_id_mother = form.get('member_id_mother').strip()
+        child_name = form.get('child_name').strip()
+        child_dob = form.get('child_dob')
+        ceremony_date_time = form.get('dedication_date_time')
+        officiating_minister = form.get('officiating_minister').strip()
+        assembly = form.get('assembly')
+
+        try:
+            if record_id == "":
+                new_birth = Birth(member_id_father=member_id_father, member_id_mother=member_id_mother, child_name=child_name,
+                                        officiating_minister=officiating_minister, assembly=assembly)
+
+                new_birth.set_child_dob(child_dob)
+                new_birth.set_dedication_date_time(ceremony_date_time)
+
+                db.session.add(new_birth)
+                db.session.commit()
+            else:
+                record_id = int(record_id)
+                # child_dob = child_dob.split('-')
+                # child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
+                row_dict = {
+                    "id": record_id,
+                    "member_id_father": member_id_father,
+                    "member_id_mother": member_id_mother,
+                    "child_name": child_name,
+                    "officiating_minister": officiating_minister,
+                    "assembly": assembly,
+                    "child_dob": child_dob,
+                    "dedication_date_time": utils.set_date_time(ceremony_date_time)
+                }
+                Birth.query.filter_by(id=record_id).update(row_dict)
+                db.session.commit()
+
+            data = {
+                "member_id_father": member_id_father,
+                "member_id_mother": member_id_mother,
+                "child_name": child_name,
+                "child_dob": child_dob,
+                "dedication_date_time": ceremony_date_time,
+                "officiating_minister": officiating_minister,
+                "assembly": assembly,
+            }
+
+            return Response(json.dumps(data), status=200, mimetype='application/json')
+        except Exception as e:
+            print(e)
+            # print(form)
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+
 @app.route('/promotion_and_transfer')
 def promotion_and_transfer():
-    return render_template('promotion-and-transfer.html')
+    try:
+        data_1 = db.session.query(Promotion, User).join(User).all()
+        promotion_data = []
+        for promotion, user in data_1:
+            row_data = {
+                "record_id": str(promotion.id),
+                "member_id": promotion.member_id,
+                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                "assembly": user.assembly,
+                #"ministry": user.ministry,
+                "age": promotion.age,
+                "present_portfolio": promotion.present_portfolio,
+                "promoted_portfolio": promotion.promoted_portfolio,
+                "portfolio_specification": promotion.portfolio_specification,
+                "promotion_date": '{}-{}-{}'.format(promotion.promotion_date.year, promotion.promotion_date.month, promotion.promotion_date.day),
+                "officiating_minister": promotion.officiating_minister
+            }
+            promotion_data.append(row_data)
 
-# @app.route('/promotion_and_transfer')
-# def promotion_and_transfer():
-#     try:
-#         data_1 = db.session.query(Promotion, User).join(User).all()
-#         promotion_data = []
-#         for promotion, user in data_1:
-#             row_data = {
-#                 "record_id": str(promotion.id),
-#                 "member_id": promotion.member_id,
-#                 "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
-#                 "assembly": user.assembly,
-#                 #"ministry": user.ministry,
-#                 "age": promotion.age,
-#                 "present_portfolio": promotion.present_portfolio,
-#                 "promoted_portfolio": promotion.promoted_portfolio,
-#                 "portfolio_specification": promotion.portfolio_specification,
-#                 "promotion_date": '{}-{}-{}'.format(promotion.promotion_date.year, promotion.promotion_date.month, promotion.promotion_date.day),
-#                 "officiating_minister": promotion.officiating_minister
-#             }
-#             promotion_data.append(row_data)
-
-#         data_2 = db.session.query(Transfer, User).join(User).all()
-#         transfer_data = []
-#         for transfer, user in data_2:
-#             row_data = {
-#                 "record_id": str(transfer.id),
-#                 "member_id": transfer.member_id,
-#                 "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
-#                 "assembly": user.assembly,
-#                 #"ministry": user.ministry,
-#                 "age": transfer.age,
-#                 "present_portfolio": transfer.present_portfolio,
-#                 "transfered_from": transfer.transfered_from,
-#                 "transfered_to": transfer.transfered_to,
-#                 "transfer_specification": transfer.transfer_specification,
-#                 "promotion_date": '{}-{}-{}'.format(transfer.transfer_date.year, transfer.transfer_date.month, transfer.transfer_date.day),
-#                 "officiating_minister": transfer.officiating_minister
-#             }
-#             transfer_data.append(row_data)
-#         #print(death_data[0])
-#         return render_template('promotion-and-transfer.html', promotion_data=promotion_data, transfer_data=transfer_data)
-#     except Exception as e:
-#         print(e)
-#         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+        data_2 = db.session.query(Transfer, User).join(User).all()
+        transfer_data = []
+        for transfer, user in data_2:
+            row_data = {
+                "record_id": str(transfer.id),
+                "member_id": transfer.member_id,
+                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                "assembly": user.assembly,
+                #"ministry": user.ministry,
+                "age": transfer.age,
+                "present_portfolio": transfer.present_portfolio,
+                "transfered_from": transfer.transfered_from,
+                "transfered_to": transfer.transfered_to,
+                "transfer_specification": transfer.transfer_specification,
+                "transfer_date": '{}-{}-{}'.format(transfer.transfer_date.year, transfer.transfer_date.month, transfer.transfer_date.day),
+                "officiating_minister": transfer.officiating_minister
+            }
+            transfer_data.append(row_data)
+        #print(death_data[0])
+        return render_template('promotion-and-transfer.html', promotion_data=promotion_data, transfer_data=transfer_data)
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/transfer_submit', methods=['POST'])
 def transfer_submit():
@@ -153,14 +220,14 @@ def transfer_submit():
         form = request.form
         record_id = form.get("trans_record_id").strip()
         member_id = form.get('trans_member_id')
-        full_name = form.ger('trans_full_name')
+        full_name = form.get('trans_full_name')
         age = form.get('trans_age').strip()
-        assembly = form.get('trans_assembly'),
+        assembly = form.get('trans_assembly')
         transfered_from = form.get("trans_transfered_from").strip()
         transfered_to = form.get('trans_transfered_to').strip()
         present_portfolio = form.get("trans_present_portfolio").strip()
         transfer_specification = form.get('trans_specify_transfer').strip()
-        transfer_date = form.get('trans_transfer_date').strip()
+        transfer_date = form.get('trans_transfer_date')
         officiating_minister = form.get('trans_officiating_minister').strip()
 
         try:
@@ -226,13 +293,13 @@ def promotion_submit():
         form = request.form
         record_id = form.get("pro_record_id").strip()
         member_id = form.get('pro_member_id')
-        full_name = form.ger('pro_full_name')
+        full_name = form.get('pro_full_name')
         age = form.get('pro_age').strip()
-        assembly = form.get('pro_assembly'),
+        assembly = form.get('pro_assembly')
         present_portfolio = form.get("pro_present_portfolio").strip()
         promoted_portfolio = form.get('pro_promoted_portfolio')
         portfolio_specification = form.get('pro_specify_portfolio').strip()
-        promotion_date = form.get('pro_promotion_date').strip()
+        promotion_date = form.get('pro_promotion_date')
         officiating_minister = form.get('pro_officiating_minister').strip()
 
         try:
@@ -280,7 +347,7 @@ def promotion_submit():
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
-            #return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
+            # return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
         except Exception as e:
             print(e)
             # print(form)
@@ -417,7 +484,13 @@ def load_dedication_msg_id():
 def dedication():
     try:
         ded_data = Dedication.query.all()
-        return render_template('dedication.html', ded_data=ded_data)
+        user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
+        user_data_dict = {"": ""}
+        # print(user_data)
+        for user in user_data:
+            user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
+
+        return render_template('dedication.html', ded_data=ded_data, user_data_dict=user_data_dict)
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -432,6 +505,8 @@ def dedication_submit():
         record_id = form.get('record_id').strip()
         member_id_father = form.get('member_id_father').strip()
         member_id_mother = form.get('member_id_mother').strip()
+        father_name = form.get('father_name').strip()
+        mother_name = form.get('mother_name').strip()
         child_name = form.get('child_name').strip()
         child_dob = form.get('child_dob')
         dedication_date_time = form.get('dedication_date_time')
@@ -470,6 +545,8 @@ def dedication_submit():
             data = {
                 "member_id_father": member_id_father,
                 "member_id_mother": member_id_mother,
+                "father_name": father_name,
+                "mother_name": mother_name,
                 "child_name": child_name,
                 "child_dob": child_dob,
                 "dedication_date_time": dedication_date_time,

@@ -460,7 +460,7 @@ let printDetails =  (data) => {
 								+ "</style></head>"
 								+ "<body style=\"padding: 20px;\">" 
 								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
-								+ "<h1 style=\"text-align: center; font-weight: bold;\">RALLIES AND CONVENTIONS</h1>"
+								+ "<h1 style=\"text-align: center; font-weight: bold;\">DEATH DETAILS</h1>"
 								+ '<div class="kt-wizard-v1__review-content">'
 								+ 'Record ID: <label>' + data.record_id + '</label>'
 								+ '<br/>Member ID: <label>' + data.member_id + '</label>'

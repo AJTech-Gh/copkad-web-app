@@ -12,7 +12,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!--begin::Fonts -->
-        <script src="{{ url_for('static', filename='../../../../../../../ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js') }}"></script>
+        <script src="{{ url_for('static', filename='assets/ajax/libs/webfont/1.6.16/webfont.js') }}"></script>
         <script>
             WebFont.load({
                 google: {"families":["Poppins:300,400,500,600,700"]},
@@ -31,6 +31,7 @@
         
         <!--begin::Global Theme Styles(used by all pages) -->
                     <link href="{{ url_for('static', filename='assets/vendors/global/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
                     <link href="{{ url_for('static', filename='assets/css/demo2/style.bundle.css') }}" rel="stylesheet" type="text/css" />
                 <!--end::Global Theme Styles -->
 
@@ -308,24 +309,55 @@
         </div>
     </div>
     <!--begin::Form-->
-    <form class="kt-form kt-form--label-right">
+    <form class="kt-form kt-form--label-right" id="birth_form">
         <div class="kt-portlet__body">
+            <div class="form-group row" id="record_id_div" hidden>
+                <label class="col-form-label col-lg-3 col-sm-12">Record ID</label>
+                  <div class="col-lg-4 col-md-9 col-sm-12">
+                      <input type="text" class="form-control" name="record_id" id="record_id" readonly />
+                  </div>
+              </div>
+                <div class="form-group row">
+                        <label class="col-form-label col-lg-3 col-sm-12">Member ID of Father</label>
+                    <div class="col-lg-4 col-md-9 col-sm-12">
+                         <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Enter ID of Father to Generate name" name="member_id_father" id="member_id_father" /> 
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="find_father_id" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
             <div class="form-group row">
             <!--pick Member ID data from database. Textbox marked as readonly-->    <label class="col-form-label col-lg-3 col-sm-12">Father's Name</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
                     <input type="text" class="form-control" />
                 </div>
             </div>
+
+            <div class="form-group row">
+                <label class="col-form-label col-lg-3 col-sm-12">Member ID of Mother</label>
+                  <div class="col-lg-4 col-md-9 col-sm-12">
+                      <input type="text" class="form-control" placeholder="Enter ID of Mother to Generate name" name="member_id_mother" id="member_id_mother" />                  
+                  </div>
+              </div>
             <div class="form-group row">
             <!--pick  first name, last name and other namesdata from the database. Textbox marked as readonly-->    <label class="col-form-label col-lg-3 col-sm-12">Mother's Name</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" />
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="mother_name" id="mother_name" readonly/>
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="find_mother_id" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color:blue;" ></i></span>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-group row">
             <!--pick age data from database. Textbox marked as readonly-->  <label class="col-form-label col-lg-3 col-sm-12">Name of Child</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" />
+                    <input type="text" class="form-control" name="child_name" id="child_name" />
                 </div>
             </div>
            
@@ -333,7 +365,7 @@
                 <!--select data of promotion here-->    <label class="col-form-label col-lg-3 col-sm-12">Date of Birth</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <div class="input-group date">
-                            <input type="text" class="form-control" readonly placeholder="Select date & time" id="kt_datetimepicker_2"/>
+                            <input type="date" class="form-control" readonly placeholder="Select date & time" id="child_dob" name="child_dob"/>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="la la-calendar-check-o glyphicon-th"></i></span>
                             </div>
@@ -344,7 +376,7 @@
             <!--select data of promotion here-->    <label class="col-form-label col-lg-3 col-sm-12">Date of Ceremony</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
                     <div class="input-group date">
-                        <input type="text" class="form-control" readonly placeholder="Select date & time" id="kt_datetimepicker_2"/>
+                        <input type="text" class="form-control" readonly placeholder="Select date & time" id="kt_datetimepicker_2" name="ceremony_date"/>
                         <div class="input-group-append">
                             <span class="input-group-text"><i class="la la-calendar-check-o glyphicon-th"></i></span>
                         </div>
@@ -354,13 +386,13 @@
             <div class="form-group row">
             <!--input name of ordination minister here-->   <label class="col-form-label col-lg-3 col-sm-12">Officiating Minister</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control"   />
+                    <input type="text" class="form-control" name="officiating_minister" id="officiating_minister" />
                 </div>
             </div>
             <div class="form-group row">
                 <!--pick assembly data from database. Textbox marked as readonly--> <label class="col-form-label col-lg-3 col-sm-12">Assembly</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
-                        <input type="text" class="form-control" />
+                        <input type="text" class="form-control" name="assembly" id="assembly" />
                     </div>
                 </div>
         </div>
@@ -372,8 +404,8 @@
                       1. submit button will save into database.
                       2. submit button will show a popup modal to send a notification
                       3. send an sms notification to members phone contact.
-                    --> <button type="submit" class="btn btn-success"  id="kt_sweetalert_demo_3_3">Submit</button>
-                        <button type="submit" class="btn btn-secondary">Cancel</button>
+                    --> <button type="submit" class="btn btn-success"  id="submit_birth_btn">Submit</button>
+                        <button type="reset" class="btn btn-secondary">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -398,9 +430,9 @@
                 <div class="kt-portlet__head-wrapper">
         <div class="kt-portlet__head-actions">
             <div class="dropdown dropdown-inline">
-                <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <!-- <button type="button" class="btn btn-default btn-icon-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="la la-download"></i> Export   
-                </button>
+                </button> -->
                 <div class="dropdown-menu dropdown-menu-right">
                     <ul class="kt-nav">
                         <li class="kt-nav__section kt-nav__section--first">
@@ -438,38 +470,31 @@
                 <thead>
                   <tr>
                                   <th>Record ID</th>
-                                  <th>Father's Name</th>
-                                  <th>Mother's Name</th>
+                                  <th>Mother's ID - Name</th>
+                                  <th>Father's ID - Name</th>
                                   <th>Name of Child</th>
                                   <th>Date of Birth</th>
                                   <th>Date of Ceremony</th>
                                   <th>Officiating Minister</th>
                                   <th>Assembly</th>
-                                  <th>Attendance</th>
-                                  <th>Mode of Count</th>
                                   <th>Actions</th>
                       </tr>
     </thead>
 
             <tbody>
-                <tr>
-                                 <!---->   <td>1</td>
-                            <!--name of father-->   <td>Kwaku Boateng</td>
-                            <!--name of mother-->      <td>Elizabeth Boateng</td>
-                            <!--name of child-->      <td>James Kofi Owusu</td>
-                            <!--date of birth-->      <td>Sep 1, 2020</td>
-                            <!--date of ceremony-->      <td>October, 1, 2020</td>
-                            <!--officiating minister-->      <td>Ps. Appiah Baah</td>
-                            <!--Assembly-->      <td>Emmanuel</td>
-                            <!--number of attendance-->      <td>300</td>
-                            <!--mode of counting attendance: Biometric, facial recognition, headcounting-->      <td>Biometric</td>
-                                 <!--
-                                     clicking the print button will print the entire datatable
-                                     clicking the generate option will generate the pdf of the datatable (birth-registry-080120201130.docx)
-                                 -->
-                                  <td nowrap></td>
-                      </tr>
-            
+                {% for ded in birth_data %}
+                    <tr>
+                        <!---->   <td>{{ded.id}}</td>
+                        <!--Member ID--> <td>{{ded.member_id_mother + " - " + user_data_dict[ded.member_id_mother]}}</td>
+                        <!--Full Name-->  <td>{{ded.member_id_father + " - " + user_data_dict[ded.member_id_father]}}</td>
+                        <!--Assembly--> <td>{{ded.child_name}}</td>
+                        <!--Date of Registration--> <td>{{ded.child_dob}}</td>
+                        <!--Date of Holy Ghost Baptism--> <td>{{ded.ceremony_date_time}}</td>
+                        <!--Ordination Minister--> <td>{{ded.officiating_minister}}</td>
+                        <!--Venue of Event--> <td>{{ded.assembly}}</td>
+                        <td nowrap></td>
+                    </tr>
+                {% endfor %}
     
             </tbody>
 

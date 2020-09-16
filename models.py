@@ -98,19 +98,22 @@ class Transfer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
     #Transfer records
-    transformed_from = db.Column(db.String(50), unique=False, nullable=False)
+    transfered_from = db.Column(db.String(50), unique=False, nullable=False)
+    age = db.Column(db.Integer, unique=False, nullable=False)
     transfered_to = db.Column(db.String(50), unique=False, nullable=False)
     present_portfolio = db.Column(db.String(50), unique=False, nullable=False)
-    transfered_specification = db.Column(db.String(100), unique=False, nullable=False)
+    transfer_specification = db.Column(db.String(100), unique=False, nullable=False)
     transfer_date = db.Column(db.DateTime(), unique=False, nullable=False)
     officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
 
     def set_transfer_date(self, transfer_date):
-        death_date = transfer_date.split('-')
-        self.death_date = datetime(int(transfer_date[0]), int(transfer_date[1]), int(transfer_date[2]))
+        _date, _time = transfer_date.split()
+        _date = _date.split('-')
+        _time = _time.split(':')
+        self.transfer_date = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
 
     def get_promotion_date(self, transfer_date):
-        return '{}-{}-{}'.format(transfer_date.year, transfer_date.month, transfer_date.day)
+        return '{}-{}-{} {}:{}'.format(transfer_date.year, transfer_date.month, transfer_date.day, transfer_date.hour, transfer_date.minute)
 
     def __repr__(self):
         return f'User: {self.member_id}'
@@ -121,20 +124,52 @@ class Promotion(db.Model):
     member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
     #Promotion records
     present_portfolio = db.Column(db.String(50), unique=False, nullable=False)
+    age = db.Column(db.Integer, unique=False, nullable=False)
     promoted_portfolio = db.Column(db.String(50), unique=False, nullable=False)
     portfolio_specification = db.Column(db.String(80), unique=False, nullable=False)
     promotion_date = db.Column(db.DateTime(), unique=False, nullable=False)
     officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
 
     def set_promotion_date(self, promotion_date):
-        death_date = promotion_date.split('-')
-        self.death_date = datetime(int(promotion_date[0]), int(promotion_date[1]), int(promotion_date[2]))
+        _date, _time = promotion_date.split()
+        _date = _date.split('-')
+        _time = _time.split(':')
+        self.promotion_date = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
 
     def get_promotion_date(self, promotion_date):
-        return '{}-{}-{}'.format(promotion_date.year, promotion_date.month, promotion_date.day)
+        return '{}-{}-{} {}:{}'.format(promotion_date.year, promotion_date.month, promotion_date.day, promotion_date.hour, promotion_date.minute)
 
     def __repr__(self):
         return f'User: {self.member_id}'
+
+class Birth(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id_father = db.Column(db.String(20), nullable=False, index=True)
+    member_id_mother = db.Column(db.String(20), nullable=False, index=True)
+    child_name = db.Column(db.String(50), unique=False, nullable=False, index=True)
+    child_dob = db.Column(db.DateTime(), unique=False, nullable=False)
+    ceremony_date_time = db.Column(db.DateTime(), unique=False, nullable=False)
+    officiating_minister = db.Column(db.String(50), unique=False, nullable=False)
+    assembly = db.Column(db.String(30), unique=False, nullable=False)
+
+    def set_child_dob(self, child_dob):
+        child_dob = child_dob.split('-')
+        self.child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
+
+    def get_child_dob(self, child_dob):
+        return '{}-{}-{}'.format(child_dob.year, child_dob.month, child_dob.day)
+
+    def set_birth_date_time(self, birth_date_time):
+        _date, _time = birth_date_time.split()
+        _date = _date.split('-')
+        _time = _time.split(':')
+        self.birth_date_time = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
+
+    def get_birth_date_time(self, birth_date_time):
+        return '{}-{}-{} {}:{}'.format(birth_date_time.year, birth_date_time.month, birth_date_time.day, birth_date_time.hour, birth_date_time.minute)
+
+    def __repr__(self):
+        return f'Name: {self.child_name}\nDate of Birth: {self.child_dob}'
 
 class Death(db.Model):
     #Deceased member info

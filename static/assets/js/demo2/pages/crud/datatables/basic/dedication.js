@@ -99,6 +99,28 @@ var KTDatatablesBasicPaginations = function() {
 						return assembly[data].title;
 					}
 				},
+				{
+					targets: 1,
+					render: function(data, type, full, meta) {
+						
+						if(data.trim() == "-") {
+							return "";
+						}
+
+						return data;
+					}
+				},
+				{
+					targets: 2,
+					render: function(data, type, full, meta) {
+						
+						if(data.trim() == "-") {
+							return "";
+						}
+
+						return data;
+					}
+				},
 				// {
 				// 	targets: 9,
 				// 	render: function(data, type, full, meta) {
@@ -241,8 +263,8 @@ let viewRowData = (row) => {
 
 	//console.log(jsonRowData);
 	document.querySelector("#record_id").value = jsonRowData.record_id;
-	document.querySelector("#member_id_mother").value = jsonRowData.member_id_mother;
-	document.querySelector("#member_id_father").value = jsonRowData.member_id_father;
+	document.querySelector("#member_id_mother").value = jsonRowData.member_id_mother.split(" - ")[0];
+	document.querySelector("#member_id_father").value = jsonRowData.member_id_father.split(" - ")[0];
 	document.querySelector("#child_name").value = jsonRowData.name_of_child;
 	document.querySelector("#child_dob").value = jsonRowData.child_dob.split(" ")[0];
 	document.querySelector("#kt_datetimepicker_2").value = jsonRowData.date_of_dedication;
@@ -603,8 +625,8 @@ let printDetails =  (data) => {
 								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
 								+ "<h1 style=\"text-align: center; font-weight: bold;\">DEDICATION</h1>"
 								+ '<div class="kt-wizard-v1__review-content">'
-								+ 'Member ID of Father: <label>' + data.member_id_father + '</label>'
-								+ '<br/>Member ID of Mother: <label>' + data.member_id_mother + '</label>'
+								+ 'Member ID of Father: <label>' + data.member_id_father + " - " + data.father_name + '</label>'
+								+ '<br/>Member ID of Mother: <label>' + data.member_id_mother + " - " + data.mother_name + '</label>'
 								+ '<br/>Child Name: <label>' + data.child_name + '</label>'
 								+ '<br/>Child Date of Birth: <label>' + data.child_dob + '</label>'
 								+ '<br/>Date of Dedication: <label>' + data.dedication_date_time + '</label>'
