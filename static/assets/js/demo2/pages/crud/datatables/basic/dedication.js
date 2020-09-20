@@ -74,7 +74,7 @@ var KTDatatablesBasicPaginations = function() {
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <button class="dropdown-item" onclick="getNotifId(this.parentElement.parentElement.parentElement.parentElement)" data-toggle="modal" data-target="#kt_modal_4"><i class="fa flaticon2-email"></i> Push Notification</button>
-                                <a class="dropdown-item" href="#"><i class="la la-print"></i> Generate Report</a>
+                                <button class="dropdown-item" onclick="printRowData(this.parentElement.parentElement.parentElement.parentElement)"><i class="la la-print"></i> Generate Report</button>
                             </div>
                         </span>
                         <a onclick="viewRowData(this.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
@@ -153,6 +153,41 @@ var KTDatatablesBasicPaginations = function() {
 jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
+
+
+// print the row data
+let printRowData = (row) => {
+	let colIds = ["record_id", "member_id_mother", "member_id_father", "child_name", "child_dob", "dedication_date_time", "officiating_minister", "assembly", "place_of_ceremony"];
+	let jsonData = {};
+	let rowData = row.getElementsByTagName("td");
+	for (let i = 0; i < rowData.length - 1; i++) {
+		if (i === 1) {
+			if (rowData[i].textContent === undefined || rowData[i].textContent === "") {
+				jsonData[colIds[i]] = "";
+				jsonData["mother_name"] = "";
+			} else {
+				let mother_id_name = rowData[i].textContent.split(" - ");
+				jsonData[colIds[i]] = mother_id_name[0];
+				jsonData["mother_name"] = mother_id_name[1];
+			}
+			continue;
+		}
+		if (i === 2) {
+			if (rowData[i].textContent === undefined || rowData[i].textContent === "") {
+				jsonData[colIds[i]] = "";
+				jsonData["father_name"] = "";
+			} else {
+				let father_id_name = rowData[i].textContent.split(" - ");
+				jsonData[colIds[i]] = father_id_name[0];
+				jsonData["father_name"] = father_id_name[1];
+			}
+			continue;
+		}
+		jsonData[colIds[i]] = rowData[i].textContent;
+	}
+	printDetails(jsonData);
+}
+
 
 // load the notification
 let getNotifId = (row) => {

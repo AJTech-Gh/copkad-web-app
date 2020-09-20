@@ -262,9 +262,9 @@
         
         <span class="kt-subheader__desc">#COPKADNA-0201</span>
         
-        <a href="#" class="btn btn-label-primary btn-bold btn-icon-h kt-margin-l-10">
+        <!-- <a href="#" class="btn btn-label-primary btn-bold btn-icon-h kt-margin-l-10">
             Add New
-        </a>
+        </a> -->
     </div>
     <div class="kt-subheader__toolbar">
         <div class="kt-subheader__wrapper">
@@ -309,7 +309,7 @@
         </div>
     </div>
     <!--begin::Form-->
-    <form class="kt-form kt-form--label-right" id="birth_form">
+    <form class="kt-form kt-form--label-right" id="birth_form" method="POST">
         <div class="kt-portlet__body">
             <div class="form-group row" id="record_id_div" hidden>
                 <label class="col-form-label col-lg-3 col-sm-12">Record ID</label>
@@ -330,12 +330,69 @@
                     </div>
                 </div>
 
-            <div class="form-group row">
-            <!--pick Member ID data from database. Textbox marked as readonly-->    <label class="col-form-label col-lg-3 col-sm-12">Father's Name</label>
-                <div class="col-lg-4 col-md-9 col-sm-12">
-                    <input type="text" class="form-control" />
-                </div>
-            </div>
+                <div class="form-group row">   
+                    <label class="col-form-label col-lg-3 col-sm-12">Name of father</label>
+                    <div class="col-lg-4 col-md-9 col-sm-12">
+                      <div class="input-group">
+                          <input type="text" class="form-control" name="father_name" id="father_name" readonly/> 
+                          <div class="input-group-append">
+                              <span class="input-group-text" id="find_father_id" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px;color:blue;" ></i></span>
+                          </div>
+                          
+                      </div>
+                      <!-- https://www.w3schools.com/icons/fontawesome_icons_spinner.asp --> 
+                          <span class="form-text text-muted"><a href="" data-toggle="modal" data-target="#father_view" >Click to view membership of father</a></span>
+                      </div>
+      
+                      <!--begin::father Modal-->
+      
+                      <!--
+                          only corresponding names should be shown here.
+                          If name is not found in the member datatable, then modal should show "No member found"
+                      -->
+      <div class="modal fade" id="father_view" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Parent Verification Panel </h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      </button>
+                  </div>
+                  <div class="modal-body">
+                      <div class="kt-portlet__body">
+                          <div class="tab-content">
+                              <div class="tab-pane active" id="kt_widget4_tab1_content">
+                                  <div class="kt-widget4">
+                                      <div class="kt-widget4__item">
+                                          <div class="kt-widget4__pic kt-widget4__pic--pic">
+                                              <!--put image of father here-->
+                                              <img name="modal_father_image" id="modal_father_image" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" alt="">   
+                                          </div>
+                                          <div class="kt-widget4__info">
+                                              <a href="#" class="kt-widget4__username">
+                                                  <span name="modal_father_name" id="modal_father_name"></span>
+                                              </a>
+                                              <!-- <p class="kt-widget4__text">
+                                                  <span name="modal_father_id" id="modal_father_id"></span>
+                                              </p>     -->
+                                              <p class="kt-widget4__text">
+                                                  <span name="modal_father_assembly" id="modal_father_assembly" ></span>
+                                              </p>                                     
+                                          </div>  
+                                          <!--clicking on the select will automatically input the father's name into the textbox-->                    
+                                          <!-- <a href="#" class="btn btn-sm btn-label-brand btn-bold">OK!</a>-->
+                                      </div>               
+                                  </div>             
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!--end:: father Modal-->
+      
+                  </div>
 
             <div class="form-group row">
                 <label class="col-form-label col-lg-3 col-sm-12">Member ID of Mother</label>
@@ -343,17 +400,66 @@
                       <input type="text" class="form-control" placeholder="Enter ID of Mother to Generate name" name="member_id_mother" id="member_id_mother" />                  
                   </div>
               </div>
-            <div class="form-group row">
-            <!--pick  first name, last name and other namesdata from the database. Textbox marked as readonly-->    <label class="col-form-label col-lg-3 col-sm-12">Mother's Name</label>
-                <div class="col-lg-4 col-md-9 col-sm-12">
-                    <div class="input-group">
-                        <input type="text" class="form-control" name="mother_name" id="mother_name" readonly/>
-                        <div class="input-group-append">
-                            <span class="input-group-text" id="find_mother_id" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color:blue;" ></i></span>
+              <div class="form-group row">
+                <label class="col-form-label col-lg-3 col-sm-12">Name of mother</label>
+                    <div class="col-lg-4 col-md-9 col-sm-12">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="mother_name" id="mother_name" readonly/>
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="find_mother_id" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color:blue;" ></i></span>
+                            </div>
+                        </div>
+                        
+                        <span class="form-text text-muted"><a href="" data-toggle="modal" data-target="#mother_view" >Click to view membership of mother</a></span>
+                    </div>
+                </div>
+                 <!--begin::mother Modal-->
+    
+                    <!--
+                        only corresponding names should be shown here.
+                        If name is not found in the member datatable, then modal should show "No member found"
+                    -->
+    <div class="modal fade" id="mother_view" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Verification Panel </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="kt-portlet__body">
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="kt_widget4_tab1_content">
+                                <div class="kt-widget4">
+                                    <div class="kt-widget4__item">
+                                        <div class="kt-widget4__pic kt-widget4__pic--pic">
+                                            <!--put image of father here-->
+                                            <img name="modal_mother_image" id="modal_mother_image" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" alt="">   
+                                        </div>
+                                        <div class="kt-widget4__info">
+                                            <a href="#" class="kt-widget4__username">
+                                                <span name="modal_mother_name" id="modal_mother_name"></span>
+                                            </a>
+                                            <!-- <p class="kt-widget4__text">
+                                                <span name="modal_mother_id" id="modal_mother_id"></span>
+                                            </p>     -->
+                                            <p class="kt-widget4__text">
+                                                <span name="modal_mother_assembly" id="modal_mother_assembly"></span>
+                                            </p>                                 
+                                        </div>  
+                                        <!--clicking on the select will automatically input the father's name into the textbox-->                    
+                                        <!-- <a href="#" class="btn btn-sm btn-label-brand btn-bold">OK!</a>                         -->
+                                    </div>               
+                                </div>             
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <!--end:: father Modal-->
             <div class="form-group row">
             <!--pick age data from database. Textbox marked as readonly-->  <label class="col-form-label col-lg-3 col-sm-12">Name of Child</label>
                 <div class="col-lg-4 col-md-9 col-sm-12">
@@ -365,7 +471,7 @@
                 <!--select data of promotion here-->    <label class="col-form-label col-lg-3 col-sm-12">Date of Birth</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <div class="input-group date">
-                            <input type="date" class="form-control" readonly placeholder="Select date & time" id="child_dob" name="child_dob"/>
+                            <input type="date" class="form-control" placeholder="Select date & time" id="child_dob" name="child_dob"/>
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="la la-calendar-check-o glyphicon-th"></i></span>
                             </div>
@@ -392,7 +498,15 @@
             <div class="form-group row">
                 <!--pick assembly data from database. Textbox marked as readonly--> <label class="col-form-label col-lg-3 col-sm-12">Assembly</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
-                        <input type="text" class="form-control" name="assembly" id="assembly" />
+                        <select class="form-control kt-select2" id="kt_select2_3" name="assembly" multiple>
+                                                        
+                            <optgroup id ="assembly" label="Assembly">
+                                <option value="EEA">Emmanuel English Assembly</option>
+                                <option value="GA">Glory Assembly</option>
+                                <option value="HA">Hope Assembly</option>
+                            </optgroup>
+                            
+                        </select>
                     </div>
                 </div>
         </div>
@@ -405,7 +519,7 @@
                       2. submit button will show a popup modal to send a notification
                       3. send an sms notification to members phone contact.
                     --> <button type="submit" class="btn btn-success"  id="submit_birth_btn">Submit</button>
-                        <button type="reset" class="btn btn-secondary">Cancel</button>
+                        <button type="reset" class="btn btn-secondary" id="reset_birth_btn">Cancel</button>
                     </div>
                 </div>
             </div>
@@ -456,11 +570,11 @@
             </div>
             &nbsp;
         </div>  
-        <a href="#" class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
+        <button class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
             <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
             <span class="kt-subheader__btn-daterange-date" id="kt_dashboard_daterangepicker_date">Aug 16</span>
             <i class="flaticon2-calendar-1"></i>
-        </a>
+        </button>
     </div>      </div>
         </div>
     
@@ -649,7 +763,8 @@
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/components/extended/sweetalert2.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/datatables/basic/birth-registry.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/dashboard.js') }}" type="text/javascript"></script>
-                            <!--end::Page Scripts -->
+            <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/forms/widgets/select2.js') }}" type="text/javascript"></script>
+            <!--end::Page Scripts -->
             </body>
     <!-- end::Body -->
 </html>

@@ -159,14 +159,14 @@ class Birth(db.Model):
     def get_child_dob(self, child_dob):
         return '{}-{}-{}'.format(child_dob.year, child_dob.month, child_dob.day)
 
-    def set_birth_date_time(self, birth_date_time):
-        _date, _time = birth_date_time.split()
+    def set_ceremony_date_time(self, ceremony_date_time):
+        _date, _time = ceremony_date_time.split()
         _date = _date.split('-')
         _time = _time.split(':')
-        self.birth_date_time = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
+        self.ceremony_date_time = datetime(int(_date[0]), int(_date[1]), int(_date[2]), int(_time[0]), int(_time[1]))
 
-    def get_birth_date_time(self, birth_date_time):
-        return '{}-{}-{} {}:{}'.format(birth_date_time.year, birth_date_time.month, birth_date_time.day, birth_date_time.hour, birth_date_time.minute)
+    def get_ceremony_date_time(self, ceremony_date_time):
+        return '{}-{}-{} {}:{}'.format(ceremony_date_time.year, ceremony_date_time.month, ceremony_date_time.day, ceremony_date_time.hour, ceremony_date_time.minute)
 
     def __repr__(self):
         return f'Name: {self.child_name}\nDate of Birth: {self.child_dob}'

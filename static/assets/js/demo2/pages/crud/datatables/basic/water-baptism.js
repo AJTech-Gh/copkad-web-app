@@ -74,7 +74,7 @@ var KTDatatablesBasicPaginations = function() {
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <button class="dropdown-item" onclick="getNotifId(this.parentElement.parentElement.parentElement.parentElement)" data-toggle="modal" data-target="#kt_modal_4"><i class="fa flaticon2-email"></i> Push Notification</button>								
-                                <button class="dropdown-item" ><i class="la la-print"></i> Generate Report</button>
+                                <button class="dropdown-item" onclick="printRowData(this.parentElement.parentElement.parentElement.parentElement)" ><i class="la la-print"></i> Generate Report</button>
                             </div>
                         </span>
                         <a onclick="viewRowData(this.parentElement.parentElement)" class="btn btn-sm btn-clean btn-icon btn-icon-md" title="View">
@@ -146,6 +146,59 @@ var KTDatatablesBasicPaginations = function() {
 jQuery(document).ready(function() {
 	KTDatatablesBasicPaginations.init();
 });
+
+
+// print the row data
+let printRowData = (row) => {
+	let colIds = ["record_id", "member_id", "full_name", "assembly", "date_of_baptism", "officiating_minister", "venue", "certificate"]
+	let jsonData = {};
+	let rowData = row.getElementsByTagName("td");
+	for (let i = 0; i < rowData.length - 1; i++) {
+		jsonData[colIds[i]] = rowData[i].textContent;
+	}
+	printRowDetails(jsonData);
+}
+
+
+let printRowDetails =  (data) => {
+	// open the print window
+	var print_area = window.open();
+	// compose the document
+	print_area.document.write("<html><head><title>User Details</title>"
+								+ "<style>.kt-wizard-v1__review-content {font-size: 20;}"
+								+ "</style></head>"
+								+ "<body style=\"padding: 20px;\">" 
+								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
+								+ "<h1 style=\"text-align: center; font-weight: bold;\">WATER BAPTISM</h1>"
+								+ '<div class="kt-wizard-v1__review-content">'
+								+ 'Record ID: <label>' + data.record_id + '</label>'
+								+ '<br/>member_id: <label>' + data.member_id + '</label>'
+								+ '<br/>Full Name: <label>' + data.full_name + '</label>'
+								+ '<br/>Assembly: <label>' + data.assembly + '</label>'
+								+ '<br/>Date of Baptism: <label>' + data.date_of_baptism + '</label>'
+								+ '<br/>Ordination Minister: <label>' + data.officiating_minister + '</label>'
+								+ '<br/>Venue: <label>' + data.venue + '</label>'
+								+ '<br/>Certificate: <label>' + data.certificate + '</label>'
+								+ "</div></body></html>");
+	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
+					"/static/assets/vendors/global/vendors.bundle.css",
+					"/static/assets/css/demo2/style.bundle.css"];
+
+	for (let i = 0; i < cssPaths.length; i++) {
+		let style = print_area.document.createElement('link');
+		style.type = "text/css";
+		style.rel = "stylesheet";
+		style.href = location.origin + cssPaths[i];
+		style.media = "all";
+		print_area.document.getElementsByTagName("head")[0].appendChild(style);
+	}
+	// print details and return to page
+	print_area.document.close();
+	print_area.focus();
+	print_area.print();
+	print_area.close();
+  }
+
 
 // load the notification
 let getNotifId = (row) => {

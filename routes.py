@@ -75,6 +75,12 @@ def office_of_the_district_secretary():
 def records():
     return render_template('add-user.html')
 
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+
 @app.route('/admin_emmanuel')
 def admin_emmanuel():
     return render_template('add-user.html')
@@ -115,9 +121,11 @@ def birth_submit():
         record_id = form.get('record_id').strip()
         member_id_father = form.get('member_id_father').strip()
         member_id_mother = form.get('member_id_mother').strip()
+        father_name = form.get('father_name').strip()
+        mother_name = form.get('mother_name').strip()
         child_name = form.get('child_name').strip()
         child_dob = form.get('child_dob')
-        ceremony_date_time = form.get('dedication_date_time')
+        ceremony_date_time = form.get('ceremony_date')
         officiating_minister = form.get('officiating_minister').strip()
         assembly = form.get('assembly')
 
@@ -127,7 +135,7 @@ def birth_submit():
                                         officiating_minister=officiating_minister, assembly=assembly)
 
                 new_birth.set_child_dob(child_dob)
-                new_birth.set_dedication_date_time(ceremony_date_time)
+                new_birth.set_ceremony_date_time(ceremony_date_time)
 
                 db.session.add(new_birth)
                 db.session.commit()
@@ -143,7 +151,7 @@ def birth_submit():
                     "officiating_minister": officiating_minister,
                     "assembly": assembly,
                     "child_dob": child_dob,
-                    "dedication_date_time": utils.set_date_time(ceremony_date_time)
+                    "ceremony_date_time": utils.set_ceremony_date_time(ceremony_date_time)
                 }
                 Birth.query.filter_by(id=record_id).update(row_dict)
                 db.session.commit()
@@ -151,9 +159,11 @@ def birth_submit():
             data = {
                 "member_id_father": member_id_father,
                 "member_id_mother": member_id_mother,
+                "mother_name": mother_name,
+                "father_name": father_name,
                 "child_name": child_name,
                 "child_dob": child_dob,
-                "dedication_date_time": ceremony_date_time,
+                "ceremony_date_time": ceremony_date_time,
                 "officiating_minister": officiating_minister,
                 "assembly": assembly,
             }

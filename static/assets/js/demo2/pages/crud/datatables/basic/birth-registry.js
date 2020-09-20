@@ -15,7 +15,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BIRTH REGISTRY',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[ 0, ':visible' ]
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[ 0, ':visible' ]
 					}
 				},
 				{
@@ -25,7 +25,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BIRTH REGISTRY',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				},
 				{
@@ -35,17 +35,17 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BIRTH REGISTRY',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				},
 				{
 					filename: 'COP_birth_pdf',
 					extend: 'pdfHtml5',
 					title: 'COP',
-					messageTop: 'DEDICBIRTH REGISTRY',
+					messageTop: 'BIRTH REGISTRY',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				},
 				{
@@ -55,7 +55,7 @@ var KTDatatablesBasicPaginations = function() {
 					messageTop: 'BIRTH REGISTRY',
 					messageBottom: 'END OF DOCUMENT',
 					exportOptions: {
-						columns: [0, 1, 2, 3, 4, 5, 6, 7, 8] //[0, ':visible']
+						columns: [0, 1, 2, 3, 4, 5, 6, 7] //[0, ':visible']
 					}
 				}
 			],
@@ -151,6 +151,40 @@ jQuery(document).ready(function() {
 });
 
 
+// print the row data
+let printRowData = (row) => {
+	let colIds = ["record_id", "member_id_mother", "member_id_father", "child_name", "child_dob", "ceremony_date_time", "officiating_minister", "assembly"];
+	let jsonData = {};
+	let rowData = row.getElementsByTagName("td");
+	for (let i = 0; i < rowData.length - 1; i++) {
+		if (i === 1) {
+			if (rowData[i].textContent === undefined || rowData[i].textContent === "") {
+				jsonData[colIds[i]] = "";
+				jsonData["mother_name"] = "";
+			} else {
+				let mother_id_name = rowData[i].textContent.split(" - ");
+				jsonData[colIds[i]] = mother_id_name[0];
+				jsonData["mother_name"] = mother_id_name[1];
+			}
+			continue;
+		}
+		if (i === 2) {
+			if (rowData[i].textContent === undefined || rowData[i].textContent === "") {
+				jsonData[colIds[i]] = "";
+				jsonData["father_name"] = "";
+			} else {
+				let father_id_name = rowData[i].textContent.split(" - ");
+				jsonData[colIds[i]] = father_id_name[0];
+				jsonData["father_name"] = father_id_name[1];
+			}
+			continue;
+		}
+		jsonData[colIds[i]] = rowData[i].textContent;
+	}
+	printDetails(jsonData);
+}
+
+
 // load the row data into the form for viewing and updating
 let viewRowData = (row) => {
 	let colIds = ["record_id", "member_id_mother", "member_id_father", "name_of_child", "child_dob", "ceremony_date", "officiating_minister", "assembly"];
@@ -178,7 +212,7 @@ let viewRowData = (row) => {
 		"Glory": "GA",
 		"Hope": "HA"
 	};
-	document.querySelector("#assembly").value = assemblies[jsonRowData.assembly];
+	document.querySelector("#kt_select2_3").value = assemblies[jsonRowData.assembly];
 	$("#kt_select2_3").trigger("change");
 
 	KTUtil.scrollTop();
@@ -186,6 +220,335 @@ let viewRowData = (row) => {
 	$("#member_id_father").trigger("change");
 	$("#member_id_mother").trigger("change");
 }
+
+$("#reset_birth_btn").on("click", function(e) {
+	$("#record_id_div").attr("hidden", true);
+});
+
+
+$("#member_id_father").on("keyup", function(e) {
+	if ($(this).val().length === 8) {
+		$("#find_father_id").attr("hidden", false);		
+        $.ajax({
+			method: "POST",
+			
+			url: "/load_user_by_id/member_id_father",
+			
+			data: $(this).serialize(),
+			
+			success: function(res) {
+				$("#find_father_id").attr("hidden", true);
+				if(res.gender==="M"){
+					if (res.first_name) {
+						let img_url = "/" + res.img;
+						$('#modal_father_image').attr("src", img_url);
+						let fullName = res.last_name + ", " + res.first_name
+						if (res.other_names) {
+							fullName = fullName + " " + res.other_names;
+						}
+						document.querySelector("#modal_father_name").textContent = fullName;
+						document.querySelector("#father_name").value = fullName;
+						let assemblies = {
+							EEA: "Emmanuel English Assembly",
+							GA: "Glory Assembly",
+							HA: "Hope Assembly"
+						}
+						document.querySelector("#modal_father_assembly").textContent = assemblies[res.assembly];
+						//document.querySelector("#modal_father_id").textContent = res.member_id;
+					} else {
+						let img_url = "/static/assets/media/users/thecopkadna-users.png";
+						$("#find_father_id").attr("hidden", true);
+						$('#modal_father_image').attr("src", img_url);
+						document.querySelector("#father_name").value = "";
+						document.querySelector("#modal_father_name").textContent = "";
+						//document.querySelector("#modal_father_id").textContent = "";
+						document.querySelector("#modal_father_assembly").textContent = "";
+						swal.fire({
+							"title": "", 
+							"text": "Father ID Not Found!", 
+							"type": "error",
+							"confirmButtonClass": "btn btn-secondary"
+						});
+						$("#record_id_div").attr("hidden", true);
+						
+					}
+				} else {
+					let img_url = "/static/assets/media/users/thecopkadna-users.png";
+					$("#find_father_id").attr("hidden", true);
+					$('#modal_father_image').attr("src", img_url);
+					document.querySelector("#father_name").value = "";
+					document.querySelector("#modal_father_name").textContent = "ID must belong to a male member";
+					//document.querySelector("#modal_father_id").textContent = "";
+					document.querySelector("#modal_father_assembly").textContent = "";
+					$("#record_id_div").attr("hidden", true);
+				}
+			},
+
+			error: function(res, status, error) {
+				$("#find_father_id").attr("hidden", true);
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
+			}
+		});
+		
+    } else {
+		let img_url = "/static/assets/media/users/thecopkadna-users.png";
+		$("#find_father_id").attr("hidden", true);
+        $('#modal_father_image').attr("src", img_url);
+		document.querySelector("#father_name").value = "";
+		document.querySelector("#modal_father_name").textContent = "";
+        //document.querySelector("#modal_father_id").textContent = "";
+		document.querySelector("#modal_father_assembly").textContent = "";
+		$("#record_id_div").attr("hidden", true);
+		
+    }
+});
+
+// search for mother's data when member id field value length is 8
+$("#member_id_mother").on("keyup", function(e) {
+    if ($(this).val().length === 8) {
+		$("#find_mother_id").attr("hidden", false);
+        $.ajax({
+			method: "POST",
+			
+			url: "/load_user_by_id/member_id_mother",
+			
+			data: $(this).serialize(),
+			
+			success: function(res) {
+				$("#find_mother_id").attr("hidden", true);
+				if(res.gender === "F"){
+					if (res.first_name) {
+						let img_url = "/" + res.img;
+						$('#modal_mother_image').attr("src", img_url);
+						let fullName = res.last_name + ", " + res.first_name
+						if (res.other_names) {
+							fullName = fullName + " " + res.other_names;
+						}
+						document.querySelector("#modal_mother_name").textContent = fullName;
+						document.querySelector("#mother_name").value = fullName;
+						let assemblies = {
+							EEA: "Emmanuel English Assembly",
+							GA: "Glory Assembly",
+							HA: "Hope Assembly"
+						}
+						document.querySelector("#modal_mother_assembly").textContent = assemblies[res.assembly];
+						//document.querySelector("#modal_mother_id").textContent = res.member_id;
+					} else {
+						$("#find_mother_id").attr("hidden", true);
+						let img_url = "/static/assets/media/users/thecopkadna-users.png";
+						$('#modal_mother_image').attr("src", img_url);
+						document.querySelector("#mother_name").value = "";
+						document.querySelector("#modal_mother_name").textContent = "";
+						//document.querySelector("#modal_mother_id").textContent = "";
+						document.querySelector("#modal_mother_assembly").textContent = "";
+						swal.fire({
+							"title": "", 
+							"text": "Mother ID Not Found!", 
+							"type": "error",
+							"confirmButtonClass": "btn btn-secondary"
+						});
+						$("#record_id_div").attr("hidden", true);
+
+					}
+				}else{
+					$("#find_mother_id").attr("hidden", true);
+					let img_url = "/static/assets/media/users/thecopkadna-users.png";
+					$('#modal_mother_image').attr("src", img_url);
+					document.querySelector("#mother_name").value = "";
+					document.querySelector("#modal_mother_name").textContent = "ID must belong to a female member";
+					//document.querySelector("#modal_mother_id").textContent = "";
+					document.querySelector("#modal_mother_assembly").textContent = "";
+					$("#record_id_div").attr("hidden", true);
+				}
+			},
+
+			error: function(res, status, error) {
+				$("#find_mother_id").attr("hidden", true);
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
+			}
+			
+		});
+		
+    } else {
+		$("#find_mother_id").attr("hidden", true);
+        let img_url = "/static/assets/media/users/thecopkadna-users.png";
+        $('#modal_mother_image').attr("src", img_url);
+		document.querySelector("#mother_name").value = "";
+		document.querySelector("#modal_mother_name").textContent = "";
+        //document.querySelector("#modal_mother_id").textContent = "";
+		document.querySelector("#modal_mother_assembly").textContent = "";
+		$("#record_id_div").attr("hidden", true);
+    }
+});
+
+$("#member_id_father").on("change", function(e){
+	e.preventDefault();
+	$("#member_id_father").trigger("keyup");
+});
+
+$("#member_id_mother").on("change", function(e){
+	e.preventDefault();
+	$("#member_id_mother").trigger("keyup");
+});
+
+
+// Class definition
+var KTForm = function () {
+    // Base elements
+    var formEl;
+    var validator;
+
+	let momOrDad = () => {
+		if (document.querySelector("#father_name").value || document.querySelector("#mother_name").value){
+			return true;
+		}
+		else{
+			return false;
+		}
+	};
+
+    var initValidation = function() {
+		
+        validator = formEl.validate({
+            // Validate only visible fields
+            ignore: ":hidden",
+
+			// Validation rules
+            rules: {
+               	//= Step 1
+				kt_select2_3: {
+					required: true
+				},   
+				kt_datetimepicker_2: {
+					required: true
+				},	 
+				child_name: {
+					required: true
+				},	 
+				child_dob: {
+					required: true
+				},
+				officiating_minister: {
+					required: true
+				},
+				place_of_ceremony: {
+					required: true
+				}
+                 
+            },
+            
+            // Display error  
+            invalidHandler: function(event, validator) {     
+                KTUtil.scrollTop();
+
+                swal.fire({
+                    "title": "", 
+                    "text": "Your form is incomplete, Please complete it!", 
+                    "type": "error",
+                    "confirmButtonClass": "btn btn-secondary"
+                });
+            },
+
+            // Submit valid form
+            submitHandler: function (form) {
+                
+            }
+        });   
+	}
+
+    var initSubmit = function() {
+        var btn = formEl.find('[id="submit_birth_btn"]');
+
+        btn.on('click', function(e) {
+            e.preventDefault();
+
+            if (validator.form() && momOrDad()) {
+                // See: src\js\framework\base\app.js
+                KTApp.progress(btn);
+                //KTApp.block(formEl);
+
+                // See: http://malsup.com/jquery/form/#ajaxSubmit
+                formEl.ajaxSubmit({
+
+                    url: "/birth_submit",
+
+                    error: function(res, err) {
+                        KTApp.unprogress(btn);
+            
+                        swal.fire({
+                            "title": "",
+                            "text": res.responseJSON.message, 
+                            "type": "error",
+                            "confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+                        });
+                    },
+
+                    success: function(res) {
+                        KTApp.unprogress(btn);
+                        //KTApp.unblock(formEl);
+
+                        swal.fire({
+                            "title": "", 
+                            "text": "The data has been successfully submitted!", 
+                            "type": "success",
+							"showCancelButton": true,
+							"confirmButtonText": 'Print',
+							"confirmButtonClass": "btn btn-primary",
+							"cancelButtonText": 'Continue',
+							"cancelButtonClass": 'btn btn-success',
+							"reverseButtons": true
+						}).then((result) => {
+							if (result.value) {
+								// print the member's details
+								printDetails(res);
+								// reset the form
+								location.href = "birth";
+							} else {
+								// reset the form
+								location.href = "birth";
+							}
+                        });
+                    }
+                });
+            } else {
+				KTUtil.scrollTop();
+
+                swal.fire({
+                    "title": "", 
+                    "text": "Your form is incomplete, Please complete it!", 
+                    "type": "error",
+                    "confirmButtonClass": "btn btn-secondary"
+                });
+			}
+        });
+    }
+
+    return {
+        // public functions
+        init: function() {
+			formEl = $('#birth_form');
+			
+			initValidation();
+			initSubmit();
+        }
+    };
+}();
+
+jQuery(document).ready(function() {    
+    KTForm.init();
+});
 
 
 // print the user's details
@@ -200,11 +563,11 @@ let printDetails =  (data) => {
 								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
 								+ "<h1 style=\"text-align: center; font-weight: bold;\">BIRTH REGISTRY</h1>"
 								+ '<div class="kt-wizard-v1__review-content">'
-								+ 'Member ID - Name of Father: <label>' + data.member_id_father + " - " + data.father_name + '</label>'
-								+ '<br/>Member ID - Name of Mother: <label>' + data.member_id_mother + " - " + data.mother_name + '</label>'
+								+ 'Father\'s ID - Name of Father: <label>' + data.member_id_father + " - " + data.father_name + '</label>'
+								+ '<br/>Mother\'s ID - Name of Mother: <label>' + data.member_id_mother + " - " + data.mother_name + '</label>'
 								+ '<br/>Child Name: <label>' + data.child_name + '</label>'
 								+ '<br/>Child Date of Birth: <label>' + data.child_dob + '</label>'
-								+ '<br/>Date of Ceremony: <label>' + data.ceremony_date + '</label>'
+								+ '<br/>Date of Ceremony: <label>' + data.ceremony_date_time + '</label>'
 								+ '<br/>Officiating Minister: <label>' + data.officiating_minister + '</label>'
 								+ '<br/>Assembly: <label>' + data.assembly + '</label>'
 								+ "</div></body></html>");
@@ -233,3 +596,57 @@ let compareDates = (date1, date2) => {
 	else if (date1 < date2) return ("l");
 	else return ("e"); 
 }
+
+// search by date
+// https://keenthemes.com/metronic/?page=docs&section=html-components-datatable
+var tableData = -1;  // keep the full table content
+$("#kt_dashboard_daterangepicker").on("apply.daterangepicker", function(e, picker) {
+	// let picker = document.querySelector("#kt_dashboard_daterangepicker");
+	// var startDate = $(this).data('daterangepicker').startDate._d;
+	// var endDate = $(this).data('daterangepicker').endDate._d;
+	let startDate = new Date(picker.startDate.format('YYYY-MM-DD'));
+	let endDate = new Date(picker.endDate.format('YYYY-MM-DD'));
+	let datatable = $("#kt_table_1").DataTable();
+	// if the table data is not set, set it
+	// else reload the table data
+	if(tableData === -1) {
+		tableData = Object.assign({}, datatable.table().data());
+	} else {
+		datatable.clear();
+		datatable.rows.add(tableData);
+		datatable.draw(false);
+	}
+	let tableRowsLength = datatable.rows()[0].length;
+	// handle equal dates and if startDate is less than endDate
+	let datesComp = compareDates(startDate, endDate);
+	if(datesComp === "e") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[5].split(" ")[0]);
+			if (compareDates(sDate, startDate) === "e" && compareDates(sDate, endDate) === "e") {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else if(datesComp === "l") {
+		for(let i = 0; i < tableRowsLength; i++) {
+			let tr_data = datatable.row(i).data();
+			let sDate = new Date(tr_data[5].split(" ")[0]);
+			if (sDate >= startDate && sDate <= endDate) {
+				continue;
+			}
+			datatable.row(i).remove().draw(false);
+			i--;
+			tableRowsLength--;
+		}
+	} else {
+		swal.fire({
+			"title": "",
+			"text": "Invalid date range", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
+});
