@@ -244,13 +244,14 @@ def transfer_submit():
             # if utils.member_id_exists(member_id, table="promotion"):
             #     return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
             if record_id == "":
-                # create new baptism object
+                # create new transfer object
                 transfer = Transfer(member_id=member_id, age=age, present_portfolio=present_portfolio, transfered_from=transfered_from, transfered_to=transfered_to,
                 transfer_specification=transfer_specification, officiating_minister=officiating_minister)
 
                 transfer.set_transfer_date(transfer_date)
 
-                # add the new baptism data to the database and save the changes
+                # add the new transfer
+                # data to the database and save the changes
                 db.session.add(transfer)
                 db.session.commit()
             else: 
@@ -316,13 +317,13 @@ def promotion_submit():
             # if utils.member_id_exists(member_id, table="promotion"):
             #     return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
             if record_id == "":
-                # create new baptism object
+                # create new transfer object
                 promotion = Promotion(member_id=member_id, age=age, present_portfolio=present_portfolio, promoted_portfolio=promoted_portfolio, 
                 portfolio_specification=portfolio_specification, officiating_minister=officiating_minister)
 
                 promotion.set_promotion_date(promotion_date)
 
-                # add the new baptism data to the database and save the changes
+                # add the new transfer data to the database and save the changes
                 db.session.add(promotion)
                 db.session.commit()
             else: 
@@ -412,13 +413,13 @@ def death_submit():
             if utils.member_id_exists(member_id, table="death"):
                 return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
             if record_id == "":
-                # create new baptism object
+                # create new transfer object
                 death = Death(member_id=member_id, place_of_burial=place_of_burial, officiating_minister=officiating_minister)
 
                 death.set_death_date(death_date)
                 death.set_burial_date(burial_date)
 
-                # add the new baptism data to the database and save the changes
+                # add the new transfer data to the database and save the changes
                 db.session.add(death)
                 db.session.commit()
             else: 
@@ -734,8 +735,8 @@ def baptism_certificates_submit():
         country = form.get('country').strip()
 
         try:
-            if utils.member_id_exists(member_id, table="baptism"):
-                return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
+            # if utils.member_id_exists(member_id, table="baptism"):
+            #     return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
             if record_id == "":
                 if not utils.upload_baptism_photo(member_id):
                     return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')

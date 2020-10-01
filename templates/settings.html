@@ -155,7 +155,7 @@
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
             <!--begin: Head -->
-    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(assets/media/misc/bg-1.jpg)">
+    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(static/assets/media/misc/bg-1.jpg)">
         <div class="kt-user-card__avatar">
             <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" /> <!--put user pic here-->
             <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
@@ -250,7 +250,7 @@
                         <a class="kt-wizard-v3__nav-item" href="#" data-ktwizard-type="step">
                             <div class="kt-wizard-v3__nav-body">
                                 <div class="kt-wizard-v3__nav-label">
-                                    <span>4</span> Services and Responses
+                                    <span>4</span> Contact
                                 </div>
                                 <div class="kt-wizard-v3__nav-bar"></div>
                             </div>
@@ -278,32 +278,42 @@
                             <div class="kt-wizard-v3__form">
                                 <div class="form-group">
                                     <label>Name of Church</label>
-                                    <input type="text" class="form-control" name="address1" placeholder="The Church Of Pentecost" value="">
-                                    <span class="form-text text-muted">Please enter name of church.</span>
+                                    <input type="text" class="form-control" name="church_name" id="church_name" value="The Church Of Pentecost" readonly>
+                                    <!-- <span class="form-text text-muted">Please enter name of church.</span> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Name of Assembly</label>
-                                    <input type="text" class="form-control" name="address1" placeholder="The Church Of Pentecost" value="">
-                                    <span class="form-text text-muted">Please enter name of assembly</span>
+                                    <input type="text" class="form-control" name="assembly_name" id="assembly_name">
+                                    <!-- <span class="form-text text-muted">Please enter name of assembly</span> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Name of District</label>
-                                    <input type="text" class="form-control" name="address2" placeholder="" value="">
-                                    <span class="form-text text-muted">Please enter name of district.</span>
+                                    <input type="text" class="form-control" name="district_name" id="district_name">
+                                    <!-- <span class="form-text text-muted">Please enter name of district.</span> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Name of Area</label>
-                                    <input type="text" class="form-control" name="address2" placeholder="" value="">
-                                    <span class="form-text text-muted">Please enter name of area.</span>
+                                    <input type="text" class="form-control" name="area_name" id="area_name">
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <label>Address Line 1</label>
+                                    <input type="text" class="form-control" name="address_line_1" id="address_line_1">
+                                    
+                                </div>
+                                <div class="form-group">
+                                    <label>Address Line 2</label>
+                                    <input type="text" class="form-control" name="address_line_2" id="address_line_2">
+                                    <!-- <span class="form-text text-muted">Please enter your Address.</span> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Region / Province / State</label>
-                                    <input type="text" class="form-control" name="address2" placeholder="" value="">
+                                    <input type="text" class="form-control" name="region" id="region" placeholder="" value="">
                                 </div>
                                 <div class="form-group">
                                     <div class="form-group">
                                     <label>Country:</label>
-                                    <select name="loccountry" class="form-control">
+                                    <select name="country" id="country" class="form-control">
                                         <option value="">Select</option>
                                         <option value="AF">Afghanistan</option>
                                         <option value="AX">Åland Islands</option>
@@ -561,7 +571,7 @@
                                     <label>Logo Upload</label>
                                     <div></div>
                                     <div class="custom-file">
-                                          <input type="file" class="custom-file-input" id="customFile">
+                                          <input type="file" class="custom-file-input" name="logo_upload" id="logo_upload">
                                           <label class="custom-file-label" for="customFile">Choose file</label>
                                     </div>
                                 </div>
@@ -576,9 +586,9 @@
                                                             <i class="fa flaticon-star"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-danger" placeholder="Enter telephone">
+                                                    <input type="text" class="form-control form-control-danger" placeholder="Enter ministry" name="ministry">
                                                     <div class="input-group-append">
-                                                        <a href="javascript:;" class="btn btn-danger btn-icon">
+                                                        <a href="javascript:;" data-repeater-delete="" class="btn btn-danger btn-icon">
                                                             <i class="la la-close"></i>
                                                         </a>
                                                     </div>
@@ -610,9 +620,9 @@
                                                             <i class="fa flaticon-squares"></i>
                                                         </span>
                                                     </div>
-                                                    <input type="text" class="form-control form-control-danger" placeholder="Enter telephone">
+                                                    <input type="text" class="form-control form-control-danger" placeholder="Enter group" name="group">
                                                     <div class="input-group-append">
-                                                        <a href="javascript:;" class="btn btn-danger btn-icon">
+                                                        <a href="javascript:;" data-repeater-delete="" class="btn btn-danger btn-icon">
                                                             <i class="la la-close"></i>
                                                         </a>
                                                     </div>
@@ -768,41 +778,29 @@
 
                     <!--begin: Form Wizard Step 4-->
                     <div class="kt-wizard-v3__content" data-ktwizard-type="step-content">
-                        <div class="kt-heading kt-heading--md">Setup Your Delivery Location</div>
+                        <div class="kt-heading kt-heading--md">Setup Contact</div>
                         <div class="kt-form__section kt-form__section--first">
                             <div class="kt-wizard-v3__form">
-                                <div class="form-group">
-                                    <label>Address Line 1</label>
-                                    <input type="text" class="form-control" name="locaddress1" placeholder="Address Line 1" value="Address Line 1">
-                                    <span class="form-text text-muted">Please enter your Address.</span>
-                                </div>
-                                <div class="form-group">
-                                    <label>Address Line 2</label>
-                                    <input type="text" class="form-control" name="locaddress2" placeholder="Address Line 2" value="Address Line 2">
-                                    <span class="form-text text-muted">Please enter your Address.</span>
-                                </div>
                                 <div class="row">
                                     <div class="col-xl-6">
                                         <div class="form-group">
-                                            <label>Postcode</label>
-                                            <input type="text" class="form-control" name="locpostcode" placeholder="Postcode" value="3072">
-                                            <span class="form-text text-muted">Please enter your Postcode.</span>
+                                            <label>Contact</label>
+                                            <input type="text" class="form-control" name="contact" placeholder="contact">
+                                            <!-- <span class="form-text text-muted">Please enter Contact.</span> -->
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
-                                            <label>City</label>
-                                            <input type="text" class="form-control" name="loccity" placeholder="City" value="Preston">
-                                            <span class="form-text text-muted">Please enter your City.</span>
+                                            <label>Email</label>
+                                            <input type="text" class="form-control" name="email" placeholder="email" >
+                                            <!-- <span class="form-text text-muted">Please enter your City.</span> -->
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-xl-6">
                                         <div class="form-group">
-                                            <label>State / Region / Province</label>
-                                            <input type="text" class="form-control" name="locstate" placeholder="State" value="VIC">
-                                            <span class="form-text text-muted">Please enter your Postcode.</span>
+                                            <label>Email Password</label>
+                                            <input type="text" class="form-control" name="e_password" placeholder="e_password" >
+                                            <!-- <span class="form-text text-muted">Please enter your City.</span> -->
                                         </div>
                                     </div>
                                 </div>
