@@ -270,7 +270,7 @@
             </div>
             <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v3__wrapper">
                 <!--begin: Form Wizard Form-->
-                <form class="kt-form" id="kt_form">
+                <form class="kt-form" id="kt_form" method='POST'>
                     <!--begin: Form Wizard Step 1-->
                     <div class="kt-wizard-v3__content" data-ktwizard-type="step-content" data-ktwizard-state="current">
                         <div class="kt-heading kt-heading--md">Setup Basic Info for the Church</div>
@@ -579,7 +579,7 @@
                                     <div class="form-group  row">
                                         <label  class="col-lg-3 col-form-label">Enter Ministry:</label>
                                         <div data-repeater-list="" class="col-lg-6">                               
-                                            <div data-repeater-item class="kt-margin-b-10">
+                                            <div data-repeater-item class="ministry_repeater_list kt-margin-b-10">
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">
@@ -613,7 +613,7 @@
                                     <div class="form-group  row">
                                         <label  class="col-lg-3 col-form-label">Enter Group:</label>
                                         <div data-repeater-list="" class="col-lg-6">                               
-                                            <div data-repeater-item class="kt-margin-b-10">
+                                            <div data-repeater-item class="group_repeater_list kt-margin-b-10">
                                                 <div class="input-group">
                                                     <div class="input-group-prepend">
                                                         <span class="input-group-text">
@@ -661,9 +661,9 @@
                                     <label class="kt-font-danger">Please fill all details </label>
                                     <div id="kt_repeater_3">
                                         <div class="form-group  row">
-                                            <label  class="col-lg-3 col-form-label">Ministry</label>
+                                            <!-- <label  class="col-lg-3 col-form-label">Ministry</label> -->
                                             <div data-repeater-list="" class="col-lg-9">                               
-                                                <div data-repeater-item class="row kt-margin-b-10">
+                                                <div data-repeater-item class="repeater_list row kt-margin-b-10">
                                                     <div class="col-lg-5">
                                                         <div class="input-group">
                                                             <div class="input-group-prepend">
@@ -671,7 +671,7 @@
                                                                     <i class="fa flaticon2-correct"></i>
                                                                 </span>
                                                             </div>
-                                                            <input type="text" class="form-control form-control-danger" placeholder="Name of Offering">
+                                                            <input type="text" class="form-control form-control-danger" name="name_of_offering" placeholder="Name of Offering">
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-5">
@@ -681,12 +681,12 @@
                                                                     <i class="fa flaticon-price-tag"></i>
                                                                 </span>
                                                             </div>
-                                                            <select name="packaging" class="form-control">
-                                                                <option value="">Tithes</option>
-                                                                <option value="" >Misssions Offering</option>
-                                                                <option value="">Special</option>
-                                                                <option value="">Ministries</option>
-                                                                <option value="">Free will</option>
+                                                            <select name="type_of_offering" class="form-control">
+                                                                <option value="Tithes" selected>Tithes</option>
+                                                                <option value="Missions Offering">Missions Offering</option>
+                                                                <option value="Special">Special</option>
+                                                                <option value="Ministries">Ministries</option>
+                                                                <option value="Free will">Free will</option>
                                                             </select>
                                                         </div>
                                                     </div> 
@@ -697,7 +697,7 @@
                                                                     <i class="fa flaticon2-pie-chart"></i>
                                                                 </span>
                                                             </div>
-                                                            <input type="number" class="form-control form-control-danger" placeholder="Percentage deduction">
+                                                            <input type="number" class="form-control form-control-danger" name="percentage_deduction" placeholder="Percentage deduction">
                                                         </div>
                                                     </div>
       
@@ -708,7 +708,7 @@
                                                                     <i class="fa flaticon-add-label-button"></i>
                                                                 </span>
                                                             </div>
-                                                            <input type="text" class="form-control form-control-danger" placeholder="Code">
+                                                            <input type="text" class="form-control form-control-danger" name="offering_code" placeholder="Code">
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-2">
@@ -745,11 +745,11 @@
                                 <div class="form-group">
                                     <label>Please upload all neccessary documents</label>
                                     <div class="form-group">
-                                        <label>Logo Letter head</label>
+                                        <label>Letter head</label>
                                         <div></div>
                                         <div class="custom-file">
-                                              <input type="file" class="custom-file-input" id="customFile">
-                                              <label class="custom-file-label" for="customFile">Choose file</label>
+                                              <input type="file" class="custom-file-input" id="letter_head" name="letter_head">
+                                              <label class="custom-file-label" for="customFile">Choose File</label>
                                         </div>
                                     </div>
 
@@ -757,7 +757,7 @@
                                         <label>Upload Baptism Certificate Template</label>
                                         <div></div>
                                         <div class="custom-file">
-                                              <input type="file" class="custom-file-input" id="customFile">
+                                              <input type="file" class="custom-file-input" id="baptism_cert_template" name="baptism_cert_template">
                                               <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
                                     </div>
@@ -766,7 +766,7 @@
                                         <label>Dedication Certificate Template</label>
                                         <div></div>
                                         <div class="custom-file">
-                                              <input type="file" class="custom-file-input" id="customFile">
+                                              <input type="file" class="custom-file-input" id="dedication_cert_template" name="dedication_cert_template">
                                               <label class="custom-file-label" for="customFile">Choose file</label>
                                         </div>
                                     </div>
@@ -785,23 +785,27 @@
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Contact</label>
-                                            <input type="text" class="form-control" name="contact" placeholder="contact">
+                                            <input type="text" class="form-control" id="contact" name="contact" placeholder="contact">
                                             <!-- <span class="form-text text-muted">Please enter Contact.</span> -->
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Email</label>
-                                            <input type="text" class="form-control" name="email" placeholder="email" >
+                                            <input type="text" class="form-control" id="email" name="email" placeholder="email" >
                                             <!-- <span class="form-text text-muted">Please enter your City.</span> -->
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Email Password</label>
-                                            <input type="text" class="form-control" name="e_password" placeholder="e_password" >
+                                            <input type="password" class="form-control" name="e_password" id="e_password" placeholder="Email Password" >
                                             <!-- <span class="form-text text-muted">Please enter your City.</span> -->
                                         </div>
+                                        <label class="kt-checkbox">
+                                            <input type="checkbox" onclick="toggleEmailPassword()"> Show password
+                                            <span></span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -819,39 +823,40 @@
                                         Details of Assembly
                                     </div>
                                     <div class="kt-wizard-v3__review-content">
-                                        Address Line 1<br/>
-                                        Address Line 2<br/>
-                                        KW 101 Kwadaso, Kumasi, Ghana
+                                        Address Line 1: <span id="rev_address_line_1"></span><br/>
+                                        Address Line 2: <span id="rev_address_line_2"></span><br/>
+                                        <span>
+                                            <label id="rev_district_name"></label> |
+                                            <label id="rev_region"></label> |
+                                            <label id="rev_country"></label>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="kt-wizard-v3__review-item">
                                     <div class="kt-wizard-v3__review-title">
                                         Financial Structure
                                     </div>
-                                    <div class="kt-wizard-v3__review-content">
+                                    <div id="rev_fin_items" class="kt-wizard-v3__review-content">
                                         <!--put detail of type of offering here-->
-                                        Tithe | Code: 202 | No percentage deduction<br/>
-                                        Ministry Offering | Code : 203 | 10% deduction<br/>
+
+                                        <!-- Tithe | Code: 202 | No percentage deduction<br/>
+                                        Ministry Offering | Code : 203 | 10% deduction<br/> -->
                                     </div>
                                 </div>
                                 <div class="kt-wizard-v3__review-item">
                                     <div class="kt-wizard-v3__review-title">
                                         Ministries 
                                     </div>
-                                    <div class="kt-wizard-v3__review-content">
-                                        <!--put all ministries and details here-->
-                                        Overnight Delivery with Regular Packaging<br/>
-                                        Preferred Morning (8:00AM - 11:00AM) Delivery 
+                                    <div id="rev_ministries" class="kt-wizard-v3__review-content">
+                                        <!-- Put all minitrie here -->
                                     </div>
                                 </div>
                                 <div class="kt-wizard-v3__review-item">
                                     <div class="kt-wizard-v3__review-title">
-                                        <!--put details of groups here-->
+                                        Groups
                                     </div>
-                                    <div class="kt-wizard-v3__review-content">
-                                        Address Line 1<br/>
-                                        Address Line 2<br/>
-                                        Preston 3072, VIC, Australia
+                                    <div id="rev_groups" class="kt-wizard-v3__review-content">
+                                        <!-- Put all group here -->
                                     </div>
                                 </div>
                             </div>

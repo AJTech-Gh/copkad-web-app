@@ -1,5 +1,5 @@
 from flask import render_template, request, make_response, jsonify, Response
-import json
+import json, os
 from datetime import datetime
 from app import app, db
 from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth
@@ -26,10 +26,6 @@ def index():
 @app.route('/login')
 def login():
     return render_template('login.html')
-
-@app.route('/member_datatable')
-def member_datatable():
-    return render_template('member-datatable.html')
 
 @app.route('/publications')
 def publications():
@@ -75,12 +71,6 @@ def office_of_the_district_secretary():
 def records():
     return render_template('add-user.html')
 
-
-@app.route('/settings')
-def settings():
-    return render_template('settings.html')
-
-
 @app.route('/admin_emmanuel')
 def admin_emmanuel():
     return render_template('add-user.html')
@@ -89,13 +79,111 @@ def admin_emmanuel():
 def admin_glory():
     return render_template('add-user.html')
 
+@app.route('/admin_hope')
+def admin_hope():
+    return render_template('add-user.html')
+
 @app.route('/all_datatables')
 def all_datatables():
     return render_template('add-user.html')
 
-@app.route('/admin_hope')
-def admin_hope():
-    return render_template('baptism-certificates.html')
+@app.route('/member_datatable')
+def member_datatable():
+    try:
+        data_1 = User.query.all()
+        data_2 = utils.load_all_incomplete_reg()
+
+        member_data = []
+        gender_map = {
+            'M': 'Male',
+            'F': 'Female'
+        }
+
+        for user in data_1:
+            row_data = {
+                'member_id': user.member_id,
+                'full_name': f'{user.last_name}, {user.first_name} {user.other_names}',
+                'gender': gender_map[user.gender], 
+                'assembly': user.assembly, 
+                'contact': (f'{user.contact_phone_1}' if user.contact_phone_2.strip() == "" else f'{user.contact_phone_1}/{user.contact_phone_2}'), 
+                'marital_status': user.marital_status.capitalize(), 
+                'ministry': user.ministry, 
+                'status': "1"
+            }
+            member_data.append(row_data)
+
+        for user in data_2:
+            row_data = {
+                'member_id': user["member_id"],
+                'full_name': f'{user["last_name"]}, {user["first_name"]} {user["other_names"]}',
+                'gender': (user["gender"].strip() if user["gender"].strip() == "" or len(user["gender"]) > 1 else gender_map[user["gender"]]), 
+                'assembly': ("" if user["assembly"] == None else user["assembly"]), 
+                'contact': (f'{user["contact_phone_1"]}' if user["contact_phone_2"].strip() == "" else f'{user["contact_phone_1"]}/{user["contact_phone_2"]}'), 
+                'marital_status': user["marital_status"].capitalize(), 
+                'ministry': user["ministry"], 
+                'status': "0"
+            }
+            member_data.append(row_data)
+
+
+        #print(death_data[0])
+        return render_template('member-datatable.html', member_data=member_data)
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
+@app.route('/settings_submit', methods=['POST'])
+def settings_submit():
+    try:
+        form = dict(request.form)
+
+        multi_item_list = ['ministry', 'group', "name_of_offering"]
+        offering_items = ['name_of_offering', 'type_of_offering', 'percentage_deduction', 'offering_code']
+        config_dict = dict({
+            'church_name':form.get('church_name'),
+            'assembly_name':form.get('assembly_name'),
+            'district_name':form.get('district_name'),
+            'area_name':form.get('area_name'),
+            'address_line_1':form.get('address_line_1'),
+            'address_line_2':form.get('address_line_2'),
+            'region':form.get('region'),
+            'country':form.get('country'),
+            'contact':form.get('contact'),
+            'email':form.get('email'),
+            'e_password':form.get('e_password')
+        })
+        
+        offering_count = 0
+        for item in multi_item_list:
+            if item == 'name_of_offering':
+                for key in form.keys():
+                    if key.__contains__(item):
+                        offering_count += 1
+                continue
+            config_dict[item] = []
+            for key in form.keys():
+                if key.__contains__(item):
+                    config_dict[item].append(form[key])
+        
+        for i in range(offering_count):
+            offering_key = 'offering_' + str(i)
+            config_dict[offering_key] = dict()
+            for item in offering_items:
+                config_dict[offering_key][item] = form[f'[{i}][{item}]']
+
+        utils.save_assembly_config(config_dict)
+
+        if utils.upload_assembly_config_files(form.get('assembly_name')):
+            return Response(json.dumps({'status':'FAIL', 'message': 'Could not upload all files'}), status=400, mimetype='application/json')
+        # print(config_dict)
+        return Response(json.dumps({'status':'SUCCESS', 'message': 'Settings saved successfully'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/birth')
 def birth():

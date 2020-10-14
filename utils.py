@@ -24,6 +24,7 @@ BAPTISM_PHOTOS_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "baptism_photos")
 PSEUDO_PROFILE_PHOTOS_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplete_reg_acc", "profile_photos")
 PSEUDO_DATA_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplete_reg_acc", "data")
 PUSH_NOTIF_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'push_notifications')
+ASSEMBLY_CONFIG_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'assembly_config')
 
 def remove_contact_symbols(contact):
     return re.sub(r"\D+", "", contact)
@@ -79,6 +80,19 @@ def read_incomplete_reg(member_pseudo_id):
     decrypted_json_data = decrypt_json_data(encrypted_json_data)
     json_file.close()
     return json.loads(decrypted_json_data)
+
+def load_all_incomplete_reg():
+    """
+    Returns all the incomplete registration account filenames (pseudo ids)
+    """
+    filenames = os.listdir(PSEUDO_DATA_DIR)
+    filenames.remove("constant_empty_json_file.json")
+    incomplete_reg_data = []
+    for name in filenames:
+        pseudo_id = name.replace(".json", "")
+        data = read_incomplete_reg(pseudo_id)
+        incomplete_reg_data.append(data)
+    return incomplete_reg_data
 
 def load_img_for_web(first_name, last_name, contact_phone_1):
     # load image
@@ -381,4 +395,81 @@ def member_id_exists(member_id, table="user"):
         return True
     if table == 'baptism' and Baptism.query.filter_by(member_id=member_id).first():
         return True
+    return False
+
+
+def save_assembly_config(config_dict):
+    # get the save the json data
+    json_data = json.dumps(config_dict)
+    encrypted_json_data = encrypt_json_data(json_data)
+    json_filename = 'config.json'
+    dir_name = re.sub(r"[\+\-\s]+", "_", config_dict["assembly_name"].lower())
+    dir_path = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name)
+    os.makedirs(dir_path, exist_ok=True)
+    json_file = open(os.path.join(dir_path, json_filename), 'wb')
+    json_file.write(encrypted_json_data)
+    json_file.close()
+
+
+def read_assembly_config(assembly_name):
+    # load the data
+    json_filename = 'config.json'
+    dir_name = re.sub(r"[\+\-\s]+", "_", assembly_name.lower())
+    json_file = open(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, json_filename), 'rb')
+    encrypted_json_data = json_file.read()
+    decrypted_json_data = decrypt_json_data(encrypted_json_data)
+    json_file.close()
+    return json.loads(decrypted_json_data)
+
+
+def upload_assembly_config_files(assembly_name):
+    """
+    Uploads the letter head, baptism and dedication certificates templates to the assembly config folder
+    """
+    # get the assembly folder name
+    dir_name = re.sub(r"[\+\-\s]+", "_", assembly_name.lower())
+    dir_path = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name)
+    os.makedirs(dir_path, exist_ok=True)
+    # check if the post request has the file part
+    logo_img = request.files.get("logo_upload")
+    letter_head_img = request.files.get("letter_head")
+    baptism_cert_template = request.files.get("baptism_cert_template")
+    dedication_cert_template = request.files.get("dedication_cert_template")
+    # if all the files are not provided, return
+    if not logo_img and not letter_head_img and not baptism_cert_template and not dedication_cert_template:
+        return False
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    missing_files = []
+    if logo_img:
+        if logo_img.filename == '':
+            missing_files.append('logo_img')
+    else:
+        missing_files.append('logo_img')
+    if letter_head_img:
+        if letter_head_img.filename == '':
+            missing_files.append('letter_head_img')
+    else:
+        missing_files.append('letter_head_img')
+    if baptism_cert_template:
+        if baptism_cert_template.filename == '':
+            missing_files.append('baptism_cert_template')
+    else:
+        missing_files.append('baptism_cert_template')
+    if dedication_cert_template:
+        if dedication_cert_template.filename == '':
+            missing_files.append('dedication_cert_template')
+    else:
+        missing_files.append('dedication_cert_template')
+    # save the files
+    if (logo_img and allowed_file(logo_img.filename)):
+        logo_img.save(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'logo' + IMG_FILE_EXT))
+    if (letter_head_img and allowed_file(letter_head_img.filename)) and not missing_files.__contains__('letter_head_img'):
+        letter_head_img.save(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'letter_head' + IMG_FILE_EXT))
+    if (baptism_cert_template and '.' in baptism_cert_template.filename and baptism_cert_template.filename.rsplit('.', 1)[1].lower() == "pdf") and not missing_files.__contains__('baptism_cert_template'):
+        baptism_cert_template.save(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'baptism_cert_template.pdf'))
+    if (dedication_cert_template and '.' in dedication_cert_template.filename and baptism_cert_template.filename.rsplit('.', 1)[1].lower() == "pdf") and not missing_files.__contains__('dedication_cert_template'):
+        dedication_cert_template.save(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'dedication_cert_template.pdf'))
+
+    # return the index page if the form is not submitted rightly
     return False

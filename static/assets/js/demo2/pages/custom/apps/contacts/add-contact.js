@@ -489,10 +489,20 @@ $("#kt_apps_contacts_add_avatar").on("change", function () {
 			$('.kt-avatar__holder').attr("style", "background-image: url(" + window.URL.createObjectURL(this.files[0]) + 
 			"); background-position: center; ");
         } catch (error) {
-            // do nothing  console.log(error)
+            swal.fire({
+				"title": "",
+				"text": error, 
+				"type": "error",
+				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+			});
         }
     } else {
-        // $("#src-image-text").text("Unacceptable file format! Expected JPG(JPEG), PNG OR GIF");
+		swal.fire({
+			"title": "",
+			"text": "Unacceptable file format! Expected JPG(JPEG) or PNG", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
     }
 });
 
