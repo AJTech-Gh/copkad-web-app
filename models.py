@@ -8,11 +8,11 @@ import re
 class User(db.Model):
     # personal info page
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    member_id = db.Column(db.String(10), primary_key=True, nullable=False, index=True)
+    member_id = db.Column(db.String(30), primary_key=True, nullable=False, index=True)
     first_name = db.Column(db.String(50), unique=False, nullable=False, index=True)
     last_name = db.Column(db.String(50), unique=False, nullable=False, index=True) 
     other_names = db.Column(db.String(50), unique=False, nullable=False, index=True)
-    gender = db.Column(db.String(1), unique=False, nullable=False)
+    gender = db.Column(db.String(6), unique=False, nullable=False)
     occupation = db.Column(db.String(50), unique=False, nullable=False)
     contact_phone_1 = db.Column(db.String(14), unique=False, nullable=False, index=True)
     contact_phone_2 = db.Column(db.String(14), unique=False, nullable=False, index=True)
@@ -40,12 +40,6 @@ class User(db.Model):
 
 #https://avacariu.me/writing/2019/composite-foreign-keys-and-many-to-many-relationships-in-sqlalchemy
 #https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
-
-    def set_gender(self, gender):
-        self.gender = gender[0].upper()
-
-    def get_gender(self, gender):
-        return ('Male' if gender.lower() == 'm' else 'Female')
 
     def set_contact_phone_1(self, contact):
         self.contact_phone_1 = re.sub(r"[\+\-\s]+", "", contact)

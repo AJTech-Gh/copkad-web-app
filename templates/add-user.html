@@ -330,7 +330,7 @@
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Photo ID</label>
                                                 <div class="col-lg-9 col-xl-6">
                                                     <div class="kt-avatar kt-avatar--outline kt-avatar--circle--" id="kt_apps_user_add_avatar">
-                                                        <div class="kt-avatar__holder" style="background-image: url(/static/assets/media/users/thecopkadna-users.png)"></div>
+                                                        <div class="kt-avatar__holder" style="background-image: url({{ user_data['img'].replace('\\', '/') }})"></div>
                                                         <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
                                                             <i class="fa fa-pen"></i>
                                                             <input type="file" id= "kt_apps_contacts_add_avatar" name="kt_apps_contacts_add_avatar" accept="image/jpeg,image/png">
@@ -341,34 +341,43 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="form-group row">
+                                            {% if user_data['member_id'] %}
+                                            <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Member ID</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="member_id" value="copkad010" name="member_id">
+                                                    <input class="form-control" type="text" id="member_id" value="{{ user_data['member_id'] }}" name="member_id" readonly>
                                                 </div>
-                                            </div> -->
+                                            </div>
+                                            {% else %}
+                                            <div class="form-group row" hidden>
+                                                <label class="col-xl-3 col-lg-3 col-form-label">Member ID</label>
+                                                <div class="col-lg-9 col-xl-9">
+                                                    <input class="form-control" type="text" id="member_id" value="" name="member_id" readonly>
+                                                </div>
+                                            </div>
+                                            {% endif %}
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">First Name</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="first_name"  name="first_name" required>
+                                                    <input class="form-control" type="text" id="first_name"  name="first_name" value="{{ user_data['first_name'] }}" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Last Name</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="last_name" name="last_name" required>
+                                                    <input class="form-control" type="text" id="last_name" name="last_name" value="{{ user_data['last_name'] }}" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Other Name(s)</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="other_names" name="other_names">
+                                                    <input class="form-control" type="text" id="other_names" name="other_names" value="{{ user_data['other_names'] }}">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Gender</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <select class="form-control"  name="gender" id="gender" name="gender">
+                                                    <select class="form-control"  name="gender" id="gender" name="gender" value="{{ user_data['gender'] }}"> 
                                                         <option value="Male">Male</option>
                                                         <option value="Female">Female</option>
                                                     </select>
@@ -379,7 +388,7 @@
                                                     <div class="col-lg-9 col-xl-9">
                                                         <div class="input-group">
                                                             <div class="input-group-prepend"><span class="input-group-text"></span></div>
-                                                            <input type="text" class="form-control" id="occupation" name="occupation" aria-describedby="basic-addon1">
+                                                            <input type="text" class="form-control" id="occupation" name="occupation" value="{{ user_data['occupation'] }}" aria-describedby="basic-addon1">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -388,7 +397,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-phone"></i></span></div>
-                                                        <input type="tel" pattern="^\+?([0-9]{2}|[0-9]{3}|[0-9]{4})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$" class="form-control" id="contact_phone_1" name="contact_phone_1" placeholder="+233(0)205..." aria-describedby="basic-addon1">
+                                                        <input type="tel" pattern="^\+?([0-9]{2}|[0-9]{3}|[0-9]{4})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$" value="{{ user_data['contact_1'] }}" class="form-control" id="contact_phone_1" name="contact_phone_1" placeholder="+233(0)205..." aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -397,7 +406,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-phone"></i></span></div>
-                                                        <input type="tel" pattern="^\+?([0-9]{2}|[0-9]{3}|[0-9]{4})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$" class="form-control" id="contact_phone_2" name="contact_phone_2" placeholder="+233(0)205..." aria-describedby="basic-addon1">
+                                                        <input type="tel" pattern="^\+?([0-9]{2}|[0-9]{3}|[0-9]{4})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$" value="{{ user_data['contact_2'] }}" class="form-control" id="contact_phone_2" name="contact_phone_2" placeholder="+233(0)205..." aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -406,7 +415,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="flaticon-calendar"></i></span></div>
-                                                        <input type="date" class="form-control" id="dob" name="dob" aria-describedby="basic-addon1">
+                                                        <input type="date" class="form-control" id="dob" name="dob" value="{{ user_data['dob'] }}" aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
@@ -415,19 +424,19 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
-                                                        <input type="text" class="form-control" id="email" name="email" placeholder="esimintim@gmail.com" aria-describedby="basic-addon1">
+                                                        <input type="text" class="form-control" id="email" name="email" value="{{ user_data['email'] }}" placeholder="esimintim@gmail.com" aria-describedby="basic-addon1">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Marital status</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <select class="form-control" id="marital_status" name="marital_status">
-                                                        <option value="married">Single</option>
-                                                        <option value="single">Married</option>
-                                                        <option value="divorced">Divorced</option>
-                                                        <option value="widowed">Widowed</option>
-                                                        <option value="widowered">Widowered</option>
+                                                    <select class="form-control" id="marital_status" name="marital_status" value="{{ user_data['marital_status'] }}">
+                                                        <option value="Single">Single</option>
+                                                        <option value="Married">Married</option>
+                                                        <option value="Divorced">Divorced</option>
+                                                        <option value="Widowed">Widowed</option>
+                                                        <option value="Widowered">Widowered</option>
                                                         </select>
                                                         <!-- <span class="form-text text-muted">Click to join marital info here <a href="#" class="kt-link" data-toggle="modal" data-target="#kt_modal_4">join</a>.</span> -->
                                                     </div> 
@@ -455,47 +464,47 @@
                                             <div class="form-group row">
                                                 <label class="col-form-label col-lg-3 col-sm-12">Church Affiliation</label>
                                                 <div class=" col-lg-9 col-md-9 col-sm-12">
-                                                    <select class="form-control kt-select2" id="kt_select2_3" name="assembly" multiple>
+                                                    <select class="form-control kt-select2" id="kt_select2_3" name="assembly" value="{{ user_data['assembly'] }}" multiple>
                                                         
-                                                        <optgroup id ="assembly" label="Assembly">
-                                                            <option value="EEA">Emmanuel English Assembly</option>
+                                                        <optgroup id ="assembly" label="Assembly" selected>
+                                                            <option value="EEA" selected>Emmanuel English Assembly</option>
                                                             <option value="GA">Glory Assembly</option>
                                                             <option value="HA">Hope Assembly</option>
                                                         </optgroup>
                                                         
                                                     </select>
                                                     <br/><br/>
-                                                    <select class="form-control kt-select2" id="kt_select2_4" name="ministry" multiple>
+                                                    <select class="form-control kt-select2" id="kt_select2_4" value="{{ user_data['ministry'] }}" name="ministry" multiple>
                                                     
-                                                        <optgroup label="Ministry" id="ministry">
-                                                            <option value="C">Children</option>
-                                                            <option value="E">Evangelism</option>
-                                                            <option value="P">PEMEM</option>
-                                                            <option value="W">Women</option>
-                                                            <option value="Y">Youth</option>
+                                                        <optgroup label="Ministry" id="ministry" selected>
+                                                            <option value="Children">Children</option>
+                                                            <option value="Evangelism" selected>Evangelism</option>
+                                                            <option value="PEMEM" selected>PEMEM</option>
+                                                            <option value="Women">Women</option>
+                                                            <option value="Youth">Youth</option>
                                                         </optgroup>
                                                         
                                                     </select>
                                                     <br/><br/>
-                                                    <select class="form-control kt-select2" id="kt_select2_5" name="assembly_groups" multiple>
+                                                    <select class="form-control kt-select2" id="kt_select2_5" name="assembly_groups" value="{{ user_data['group'] }}" multiple>
 
-                                                        <optgroup label="EEA Bible Studies Groups" id="EEA-groups">
-                                                            <option value="EAG">Patience</option>
-                                                            <option value="EPG" >Peace</option>
-                                                            <option value="EJG">Joy</option>
-                                                            <option value="ELG">Love</option>
+                                                        <optgroup label="EEA Bible Studies Groups" id="EEA-groups" selected>
+                                                            <option value="Patience">Patience</option>
+                                                            <option value="Peace" >Peace</option>
+                                                            <option value="Joy">Joy</option>
+                                                            <option value="Love">Love</option>
                                                         </optgroup>
-                                                        <optgroup label="Glory Assembly Bible Studies Group" id="GA-groups">
-                                                            <option value="GAGO">Group One</option>
-                                                            <option value="GAGW">Group Two</option>
-                                                            <option value="GAGT">Group Three</option>
-                                                            <option value="GAGF">Group Four</option>
+                                                        <optgroup label="Glory Assembly Bible Studies Group" id="GA-groups" selected>
+                                                            <option value="Group One">Group One</option>
+                                                            <option value="Group Two">Group Two</option>
+                                                            <option value="Group Three">Group Three</option>
+                                                            <option value="Group Four">Group Four</option>
                                                         </optgroup>
-                                                        <optgroup label="Hope Assembly Bible Studies Group" id="HA-groups">
-                                                            <option value="HAGO">Group One</option>
-                                                            <option value="HAGW">Group Two</option>
-                                                            <option value="HAGT">Group Three</option>
-                                                            <option value="HAGF">Group Four</option>
+                                                        <optgroup label="Hope Assembly Bible Studies Group" id="HA-groups" selected>
+                                                            <option value="Group One">Group One</option>
+                                                            <option value="Group Two">Group Two</option>
+                                                            <option value="Group Three">Group Three</option>
+                                                            <option value="Group Four">Group Four</option>
                                                         </optgroup>
 
                                                     </select>
@@ -525,7 +534,7 @@
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Full name</label>
                                                 <div class="col-lg-9 col-xl-9">
-                                                    <input class="form-control" type="text" id="full_name_read_only" readonly>
+                                                    <input class="form-control" type="text" id="full_name_read_only" value="{{ user_data['full_name'] }}" readonly>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -533,7 +542,7 @@
                                                 <div class="col-lg-9 col-xl-9">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend"><span class="input-group-text"><i class="la la-at"></i></span></div>
-                                                        <input type="text" class="form-control" id="email_readonly" readonly aria-describedby="basic-addon1">
+                                                        <input type="text" class="form-control" id="email_readonly" value="{{ user_data['email'] }}" readonly aria-describedby="basic-addon1">
                                                     </div>
                                                     <!-- <span class="form-text text-muted">Email will not be publicly displayed. <a href="#" class="kt-link">Learn more</a>.</span> -->
                                                 </div>
@@ -552,8 +561,7 @@
                                                     <label class="col-xl-3 col-lg-3 col-form-label">Password</label>
                                                     <div class="col-lg-9 col-xl-9">
                                                         <div class="input-group">
-                                                 <div class="input-group-prepend"><span class="input-group-text"><i class="
-                                                                flaticon-security"></i></span></div>
+                                                 <div class="input-group-prepend"><span class="input-group-text"><i class="flaticon-security"></i></span></div>
                                                             <input type="password" readonly class="form-control" id="password" name="password" aria-describedby="basic-addon1">
                                                         </div>
                                                         <!-- <span class="form-text text-muted">Email will not be publicly displayed. <a href="#" class="kt-link">Learn more</a>.</span> -->
@@ -575,15 +583,27 @@
                                                 <div class="col-lg-9 col-xl-6">
                                                     <div class="kt-checkbox-inline">
                                                         <label class="kt-checkbox">
-                                                            <input type="checkbox" checked id="comm_email" name="comm_email"> Email
+                                                            {% if user_data['comm_email'] %}
+                                                            <input type="checkbox" checked id="comm_email" name="comm_email" />  Email
+                                                            {% else %}
+                                                            <input type="checkbox" id="comm_email" name="comm_email"> Email
+                                                            {% endif %}
                                                             <span></span>
                                                         </label>
                                                         <label class="kt-checkbox">
-                                                            <input type="checkbox" checked id="comm_sms" name="comm_sms"> SMS
+                                                            {% if user_data['comm_sms'] %}
+                                                            <input type="checkbox" checked id="comm_sms" name="comm_sms"/> SMS  
+                                                            {% else %}                
+                                                            <input type="checkbox" id="comm_sms" name="comm_sms" /> SMS  
+                                                            {% endif %}
                                                             <span></span>
                                                         </label>
                                                         <label class="kt-checkbox">
-                                                            <input type="checkbox" id="comm_phone" name="comm_phone"> Phone
+                                                            {% if user_data['comm_phone'] %}
+                                                            <input type="checkbox" checked id="comm_phone" name="comm_phone" /> Phone
+                                                            {% else %}
+                                                            <input type="checkbox" id="comm_phone" name="comm_phone" /> Phone
+                                                            {% endif %}
                                                             <span></span>
                                                         </label>
                                                     </div>
@@ -643,26 +663,26 @@
                             <div class="kt-wizard-v1__form">
                                 <div class="form-group">
                                     <label>Address Line 1</label>
-                                    <input type="text" class="form-control" id="address_line_1" name="address_line_1" placeholder="Sun Flower St. 4">
+                                    <input type="text" class="form-control" id="address_line_1" value="{{ user_data['address_line_1'] }}" name="address_line_1" placeholder="Sun Flower St. 4">
                                     <span class="form-text text-muted">Please enter your Address.</span>
                                 </div>
                                 <div class="form-group">
                                     <label>Address Line 2</label>
-                                    <input type="text" class="form-control" id="address_line_2" name="address_line_2" placeholder="P. O. Box 22">
+                                    <input type="text" class="form-control" id="address_line_2" value="{{ user_data['address_line_2'] }}" name="address_line_2" placeholder="P. O. Box 22">
                                     <span class="form-text text-muted">Please enter an alternative Address.</span>
                                 </div>
                                 <div class="row">
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Digital Address Code</label>
-                                            <input type="text" class="form-control" id="digital_address_code" name="digital_address_code" placeholder="AS-09323237R">
+                                            <input type="text" class="form-control" id="digital_address_code" value="{{ user_data['digital_address_code'] }}" name="digital_address_code" placeholder="AS-09323237R">
                                             <span class="form-text text-muted">Please enter your digital address code</span>
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>Region</label>
-                                            <input type="text" class="form-control" id="region" name="region" placeholder="Ashanti">
+                                            <input type="text" class="form-control" id="region" value="{{ user_data['region'] }}" name="region" placeholder="Ashanti">
                                             <span class="form-text text-muted">Please enter your region.</span>
                                         </div>
                                     </div>
@@ -671,14 +691,14 @@
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                             <label>District</label>
-                                            <input type="text" class="form-control" id="district" name="district" placeholder="Kwadaso South district" >
+                                            <input type="text" class="form-control" id="district" value="{{ user_data['district'] }}" name="district" placeholder="Kwadaso South district" >
                                             <span class="form-text text-muted">Please enter district</span>
                                         </div>
                                     </div>
                                     <div class="col-xl-6">
                                         <div class="form-group">
                                         <label>Country:</label>
-                                        <select name="country" id="country" class="form-control">
+                                        <select name="country" id="country" class="form-control" value="{{ user_data['country'] }}">
                                             <option value="">Select</option>
                                             <option value="AF">Afghanistan</option>
                                             <option value="AX">Åland Islands</option>

@@ -214,6 +214,17 @@ jQuery(document).ready(function() {
 	KTAppContactsAdd.init();
 });
 
+// check if full name and contact are available
+function checkNameContact() {
+	let firstName = $("#first_name").val().trim();
+	let lastName = $("#first_name").val().trim();
+	let contact1 = $("#contact_phone_1").val().trim();
+	if (firstName && lastName && contact1) {
+		return true;
+	}
+	return false;
+}
+
 // save and continue
 $("#save_continue").on('click', function(e) {
 	e.preventDefault();
@@ -222,33 +233,44 @@ $("#save_continue").on('click', function(e) {
 
 	var formEl = $('#kt_apps_contacts_add_form');
 
-	formEl.ajaxSubmit({
+	if (checkNameContact()) {
+		formEl.ajaxSubmit({
 
-		url: "/add_user_save_continue",
+			url: "/add_user_save_continue",
+	
+			error: function(res, err) {
+				KTApp.unprogress($("#save_continue"));
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
+			},
+	
+			success: function(res) {
+				KTApp.unprogress($("#save_continue"));
+	
+				swal.fire({
+					"title": "", 
+					"text": "Saved successfully!", 
+					"type": "success",
+					"confirmButtonClass": "btn btn-secondary"
+				});
+	
+			}
+		});
+	} else {
+		KTApp.unprogress($("#save_continue"));
 
-		error: function(res, err) {
-			KTApp.unprogress($("#save_continue"));
-
-			swal.fire({
-				"title": "",
-				"text": res.responseJSON.message, 
-				"type": "error",
-				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
-			});
-		},
-
-		success: function(res) {
-			KTApp.unprogress($("#save_continue"));
-
-			swal.fire({
-				"title": "", 
-				"text": "Saved successfully!", 
-				"type": "success",
-				"confirmButtonClass": "btn btn-secondary"
-			});
-
-		}
-	});
+		swal.fire({
+			"title": "",
+			"text": "Provide at least First Name, Last Name and Contact Phone 1 before saving", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
 });
 
 // save and add new
@@ -259,38 +281,49 @@ $("#save_new").on('click', function(e) {
 
 	var formEl = $('#kt_apps_contacts_add_form');
 
-	formEl.ajaxSubmit({
+	if (checkNameContact()) {
+		formEl.ajaxSubmit({
 
-		url: "/add_user_save_new",
+			url: "/add_user_save_new",
+	
+			error: function(res, err) {
+				KTApp.unprogress($("#save_new"));
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
+			},
+	
+			success: function(res) {
+				KTApp.unprogress($("#save_new"));
+	
+				swal.fire({
+					"title": "", 
+					"text": "Saved successfully!", 
+					"type": "success",
+					"confirmButtonClass": "btn btn-secondary"
+				}).then((result) => {
+					if (result.value) {
+						// reset the form
+						location.href = "add_user";
+					}
+				});
+	
+			}
+		});
+	} else {
+		KTApp.unprogress($("#save_new"));
 
-		error: function(res, err) {
-			KTApp.unprogress($("#save_new"));
-
-			swal.fire({
-				"title": "",
-				"text": res.responseJSON.message, 
-				"type": "error",
-				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
-			});
-		},
-
-		success: function(res) {
-			KTApp.unprogress($("#save_new"));
-
-			swal.fire({
-				"title": "", 
-				"text": "Saved successfully!", 
-				"type": "success",
-				"confirmButtonClass": "btn btn-secondary"
-			}).then((result) => {
-				if (result.value) {
-					// reset the form
-					location.href = "add_user";
-				}
-			});
-
-		}
-	});
+		swal.fire({
+			"title": "",
+			"text": "Provide at least First Name, Last Name and Contact Phone 1 before saving", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
 });
 
 
@@ -302,38 +335,49 @@ $("#save_exits").on('click', function(e) {
 
 	var formEl = $('#kt_apps_contacts_add_form');
 
-	formEl.ajaxSubmit({
+	if (checkNameContact()) {
+		formEl.ajaxSubmit({
 
-		url: "/add_user_save_exit",
+			url: "/add_user_save_exit",
+	
+			error: function(res, err) {
+				KTApp.unprogress($("#save_new"));
+	
+				swal.fire({
+					"title": "",
+					"text": res.responseJSON.message, 
+					"type": "error",
+					"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+				});
+			},
+	
+			success: function(res) {
+				KTApp.unprogress($("#save_exits"));
+	
+				swal.fire({
+					"title": "", 
+					"text": "Saved successfully!", 
+					"type": "success",
+					"confirmButtonClass": "btn btn-secondary"
+				}).then((data) => {
+					if (data.value){
+						// reset the form
+						location.href = "/";
+					}
+				});
+	
+			}
+		});
+	} else {
+		KTApp.unprogress($("#save_exits"));
 
-		error: function(res, err) {
-			KTApp.unprogress($("#save_new"));
-
-			swal.fire({
-				"title": "",
-				"text": res.responseJSON.message, 
-				"type": "error",
-				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
-			});
-		},
-
-		success: function(res) {
-			KTApp.unprogress($("#save_exits"));
-
-			swal.fire({
-				"title": "", 
-				"text": "Saved successfully!", 
-				"type": "success",
-				"confirmButtonClass": "btn btn-secondary"
-			}).then((data) => {
-				if (data.value){
-					// reset the form
-					location.href = "/";
-				}
-			});
-
-		}
-	});
+		swal.fire({
+			"title": "",
+			"text": "Provide at least First Name, Last Name and Contact Phone 1 before saving", 
+			"type": "error",
+			"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+		});
+	}
 });
 
 //Receive data and print on review

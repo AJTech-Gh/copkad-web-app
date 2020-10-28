@@ -1,6 +1,9 @@
 from flask import render_template, request, make_response, jsonify, Response
-import json, os
+import json, os, re
 from datetime import datetime
+from flask.helpers import url_for
+
+from werkzeug.utils import redirect
 from app import app, db
 from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth
 import utils
@@ -69,7 +72,7 @@ def office_of_the_district_secretary():
 
 @app.route('/records')
 def records():
-    return render_template('add-user.html')
+    return render_template('report.html')
 
 @app.route('/admin_emmanuel')
 def admin_emmanuel():
@@ -81,11 +84,24 @@ def admin_glory():
 
 @app.route('/admin_hope')
 def admin_hope():
-    return render_template('add-user.html')
+    return render_template('print-out-sample.html')
 
 @app.route('/all_datatables')
 def all_datatables():
     return render_template('add-user.html')
+
+
+@app.route('/view_member_data')
+def view_member_data():
+    member_id = request.args.get("id")
+    status = request.args.get("status")
+    user_data = {}
+    if status == '0':
+        user_data = utils.read_incomplete_reg(member_id)
+    else:
+        user_data = utils.read_user_by_member_id(member_id)
+    return render_template("add-user.html", user_data=user_data)
+
 
 @app.route('/member_datatable')
 def member_datatable():
@@ -94,16 +110,12 @@ def member_datatable():
         data_2 = utils.load_all_incomplete_reg()
 
         member_data = []
-        gender_map = {
-            'M': 'Male',
-            'F': 'Female'
-        }
 
         for user in data_1:
             row_data = {
                 'member_id': user.member_id,
                 'full_name': f'{user.last_name}, {user.first_name} {user.other_names}',
-                'gender': gender_map[user.gender], 
+                'gender': user.gender, 
                 'assembly': user.assembly, 
                 'contact': (f'{user.contact_phone_1}' if user.contact_phone_2.strip() == "" else f'{user.contact_phone_1}/{user.contact_phone_2}'), 
                 'marital_status': user.marital_status.capitalize(), 
@@ -116,7 +128,7 @@ def member_datatable():
             row_data = {
                 'member_id': user["member_id"],
                 'full_name': f'{user["last_name"]}, {user["first_name"]} {user["other_names"]}',
-                'gender': (user["gender"].strip() if user["gender"].strip() == "" or len(user["gender"]) > 1 else gender_map[user["gender"]]), 
+                'gender': user['gender'], 
                 'assembly': ("" if user["assembly"] == None else user["assembly"]), 
                 'contact': (f'{user["contact_phone_1"]}' if user["contact_phone_2"].strip() == "" else f'{user["contact_phone_1"]}/{user["contact_phone_2"]}'), 
                 'marital_status': user["marital_status"].capitalize(), 
@@ -124,7 +136,6 @@ def member_datatable():
                 'status': "0"
             }
             member_data.append(row_data)
-
 
         #print(death_data[0])
         return render_template('member-datatable.html', member_data=member_data)
@@ -879,9 +890,37 @@ def load_user_img(member_id):
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Failed to load profile photo'}), status=400, mimetype='application/json')
 
+
 @app.route('/add_user')
 def add_user():
-    return render_template('add-user.html')    
+    user_data = {
+            "member_id": "",
+            "first_name": "",
+            "last_name": "",
+            "other_names": "",
+            "full_name": "",
+            "gender": "Male",
+            "occupation": "",
+            "contact_1": "",
+            "contact_2": "",
+            "dob": "",
+            "email": "",
+            "marital_status": "Single",
+            "assembly": "",
+            "ministry": "",
+            "group": "Group One",
+            "comm_email": "checked",
+            "comm_sms": "checked",
+            "comm_phone": "",
+            "address_line_1": "",
+            "address_line_2": "",
+            "digital_address_code": "",
+            "region": "",
+            "district": "",
+            "country": "GH",
+            "img": "/static/assets/media/users/thecopkadna-users.png"
+        }
+    return render_template('add-user.html', user_data=user_data)
 
 @app.route('/add_user_submit', methods=['POST'])
 def add_user_submit():
@@ -890,7 +929,7 @@ def add_user_submit():
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
         form = request.form
-        # member_id = form.get('member_id')
+        member_id = form.get('member_id').strip()
         first_name = form.get('first_name').strip()
         last_name = form.get('last_name').strip()
         other_names = form.get('other_names').strip() 
@@ -918,34 +957,62 @@ def add_user_submit():
         country = form.get('country')
 
         try:
-            member_id = utils.gen_id(assembly, ministry)
-            if not member_id:
-                return Response(json.dumps({'status':'FAIL', 'message': 'Invalid combination of ministries.'}), status=400, mimetype='application/json')
-            if not utils.upload_profile_photo(member_id):
-                return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
-            if utils.check_email_duplicates(email):
-                return Response(json.dumps({'status':'FAIL', 'message': 'Email already exists.'}), status=400, mimetype='application/json')
-            if utils.check_contact_duplicates(contact_phone_1):
-                return Response(json.dumps({'status':'FAIL', 'message': 'Contact 1 already exists.'}), status=400, mimetype='application/json')
-            # create new user object
-            user = User(member_id=member_id, first_name=first_name, last_name=last_name, other_names=other_names,
-                        occupation=occupation, email=email, marital_status=marital_status, assembly=assembly,
-                        address_line_1=address_line_1, address_line_2=address_line_2, digital_address_code=digital_address_code, region=region, 
-                        district=district, country=country
-                    )
-            user.set_gender(gender)
-            user.set_contact_phone_1(contact_phone_1)
-            user.set_contact_phone_2(contact_phone_2)
-            user.set_dob(dob)
-            user.set_ministry(ministry)
-            user.set_group(group)
-            user.set_password(password)
-            user.set_comm_email(comm_email)
-            user.set_comm_sms(comm_sms)
-            user.set_comm_phone(comm_phone)
-            # add the new user to the database and save the changes
-            db.session.add(user)
-            db.session.commit()
+            if member_id == "": 
+                member_id = utils.gen_id(first_name, other_names, last_name)
+                if not member_id:
+                    return Response(json.dumps({'status':'FAIL', 'message': 'Invalid combination of ministries.'}), status=400, mimetype='application/json')
+                if not utils.upload_profile_photo(member_id):
+                    return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
+                if utils.check_email_duplicates(email):
+                    return Response(json.dumps({'status':'FAIL', 'message': 'Email already exists.'}), status=400, mimetype='application/json')
+                if utils.check_contact_duplicates(contact_phone_1):
+                    return Response(json.dumps({'status':'FAIL', 'message': 'Contact 1 already exists.'}), status=400, mimetype='application/json')
+                # create new user object
+                user = User(member_id=member_id, first_name=first_name, last_name=last_name, other_names=other_names,
+                            occupation=occupation, email=email, marital_status=marital_status, assembly=assembly,
+                            address_line_1=address_line_1, address_line_2=address_line_2, digital_address_code=digital_address_code, region=region, 
+                            district=district, country=country, gender=gender
+                        )
+                user.set_contact_phone_1(contact_phone_1)
+                user.set_contact_phone_2(contact_phone_2)
+                user.set_dob(dob)
+                user.set_ministry(ministry)
+                user.set_group(group)
+                user.set_password(password)
+                user.set_comm_email(comm_email)
+                user.set_comm_sms(comm_sms)
+                user.set_comm_phone(comm_phone)
+                # add the new user to the database and save the changes
+                db.session.add(user)
+                db.session.commit()
+            else:
+                utils.upload_profile_photo(member_id)
+                row_dict = {
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "other_names": other_names,
+                    "occupation": occupation,
+                    "email": email,
+                    "marital_status": marital_status,
+                    "assembly" : assembly,
+                    "address_line_1": address_line_1,
+                    "address_line_2": address_line_2,
+                    "digital_address_code": digital_address_code,
+                    "region": region,
+                    "district": district,
+                    "country": country,
+                    "gender": gender,
+                    "contact_phone_1": re.sub(r"[\+\-\s]+", "", contact_phone_1),
+                    "contact_phone_2": re.sub(r"[\+\-\s]+", "", contact_phone_2),
+                    "dob": dob,
+                    "ministry": ",".join(ministry),
+                    "group": ("" if not group else group),
+                    "comm_email": (1 if comm_email and comm_email.lower() == 'on' else 0),
+                    "comm_sms": (1 if comm_sms and comm_sms.lower() == 'on' else 0),
+                    "comm_phone": (1 if comm_phone and comm_phone.lower() == 'on' else 0)
+                }
+                User.query.filter_by(member_id=member_id).update(row_dict)
+                db.session.commit()
 
             # send confirmation email or sms
             if email:
@@ -1009,8 +1076,8 @@ def add_user_save_continue():
                 "other_names": other_names,
                 "gender": gender,
                 "occupation": occupation,
-                "contact_phone_1": contact_phone_1,
-                "contact_phone_2": contact_phone_2,
+                "contact_1": contact_phone_1,
+                "contact_2": contact_phone_2,
                 "dob": dob,
                 "email": email,
                 "marital_status": marital_status,
@@ -1084,8 +1151,8 @@ def add_user_save_new():
                 "other_names": other_names,
                 "gender": gender,
                 "occupation": occupation,
-                "contact_phone_1": contact_phone_1,
-                "contact_phone_2": contact_phone_2,
+                "contact_1": contact_phone_1,
+                "contact_2": contact_phone_2,
                 "dob": dob,
                 "email": email,
                 "marital_status": marital_status,
@@ -1159,8 +1226,8 @@ def add_user_save_exit():
                 "other_names": other_names,
                 "gender": gender,
                 "occupation": occupation,
-                "contact_phone_1": contact_phone_1,
-                "contact_phone_2": contact_phone_2,
+                "contact_1": contact_phone_1,
+                "contact_2": contact_phone_2,
                 "dob": dob,
                 "email": email,
                 "marital_status": marital_status,

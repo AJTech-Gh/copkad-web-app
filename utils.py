@@ -127,36 +127,17 @@ def check_contact_duplicates(contact):
     return (False if ret is None else True)
 
 
-def gen_id(assembly, selected_ministries):
+def gen_id(first_name, other_names, last_name):
     """
-    8-digit code
-    1st digit: Assembly (1=Emmanuel, 2=Glory, 3=Hope)
-    2nd - 6th: Position of registration
-    7th - 8th: Ministries
+    This generates the ID for a user
     """
-    assemblies = ["EEA", "GA", "HA"]
-    ministries = ["CM", "EM", "PM", "WM", "YM"]
-    valid_ministries = ['C', 'E', 'EP', 'EPY', 'EW', 'EWY', 'EY', 'P', 'PY', 'W', 'WY', 'Y']
-    # get the first digit of the member id
-    # EEA=1, GA=2, HA=3
-    digit_1 = str(assemblies.index(assembly) + 1)
-    # get the 2nd to 6th digits
-    max_prev_count = 0
-    assembly_ids = User.query.filter_by(assembly=assembly).with_entities(User.member_id).all()
-    for m_id in assembly_ids:
-        count_str = m_id[0][1:-2]
-        count = int(count_str)
-        if count > max_prev_count:
-            max_prev_count = count
-    digits_2_to_6 = to_given_length(max_prev_count + 1, 5)
-    # get the 7th and 8th digits
-    selected_ministries = [m[0] for m in selected_ministries]
-    selected_ministries = "".join(sorted(selected_ministries))
-    if not valid_ministries.__contains__(selected_ministries):
-        return ""
-    digits_7_to_8 = to_given_length(valid_ministries.index(selected_ministries) + 1, 2)
-    # return member id
-    return (digit_1 + digits_2_to_6 + digits_7_to_8)
+    first_name = first_name[0]
+    other_names = (other_names[0] if other_names else "")
+    last_name = re.sub(r"[^\w]", "", last_name)
+    member_id = first_name + other_names + last_name
+    existing_id_count = db.session.query(User).filter(User.member_id.ilike(f'{member_id}%')).count()
+    member_id = (member_id if existing_id_count == 0 else f'{member_id}{to_given_length(existing_id_count, 3)}')
+    return member_id.lower()
 
 
 def to_given_length(val, length):
@@ -296,9 +277,9 @@ def read_user_by_member_id(id):
     user = User.query.filter_by(member_id=id).first()
     data = dict()
     if (user):
-        data = {'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names,
+        data = {'member_id': id, 'first_name': user.first_name, 'last_name':user.last_name, 'other_names':user.other_names,
         'gender':user.gender, 'occupation':user.occupation, 'assembly':user.assembly, 'contact_1':user.contact_phone_1, 
-        'contact_2':user.contact_phone_2, 'dob':'{}-{}-{}'.format(user.dob.year, user.dob.month, user.dob.day), 
+        'contact_2':user.contact_phone_2, 'dob':'{}-{}-{}'.format(user.dob.year, to_given_length(user.dob.month, 2), to_given_length(user.dob.day, 2)), 
         'email':user.email, 'marital_status':user.marital_status, 'ministry':user.ministry, 'group':user.group, 
         'comm_email':user.comm_email,'comm_sms':user.comm_sms, 'comm_phone':user.comm_phone, 
         'address_line_1':user.address_line_1,'address_line_2':user.address_line_2, 'digital_address_code':user.digital_address_code, 
@@ -327,7 +308,7 @@ def get_img_path(member_id, type='complete', model="user"):
     for name in imgs:
         if name.startswith(member_id):
             return os.path.join(dest_dir, name)
-    return ""
+    return "/static/assets/media/users/thecopkadna-users.png"
 
 
 def get_rc_id():
