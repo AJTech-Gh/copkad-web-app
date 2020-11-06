@@ -44,7 +44,7 @@ def view_user():
 
 @app.route('/overview')
 def overview():
-    return render_template('promotion-and-transfer.html')
+    return render_template('overview.html')
 
 @app.route('/messages')
 def messages():
@@ -91,6 +91,30 @@ def all_datatables():
     return render_template('add-user.html')
 
 
+@app.route('/personal_information')
+def personal_information():
+    return render_template('personal-information.html')
+
+@app.route('/account_information')
+def account_information():
+    return render_template('account-information.html')
+
+@app.route('/financial_status')
+def financial_status():
+    return render_template('financial-status.html')
+
+@app.route('/change_password')
+def change_password():
+    return render_template('change-password.html')
+
+@app.route('/admin_pledges_overview')
+def admin_pledges_overview():
+    return render_template('personal-information.html')
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    return render_template('admin-dashboard.html')
+
 @app.route('/view_member_data')
 def view_member_data():
     member_id = request.args.get("id")
@@ -100,7 +124,9 @@ def view_member_data():
         user_data = utils.read_incomplete_reg(member_id)
     else:
         user_data = utils.read_user_by_member_id(member_id)
-    return render_template("add-user.html", user_data=user_data)
+
+    assembly_names, ministry_names, group_names = utils.load_assembly_data()
+    return render_template("add-user.html", user_data=user_data, assembly_names=assembly_names, ministry_names=ministry_names, group_names=group_names)
 
 
 @app.route('/member_datatable')
@@ -138,6 +164,7 @@ def member_datatable():
             member_data.append(row_data)
 
         #print(death_data[0])
+        
         return render_template('member-datatable.html', member_data=member_data)
     except Exception as e:
         print(e)
@@ -509,9 +536,9 @@ def death_submit():
         officiating_minister = form.get('officiating_minister').strip()
 
         try:
-            if utils.member_id_exists(member_id, table="death"):
-                return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
             if record_id == "":
+                if utils.member_id_exists(member_id, table="death"):
+                    return Response(json.dumps({'status':'FAIL', 'message': 'Member ID already exists!'}), status=400, mimetype='application/json')
                 # create new transfer object
                 death = Death(member_id=member_id, place_of_burial=place_of_burial, officiating_minister=officiating_minister)
 
@@ -534,9 +561,12 @@ def death_submit():
                 Death.query.filter_by(id=record_id).update(row_dict)
                 db.session.commit()
 
+            user_data = User.query.filter_by(member_id=member_id).first()
+            full_name = user_data.last_name + ', ' + user_data.first_name + ' ' + user_data.other_names
             data = {
-            "death_id": utils.get_death_id(),
+            "record_id": record_id,
             "member_id": member_id,
+            "full_name": full_name,
             "date_of_birth": date_of_birth,
             "death_date": death_date,
             "aged": aged,
@@ -862,9 +892,23 @@ def baptism_certificates_submit():
                 Baptism.query.filter_by(id=record_id).update(row_dict)
                 db.session.commit()
 
+            user_data = User.query.filter_by(member_id=member_id).first()
+            fullname = user_data.last_name + ', ' + user_data.first_name + ' ' + user_data.other_names
+            baptism_data = {
+                "record_id":record_id,
+                "member_id":member_id,
+                "full_name": fullname,
+                "date_of_baptism":date_of_baptism,
+                "place_of_baptism":place_of_baptism,
+                "officiating_minister":officiating_minister,
+                "district":district,
+                "area":area,
+                "country":country
+            }
+
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
-            return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
+            return Response(json.dumps({'status':'OK', 'message': 'successful', 'baptism_data': baptism_data}), status=200, mimetype='application/json')
         except Exception as e:
             print(e)
             # print(form)
@@ -920,7 +964,8 @@ def add_user():
             "country": "GH",
             "img": "/static/assets/media/users/thecopkadna-users.png"
         }
-    return render_template('add-user.html', user_data=user_data)
+    assembly_names, ministry_names, group_names = utils.load_assembly_data()
+    return render_template('add-user.html', user_data=user_data, assembly_names=assembly_names, ministry_names=ministry_names, group_names=group_names)
 
 @app.route('/add_user_submit', methods=['POST'])
 def add_user_submit():
@@ -1025,7 +1070,7 @@ def add_user_submit():
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
-            return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_id': member_id}), status=200, mimetype='application/json')
+            return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_data': utils.read_user_by_member_id(member_id)}), status=200, mimetype='application/json')
         except Exception as e:
             print(e)
             # print(form)

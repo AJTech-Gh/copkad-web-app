@@ -380,27 +380,131 @@ let transPrintDetails =  (data) => {
 	// open the print window
 	var print_area = window.open();
 	// compose the document
-	print_area.document.write("<html><head><title>User Details</title>"
-								+ "<style>.kt-wizard-v1__review-content {font-size: 20;}"
-								+ "</style></head>"
-								+ "<body style=\"padding: 20px;\">" 
-								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
-								+ "<h1 style=\"text-align: center; font-weight: bold;\">TRANSFER DETAILS</h1>"
-								+ '<div class="kt-wizard-v1__review-content">'
-								+ 'Record ID: <label>' + data.transfer_id + '</label>'
-								+ '<br/>Member ID: <label>' + data.member_id + '</label>'
-								+ '<br/>Full Name: <label>' + data.full_name + '</label>'
-								+ '<br/>Reason for Transfer: <label>' + data.transfer_specification + '</label>'
-								+ '<br/>Transfer Date: <label>' + data.transfer_date + '</label>'
-								+ '<br/>Age: <label>' + data.age + '</label>'
-								+ '<br/>Present Portfolio: <label>' + data.present_portfolio + '</label>'
-								+ '<br/>Transfered From: <label>' + data.transfered_from + '</label>'
-								+ '<br/>Transfered To: <label>' + data.transfered_to + '</label>'
-								+ '<br/>Officiating Minister: <label>' + data.officiating_minister + '</label>'
-								+ "</div></body></html>");
+	// print_area.document.write("<html><head><title>User Details</title>"
+	// 							+ "<style>.kt-wizard-v1__review-content {font-size: 20;}"
+	// 							+ "</style></head>"
+	// 							+ "<body style=\"padding: 20px;\">" 
+	// 							+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
+	// 							+ "<h1 style=\"text-align: center; font-weight: bold;\">TRANSFER DETAILS</h1>"
+	// 							+ '<div class="kt-wizard-v1__review-content">'
+	// 							+ 'Record ID: <label>' + data.transfer_id + '</label>'
+	// 							+ '<br/>Member ID: <label>' + data.member_id + '</label>'
+	// 							+ '<br/>Full Name: <label>' + data.full_name + '</label>'
+	// 							+ '<br/>Reason for Transfer: <label>' + data.transfer_specification + '</label>'
+	// 							+ '<br/>Transfer Date: <label>' + data.transfer_date + '</label>'
+	// 							+ '<br/>Age: <label>' + data.age + '</label>'
+	// 							+ '<br/>Present Portfolio: <label>' + data.present_portfolio + '</label>'
+	// 							+ '<br/>Transfered From: <label>' + data.transfered_from + '</label>'
+	// 							+ '<br/>Transfered To: <label>' + data.transfered_to + '</label>'
+	// 							+ '<br/>Officiating Minister: <label>' + data.officiating_minister + '</label>'
+	// 							+ "</div></body></html>");
+	// let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
+	// 				"/static/assets/vendors/global/vendors.bundle.css",
+	// 				"/static/assets/css/demo2/style.bundle.css"];
+
+	print_area.document.write("<!DOCTYPE html><html><head><style>* { font-size: 20px; }</style></head><body>" + `
+								<div class="kt-content kt-grid__item kt-grid__item--fluid">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="kt-portlet">
+											<div class="kt-portlet__body kt-portlet__body--fit">
+												<div class="kt-invoice-2">
+													<div class="kt-invoice__wrapper">
+														<div class="kt-invoice__head">
+															<div class="kt-invoice__container kt-invoice__container--centered">
+																<div class="kt-invoice__logo">
+																	<a href="#">
+																		<h1>TRANSFER DATA</h1>
+																	</a>
+																	<a href="#">
+																		<img src="/static/assets/media/logos/thecopnsema-2.png">
+																	</a>
+																</div>
+																<span class="kt-invoice__desc">
+																	<span>The Church of Pentecost</span>
+																	<span>Kwadaso Area | Kwadaso Agric District | Nsema Assemblies</span>
+																	<span>Post Office Box, KW 101. </span>
+																	<span>Kwadaso - Kumasi</span>
+																	<span>Tel : +233 570 364 383</span>
+																	<span>Email: info@thecopkadna.com</span>
+																</span>
+															</div>
+														</div>
+														<!-- body -->
+														<div class="kt-invoice__body kt-invoice__body--centered">
+															<div class="row">
+																<div class="col">
+																	<strong>Member ID:</strong><br/>
+																	<label>` + data.member_id + `</label>
+																</div>
+																<div class="col">
+																	<strong>Transfer Date:</strong><br/>
+																	<label>` + data.transfer_date + `</label>
+																</div>
+																<div class="col">
+																	<strong>Fullname:</strong><br/>
+																	<label>` + data.full_name + `</label>
+																</div>
+															</div>
+															<br/>
+															<div class="row">
+																<div class="col">
+																	<strong>Age(At Promotion):</strong><br/>
+																	<label>` + data.age + `</label>
+																</div>
+																<div class="col">
+																	<strong>Assembly:</strong><br/>
+																	<label>` + data.assembly + `</label>
+																</div>
+																<div class="col">
+																	<strong>Present Portfolio:</strong><br/>
+																	<label>` + data.present_portfolio + `</label>
+																</div>
+															</div>
+															<br/>
+															<div class="row">
+																<div class="col">
+																	<strong>Transfered From:</strong><br/>
+																	<label>` + data.transfered_from + `</label>
+																</div>
+																<div class="col">
+																	<strong>Transfered To:</strong><br/>
+																	<label>` + data.transfered_to + `</label>
+																</div>
+																<div class="col">
+																	<strong>Officiating Minister:</strong><br/>
+																	<label>` + data.officiating_minister + `</label>
+																</div>
+															</div>
+															</br>
+															<div class="row">
+																<div class="col">
+																	<strong>Transfered Specification:</strong><br/>
+																	<label>` + data.transfer_specification + `</label>
+																</div>
+																<div class="col">
+																</div>
+																<div class="col">
+																</div>
+															</div>
+														</div>
+														<!-- footer -->
+														<!--<div class="kt-invoice__footer">
+															<div class="kt-invoice__table  kt-invoice__table--centered table-responsive"></div>
+														</div> -->
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>      
+								</div>
+								` + "</body></html>")
+
 	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
 					"/static/assets/vendors/global/vendors.bundle.css",
-					"/static/assets/css/demo2/style.bundle.css"];
+					"/static/assets/css/demo2/style.bundle.css",
+					"/static/assets/css/demo2/pages/general/invoices/invoice-2.css"];
 
 	for (let i = 0; i < cssPaths.length; i++) {
 		let style = print_area.document.createElement('link');
@@ -413,6 +517,6 @@ let transPrintDetails =  (data) => {
 	// print details and return to page
 	print_area.document.close();
 	print_area.focus();
-	print_area.print();
-	print_area.close();
+	// print_area.print();
+	// print_area.close();
   }

@@ -136,7 +136,7 @@ var KTWizard2 = function () {
 						}).then((result) => {
 							if (result.value) {
 								// print the member's details
-								printDetails("review_and_submit_div", res.member_id);
+								printDetails(res.baptism_data);
 								// reset the form
 								location.href = "baptism_certificates";
 							} else {
@@ -288,23 +288,104 @@ $("#member_id").on("change", function(e) {
 });
 
 // print the user's details
-let printDetails =  (elementId, memberId) => {
+let printDetails =  (baptism_data) => {
 	// get the content to print
-	var details = document.querySelector("#" + elementId).innerHTML;
+	// var details = document.querySelector("#" + elementId).innerHTML;
 	// open the print window
 	var print_area = window.open();
 	// compose the document
-	print_area.document.write("<html><head><title>Baptism Details</title>"
-								+ "<style>.kt-wizard-v2__review-title {font-size: 25; font-weight: bold; margin-top: 20px;} "
-								+ ".kt-wizard-v2__review-content {font-size: 20;}"
-								+ "</style></head>"
-								+ "<body style=\"padding: 20px;\">" 
-                                + "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
-                                + "<h1 style=\"text-align: center; font-weight: bold;\">MEMBER ID:&nbsp" + memberId + "</h1>"
-								+ details + "</body></html>");
-	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-2.css",
+	print_area.document.write("<!DOCTYPE html><html><head><style>* { font-size: 20px; }</style></head><body>" + `
+								<div class="kt-content kt-grid__item kt-grid__item--fluid">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="kt-portlet">
+											<div class="kt-portlet__body kt-portlet__body--fit">
+												<div class="kt-invoice-2">
+													<div class="kt-invoice__wrapper">
+														<div class="kt-invoice__head">
+															<div class="kt-invoice__container kt-invoice__container--centered">
+																<div class="kt-invoice__logo">
+																	<a href="#">
+																		<h1>BAPTISM CERTIFICATE DATA</h1>
+																	</a>
+																	<a href="#">
+																		<img src="/static/assets/media/logos/thecopnsema-2.png">
+																	</a>
+																</div>
+																<span class="kt-invoice__desc">
+																	<span>The Church of Pentecost</span>
+																	<span>Kwadaso Area | Kwadaso Agric District || Nsema Assemblies</span>
+																	<span>Post Office Box, KW 101. </span>
+																	<span>Kwadaso - Kumasi</span>
+																	<span>Tel : +233 570 364 383</span>
+																	<span>Email: info@thecopkadna.com</span>
+																</span>
+															</div>
+														</div>
+														<!-- body -->
+														<div class="kt-invoice__body kt-invoice__body--centered">
+															<div class="row">
+																<div class="col">
+																	<strong>Record ID:</strong><br/>
+																	<label>` + baptism_data.record_id + `</label>
+																</div>
+																<div class="col">
+																	<strong>Member ID:</strong><br/>
+																	<label>` + baptism_data.member_id + `</label>
+																</div>
+																<div class="col">
+																	<strong>Full Name:</strong><br/>
+																	<label>` + baptism_data.full_name + `</label>
+																</div>
+															</div>
+															<br/>
+															<div class="row">
+																<div class="col">
+																	<strong>Assembly:</strong><br/>
+																	<label>` + baptism_data.date_of_baptism + `</label>
+																</div>
+																<div class="col">
+																	<strong>Date of Baptism:</strong><br/>
+																	<label>` + baptism_data.place_of_baptism + `</label>
+																</div>
+																<div class="col">
+																	<strong>Officiating Minister:</strong><br/>
+																	<label>` + baptism_data.officiating_minister + `</label>
+																</div>
+															</div>
+															<br/>
+															<div class="row">
+																<div class="col">
+																	<strong>District:</strong><br/>
+																	<label>` + baptism_data.district + `</label>
+																</div>
+																<div class="col">
+																	<strong>Area:</strong><br/>
+																	<label>` + baptism_data.area + `</label>
+																</div>
+																<div class="col">
+                                                                    <strong>Country:</strong><br/>
+                                                                    <label>` + baptism_data.country + `</label>
+																</div>
+															</div>
+														</div>
+														<!-- footer -->
+														<!--<div class="kt-invoice__footer">
+															<div class="kt-invoice__table  kt-invoice__table--centered table-responsive"></div>
+														</div> -->
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>      
+								</div>
+								` + "</body></html>")
+
+	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
 					"/static/assets/vendors/global/vendors.bundle.css",
-					"/static/assets/css/demo2/style.bundle.css"];
+					"/static/assets/css/demo2/style.bundle.css",
+					"/static/assets/css/demo2/pages/general/invoices/invoice-2.css"];
 
 	for (let i = 0; i < cssPaths.length; i++) {
 		let style = print_area.document.createElement('link');
@@ -317,8 +398,8 @@ let printDetails =  (elementId, memberId) => {
 	// print details and return to page
 	print_area.document.close();
 	print_area.focus();
-	print_area.print();
-	print_area.close();
+	// print_area.print();
+	// print_area.close();
   }
 
 // handle scanned file upload

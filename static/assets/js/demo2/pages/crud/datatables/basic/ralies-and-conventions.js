@@ -289,27 +289,130 @@ let printDetails =  (data) => {
 	// open the print window
 	var print_area = window.open();
 	// compose the document
-	print_area.document.write("<html><head><title>User Details</title>"
-								+ "<style>.kt-wizard-v1__review-content {font-size: 20;}"
-								+ "</style></head>"
-								+ "<body style=\"padding: 20px;\">" 
-								+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
-								+ "<h1 style=\"text-align: center; font-weight: bold;\">RALLIES AND CONVENTIONS</h1>"
-								+ '<div class="kt-wizard-v1__review-content">'
-								+ 'ID: <label>' + data.cr_id + '</label>'
-								+ '<br/>Type: <label>' + data.cr_type + '</label>'
-								+ '<br/>Title: <label>' + data.cr_title + '</label>'
-								+ '<br/>Start Date: <label>' + data.start_date_time + '</label>'
-								+ '<br/>End Date: <label>' + data.end_date_time + '</label>'
-								+ '<br/>Assembly: <label>' + data.assembly + '</label>'
-								+ '<br/>Venue: <label>' + data.venue + '</label>'
-								+ '<br/>Souls Won: <label>' + data.souls_won + '</label>'
-								+ '<br/>Head Count: <label>' + data.head_count + '</label>'
-								+ '<br/>Mode of Count: <label>' + data.mode_of_count + '</label>'
-								+ "</div></body></html>");
+	// print_area.document.write("<html><head><title>User Details</title>"
+	// 							+ "<style>.kt-wizard-v1__review-content {font-size: 20;}"
+	// 							+ "</style></head>"
+	// 							+ "<body style=\"padding: 20px;\">" 
+	// 							+ "<h1 style=\"text-align: center; font-weight: bold;\">COP</h1><br><br>"
+	// 							+ "<h1 style=\"text-align: center; font-weight: bold;\">RALLIES AND CONVENTIONS</h1>"
+	// 							+ '<div class="kt-wizard-v1__review-content">'
+	// 							+ 'ID: <label>' + data.cr_id + '</label>'
+	// 							+ '<br/>Type: <label>' + data.cr_type + '</label>'
+	// 							+ '<br/>Title: <label>' + data.cr_title + '</label>'
+	// 							+ '<br/>Start Date: <label>' + data.start_date_time + '</label>'
+	// 							+ '<br/>End Date: <label>' + data.end_date_time + '</label>'
+	// 							+ '<br/>Assembly: <label>' + data.assembly + '</label>'
+	// 							+ '<br/>Venue: <label>' + data.venue + '</label>'
+	// 							+ '<br/>Souls Won: <label>' + data.souls_won + '</label>'
+	// 							+ '<br/>Head Count: <label>' + data.head_count + '</label>'
+	// 							+ '<br/>Mode of Count: <label>' + data.mode_of_count + '</label>'
+	// 							+ "</div></body></html>");
+
+	print_area.document.write("<!DOCTYPE html><html><head><style>* { font-size: 20px; }</style></head><body>" + `
+								<div class="kt-content kt-grid__item kt-grid__item--fluid">
+								<div class="row">
+									<div class="col-lg-12">
+										<div class="kt-portlet">
+											<div class="kt-portlet__body kt-portlet__body--fit">
+												<div class="kt-invoice-2">
+													<div class="kt-invoice__wrapper">
+														<div class="kt-invoice__head">
+															<div class="kt-invoice__container kt-invoice__container--centered">
+																<div class="kt-invoice__logo">
+																	<a href="#">
+																		<h1>RALLIES AND CONVENTIONS DATA</h1>
+																	</a>
+																	<a href="#">
+																		<img src="/static/assets/media/logos/thecopnsema-2.png">
+																	</a>
+																</div>
+																<span class="kt-invoice__desc">
+																	<span>The Church of Pentecost</span>
+																	<span>Kwadaso Area | Kwadaso Agric District | Nsema Assemblies</span>
+																	<span>Post Office Box, KW 101. </span>
+																	<span>Kwadaso - Kumasi</span>
+																	<span>Tel : +233 570 364 383</span>
+																	<span>Email: info@thecopkadna.com</span>
+																</span>
+															</div>
+														</div>
+														<!-- body -->
+														<div class="kt-invoice__body kt-invoice__body--centered">
+															<div class="row">
+																<div class="col">
+																	<strong>ID:</strong><br/>
+																	<label>` + data.cr_id + `</label>
+																</div>
+																<div class="col">
+																	<strong>Type:</strong><br/>
+																	<label>` + data.cr_type + `</label>
+																</div>
+																<div class="col">
+																	<strong>Title:</strong><br/>
+																	<label>` + data.cr_title + `</label>
+																</div>
+															</div>
+															<br/>
+															<div class="row">
+																<div class="col">
+																	<strong>Start Date:</strong><br/>
+																	<label>` + data.start_date_time + `</label>
+																</div>
+																<div class="col">
+																	<strong>End Date:</strong><br/>
+																	<label>` + data.end_date_time + `</label>
+																</div>
+																<div class="col">
+																	<strong>Assembly:</strong><br/>
+																	<label>` + data.assembly + `</label>
+																</div>
+															</div>
+															<br/>
+															<div class="row">
+																<div class="col">
+																	<strong>Venue:</strong><br/>
+																	<label>` + data.venue + `</label>
+																</div>
+																<div class="col">
+																	<strong>Souls Won:</strong><br/>
+																	<label>` + data.souls_won + `</label>
+																</div>
+																<div class="col">
+																<strong>Head Count:</strong><br/>
+																<label>` + data.head_count + `</label>
+																</div>
+															</div>
+															<br/>
+															<div class="row">
+																<div class="col">
+																	<strong>Mode of Count:</strong><br/>
+																	<label>` + data.mode_of_count + `</label>
+																</div>
+																<div class="col">
+																	
+																</div>
+																<div class="col">
+																
+																</div>
+															</div>
+														</div>
+														<!-- footer -->
+														<!--<div class="kt-invoice__footer">
+															<div class="kt-invoice__table  kt-invoice__table--centered table-responsive"></div>
+														</div> -->
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>      
+								</div>
+								` + "</body></html>")
+
 	let cssPaths = ["/static/assets/css/demo2/pages/general/wizard/wizard-1.css",
 					"/static/assets/vendors/global/vendors.bundle.css",
-					"/static/assets/css/demo2/style.bundle.css"];
+					"/static/assets/css/demo2/style.bundle.css",
+					"/static/assets/css/demo2/pages/general/invoices/invoice-2.css"];
 
 	for (let i = 0; i < cssPaths.length; i++) {
 		let style = print_area.document.createElement('link');
@@ -322,8 +425,8 @@ let printDetails =  (data) => {
 	// print details and return to page
 	print_area.document.close();
 	print_area.focus();
-	print_area.print();
-	print_area.close();
+	// print_area.print();
+	// print_area.close();
   }
 
 // print table

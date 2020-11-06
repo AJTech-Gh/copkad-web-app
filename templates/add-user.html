@@ -465,47 +465,31 @@
                                                 <label class="col-form-label col-lg-3 col-sm-12">Church Affiliation</label>
                                                 <div class=" col-lg-9 col-md-9 col-sm-12">
                                                     <select class="form-control kt-select2" id="kt_select2_3" name="assembly" value="{{ user_data['assembly'] }}" multiple>
-                                                        
                                                         <optgroup id ="assembly" label="Assembly" selected>
-                                                            <option value="EEA" selected>Emmanuel English Assembly</option>
-                                                            <option value="GA">Glory Assembly</option>
-                                                            <option value="HA">Hope Assembly</option>
+                                                        {% for assembly in assembly_names %}    
+                                                            <option value="{{assembly}}" >{{ assembly }}</option>
+                                                        {% endfor %}
                                                         </optgroup>
-                                                        
                                                     </select>
                                                     <br/><br/>
                                                     <select class="form-control kt-select2" id="kt_select2_4" value="{{ user_data['ministry'] }}" name="ministry" multiple>
                                                     
-                                                        <optgroup label="Ministry" id="ministry" selected>
-                                                            <option value="Children">Children</option>
-                                                            <option value="Evangelism" selected>Evangelism</option>
-                                                            <option value="PEMEM" selected>PEMEM</option>
-                                                            <option value="Women">Women</option>
-                                                            <option value="Youth">Youth</option>
+                                                        <optgroup label="Ministry" id="ministry">
+                                                            {% for ministry in ministry_names %}  
+                                                            <option value="{{ ministry }}">{{ ministry }}</option>
+                                                            {% endfor %}
                                                         </optgroup>
                                                         
                                                     </select>
                                                     <br/><br/>
                                                     <select class="form-control kt-select2" id="kt_select2_5" name="assembly_groups" value="{{ user_data['group'] }}" multiple>
-
-                                                        <optgroup label="EEA Bible Studies Groups" id="EEA-groups" selected>
-                                                            <option value="Patience">Patience</option>
-                                                            <option value="Peace" >Peace</option>
-                                                            <option value="Joy">Joy</option>
-                                                            <option value="Love">Love</option>
+                                                    {% for assembly_name, groups in group_names.items() %}
+                                                        <optgroup label="{{ assembly_name }} Groups" selected>
+                                                            {% for group in groups %}
+                                                            <option value="{{group}}">{{group}}</option>
+                                                            {% endfor %}
                                                         </optgroup>
-                                                        <optgroup label="Glory Assembly Bible Studies Group" id="GA-groups" selected>
-                                                            <option value="Group One">Group One</option>
-                                                            <option value="Group Two">Group Two</option>
-                                                            <option value="Group Three">Group Three</option>
-                                                            <option value="Group Four">Group Four</option>
-                                                        </optgroup>
-                                                        <optgroup label="Hope Assembly Bible Studies Group" id="HA-groups" selected>
-                                                            <option value="Group One">Group One</option>
-                                                            <option value="Group Two">Group Two</option>
-                                                            <option value="Group Three">Group Three</option>
-                                                            <option value="Group Four">Group Four</option>
-                                                        </optgroup>
+                                                    {% endfor %}
 
                                                     </select>
                                                     <!-- <span class="form-text text-muted">Select assembly, ministry and bible studies group of the member. Selection will be saved to the database </span> -->
@@ -783,7 +767,7 @@
                                             <option value="GM">Gambia</option>
                                             <option value="GE">Georgia</option>
                                             <option value="DE">Germany</option>
-                                            <option value="GH" selected="" >Ghana</option>
+                                            <option value="Ghana" selected="" >Ghana</option>
                                             <option value="GI">Gibraltar</option>
                                             <option value="GR">Greece</option>
                                             <option value="GL">Greenland</option>

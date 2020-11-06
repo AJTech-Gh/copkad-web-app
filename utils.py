@@ -454,3 +454,16 @@ def upload_assembly_config_files(assembly_name):
 
     # return the index page if the form is not submitted rightly
     return False
+
+
+def load_assembly_data():
+    assembly_names = []
+    ministry_names = []
+    group_names = {}
+    for dir_name in os.listdir(ASSEMBLY_CONFIG_BASE_DIR):
+        assembly_name = read_assembly_config(dir_name)['assembly_name']
+        assembly_names.append(assembly_name)
+        ministry_names.extend(read_assembly_config(dir_name)['ministry'])
+        group_names[assembly_name] = read_assembly_config(dir_name)['group']
+    ministry_names = list(set(ministry_names))
+    return assembly_names, ministry_names, group_names
