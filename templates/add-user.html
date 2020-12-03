@@ -467,7 +467,11 @@
                                                     <select class="form-control kt-select2" id="kt_select2_3" name="assembly" value="{{ user_data['assembly'] }}" multiple>
                                                         <optgroup id ="assembly" label="Assembly" selected>
                                                         {% for assembly in assembly_names %}    
-                                                            <option value="{{assembly}}" >{{ assembly }}</option>
+                                                            {% if assembly == user_data['assembly'] %}
+                                                                <option value="{{assembly}}" selected>{{ assembly }}</option>
+                                                            {% else %}
+                                                                <option value="{{assembly}}" >{{ assembly }}</option>
+                                                            {% endif %}
                                                         {% endfor %}
                                                         </optgroup>
                                                     </select>
@@ -475,22 +479,29 @@
                                                     <select class="form-control kt-select2" id="kt_select2_4" value="{{ user_data['ministry'] }}" name="ministry" multiple>
                                                     
                                                         <optgroup label="Ministry" id="ministry">
-                                                            {% for ministry in ministry_names %}  
-                                                            <option value="{{ ministry }}">{{ ministry }}</option>
+                                                            {% for ministry in ministry_names %}
+                                                                {% if user_data['ministry'].__contains__(ministry) %}
+                                                                    <option value="{{ ministry }}" selected>{{ ministry }}</option>
+                                                                {% else %}
+                                                                    <option value="{{ ministry }}">{{ ministry }}</option>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         </optgroup>
                                                         
                                                     </select>
                                                     <br/><br/>
-                                                    <select class="form-control kt-select2" id="kt_select2_5" name="assembly_groups" value="{{ user_data['group'] }}" multiple>
-                                                    {% for assembly_name, groups in group_names.items() %}
-                                                        <optgroup label="{{ assembly_name }} Groups" selected>
-                                                            {% for group in groups %}
-                                                            <option value="{{group}}">{{group}}</option>
-                                                            {% endfor %}
-                                                        </optgroup>
-                                                    {% endfor %}
-
+                                                    <select class="form-control kt-select2" id="kt_select2_5" name="group" value="{{ user_data['group'] }}" multiple>
+                                                        {% for assembly_name, groups in group_names.items() %}
+                                                            <optgroup label="{{ assembly_name }} Groups" selected>
+                                                                {% for group in groups %}
+                                                                    {% if assembly_name == user_data['assembly'] and group == user_data['group']  %}
+                                                                        <option value="{{group}}" selected>{{group}}</option>
+                                                                    {% else %}
+                                                                        <option value="{{group}}">{{group}}</option>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </optgroup>
+                                                        {% endfor %}
                                                     </select>
                                                     <!-- <span class="form-text text-muted">Select assembly, ministry and bible studies group of the member. Selection will be saved to the database </span> -->
                                                 </div>

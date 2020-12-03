@@ -495,14 +495,12 @@
             <div class="form-group row">
                 <!--pick assembly data from database. Textbox marked as readonly--> <label class="col-form-label col-lg-3 col-sm-12">Assembly</label>
                     <div class="col-lg-4 col-md-9 col-sm-12">
-                        <select class="form-control kt-select2" id="kt_select2_3" name="assembly" multiple>
-                                                        
-                            <optgroup id ="assembly" label="Assembly">
-                                <option value="EEA">Emmanuel English Assembly</option>
-                                <option value="GA">Glory Assembly</option>
-                                <option value="HA">Hope Assembly</option>
+                        <select class="form-control kt-select2" id="kt_select2_3" name="assembly" value="{{ ded_data['assembly'] }}" multiple>
+                            <optgroup id ="assembly" label="Assembly" selected>
+                                {% for assembly in assembly_names %}    
+                                    <option value="{{assembly}}">{{ assembly }}</option>
+                                {% endfor %}
                             </optgroup>
-                            
                         </select>
                     </div>
                 </div>

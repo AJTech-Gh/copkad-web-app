@@ -36,7 +36,8 @@ class User(db.Model):
     district = db.Column(db.String(50), unique=False, nullable=False)
     country = db.Column(db.String(50), unique=False, nullable=False)
     # relationships
-    baptism = db.relationship('Baptism', backref='user', lazy=True)
+    # baptism = db.relationship('Baptism', backref='user', lazy=True)
+    # attendance = db.relationship('Attendance', backref='user', lazy=True)
 
 #https://avacariu.me/writing/2019/composite-foreign-keys-and-many-to-many-relationships-in-sqlalchemy
 #https://flask-sqlalchemy.palletsprojects.com/en/2.x/models/
@@ -281,3 +282,20 @@ class Dedication(db.Model):
 
     def __repr__(self):
         return f'Name: {self.child_name}\nDate of Birth: {self.child_dob}'
+
+
+class Attendance(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
+    event = db.Column(db.String(50), unique=False, nullable=False, index=True)
+    date = db.Column(db.DateTime(), unique=False, nullable=False)
+    status = db.Column(db.String(1), unique=False, nullable=False, index=True)
+    time_in = db.Column(db.String(6), unique=False, nullable=False, index=True)
+    time_out = db.Column(db.String(6), unique=False, nullable=False, index=True)
+
+    def set_date(self, date):
+        date = date.split('-')
+        self.date = datetime(int(date[0]), int(date[1]), int(date[2]))
+
+    def get_date(self, date):
+        return '{}-{}-{}'.format(date.year, date.month, date.day)

@@ -197,7 +197,7 @@ let printDetails =  (data) => {
 								<div class="kt-invoice__container kt-invoice__container--centered">
 									<div class="kt-invoice__logo">
 										<a href="#">
-											<h1>MEMBER DATA</h1>
+											<h1>MEMBER DATA SUMMARY</h1>
 										</a>
 										<a href="#">
 											<img src="/static/assets/media/logos/thecopnsema-2.png">

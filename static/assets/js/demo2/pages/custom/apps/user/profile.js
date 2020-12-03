@@ -25,3 +25,35 @@ var KTAppUserProfile = function () {
 KTUtil.ready(function() {	
 	KTAppUserProfile.init();
 });
+
+
+$("#upload_attendance").on('click', function(e) {
+	$("#bva_modal").modal("toggle");
+});
+
+// $("#update_attendance_btn").on("click", function(e){
+
+// 	$.ajax({
+// 		method: "POST",
+
+// 		url: "/upload_attendance",
+
+// 		success: function(res) {
+// 			swal.fire({
+// 				"title": "", 
+// 				"text": "Attendance updated Successfully!", 
+// 				"type": "success",
+// 				"confirmButtonClass": "btn btn-secondary"
+// 			});
+// 		},
+
+// 		error: function(res, status, error) {
+// 			swal.fire({
+// 				"title": "",
+// 				"text": res.responseJSON.message, 
+// 				"type": "error",
+// 				"confirmButtonClass": "btn btn-brand btn-sm btn-bold"
+// 			});
+// 		}
+// 	});
+// });

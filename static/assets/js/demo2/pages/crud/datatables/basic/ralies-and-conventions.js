@@ -116,7 +116,12 @@ let viewRowData = (row) => {
 	let jsonRowData = {}
 
 	for (let i = 0; i < rowData.length - 1; i++ ){
-		jsonRowData[colIds[i]] = rowData[i].textContent;
+		if (colIds[i] == "assembly") {
+			let assemblies = rowData[i].textContent.split(",");
+			jsonRowData[colIds[i]] = assemblies;
+		} else {
+			jsonRowData[colIds[i]] = rowData[i].textContent;
+		}
 	}
 
 	$("#cr_id_div").attr("hidden", false);
@@ -128,7 +133,16 @@ let viewRowData = (row) => {
 	document.querySelector("#kt_datetimepicker_1").value = jsonRowData.start_date_time;
 	document.querySelector("#kt_datetimepicker_2").value = jsonRowData.end_date_time;
 	document.querySelector("#venue").value = jsonRowData.venue;
-	document.querySelector("#assembly").value = jsonRowData.assembly;
+
+	let all_assembly_options = document.querySelector("#assembly").innerText.split("\n");
+	$.each(all_assembly_options, function(i,e){
+		$("#assembly option[value='" + e + "']").prop("selected", false);
+	});
+	$.each(jsonRowData.assembly, function(i,e){
+		$("#assembly option[value='" + e + "']").prop("selected", true);
+	});
+	$("#kt_select2_3_b").trigger("change");
+
 	document.querySelector("#souls_won").value = jsonRowData.souls_won;
 	document.querySelector("#head_count").value = jsonRowData.head_count;
 	document.querySelector("#mode_of_count").value = jsonRowData.mode_of_count;

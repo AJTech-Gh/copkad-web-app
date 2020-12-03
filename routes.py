@@ -42,10 +42,6 @@ def index_2():
 def view_user():
     return render_template('member-datatable.html')
 
-@app.route('/overview')
-def overview():
-    return render_template('overview.html')
-
 @app.route('/messages')
 def messages():
     return render_template('baptism-certificates.html')
@@ -61,6 +57,18 @@ def my_activities():
 @app.route('/login_v2')
 def login_v2():
     return render_template('baptism-certificates.html')
+
+@app.route('/messaging')
+def messaging():
+    return render_template('messaging.html')
+
+@app.route('/statistical_updates')
+def statistical_updates():
+    return render_template('statistical-updates.html')
+
+@app.route('/finance_info')
+def finance_info():
+    return render_template('finance-info.html')
 
 @app.route('/office_of_the_district_pastor')
 def office_of_the_district_pastor():
@@ -114,6 +122,24 @@ def admin_pledges_overview():
 @app.route('/admin_dashboard')
 def admin_dashboard():
     return render_template('admin-dashboard.html')
+
+
+@app.route('/overview')
+def overview():
+    latest_updates = utils.get_latest_updates("Emmanuel English Assembly")
+    return render_template('overview.html', latest_updates=latest_updates)
+
+
+@app.route('/upload_attendance', methods=['POST'])
+def upload_attendance():
+    try:
+        if not utils.upload_attendance():
+            return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
+        return Response(json.dumps({'status':'SUCCESS', 'message': 'Attendance uploaded successfully'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
 
 @app.route('/view_member_data')
 def view_member_data():
@@ -226,13 +252,14 @@ def settings_submit():
 @app.route('/birth')
 def birth():
     try:
+        assembly_names, _, _ = utils.load_assembly_data()
         birth_data = Birth.query.all()
         user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
         user_data_dict = {"": ""}
         # print(user_data)
         for user in user_data:
             user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
-        return render_template('birth.html', birth_data=birth_data, user_data_dict=user_data_dict)
+        return render_template('birth.html', birth_data=birth_data, user_data_dict=user_data_dict,assembly_names=assembly_names)
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -623,6 +650,7 @@ def load_dedication_msg_id():
 @app.route('/dedication')
 def dedication():
     try:
+        assembly_names, _, _ = utils.load_assembly_data()
         ded_data = Dedication.query.all()
         user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
         user_data_dict = {"": ""}
@@ -630,7 +658,7 @@ def dedication():
         for user in user_data:
             user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
 
-        return render_template('dedication.html', ded_data=ded_data, user_data_dict=user_data_dict)
+        return render_template('dedication.html', ded_data=ded_data, user_data_dict=user_data_dict, assembly_names=assembly_names)
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -704,8 +732,10 @@ def dedication_submit():
 @app.route('/rallies_and_conventions')
 def rallies_and_conventions():
     try:
+        assembly_names, _, _ = utils.load_assembly_data()
+        assembly_names.insert(0, 'All')
         cr_data = RalliesAndConventions.query.all()
-        return render_template('rallies-and-conventions.html', cr_data=cr_data)
+        return render_template('rallies-and-conventions.html', cr_data=cr_data, assembly_names=assembly_names)
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -722,7 +752,7 @@ def rallies_and_conventions_submit():
         cr_type = form.get('cr_type')
         start_date_time = form.get('start_date_time')
         end_date_time = form.get('end_date_time')
-        assembly = form.get('assembly')
+        assembly = ','.join(form.getlist('assembly'))
         venue = form.get('venue').strip()
         souls_won = form.get('souls_won')
         head_count = form.get('head_count')
@@ -840,7 +870,7 @@ def baptism_certificates():
                 "certificates": 2 if utils.get_img_path(baptism.member_id) == "" else 1
             }
             bc_data.append(row_data)
-        #print(bc_data[0])
+        # print(bc_data[0])
         return render_template('baptism-certificates.html', bc_data=bc_data)
      except Exception as e:
         print(e)
@@ -1051,7 +1081,7 @@ def add_user_submit():
                     "contact_phone_2": re.sub(r"[\+\-\s]+", "", contact_phone_2),
                     "dob": dob,
                     "ministry": ",".join(ministry),
-                    "group": ("" if not group else group),
+                    "group": group,
                     "comm_email": (1 if comm_email and comm_email.lower() == 'on' else 0),
                     "comm_sms": (1 if comm_sms and comm_sms.lower() == 'on' else 0),
                     "comm_phone": (1 if comm_phone and comm_phone.lower() == 'on' else 0)

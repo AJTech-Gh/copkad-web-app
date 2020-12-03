@@ -1,7 +1,7 @@
 import os
 import time
 from app import db, app, mail
-from models import User, RalliesAndConventions, Baptism, Death, Promotion, Transfer
+from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth
 from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
@@ -25,6 +25,7 @@ PSEUDO_PROFILE_PHOTOS_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplet
 PSEUDO_DATA_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplete_reg_acc", "data")
 PUSH_NOTIF_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'push_notifications')
 ASSEMBLY_CONFIG_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'assembly_config')
+ATTENDANCE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'attendance')
 
 def remove_contact_symbols(contact):
     return re.sub(r"\D+", "", contact)
@@ -202,6 +203,45 @@ def upload_baptism_photo(member_id):
         return True
     # return the index page if the form is not submitted rightly
     return False
+
+
+def upload_attendance():
+    """
+    Uploads attendance
+    """
+    # check if the post request has the file part
+    attendance_file = request.files.get("file")
+    if not attendance_file:
+        return False
+    # if user does not select file, browser also
+    # submit an empty part without filename
+    if attendance_file.filename == '':
+        return False
+    # get file extension
+    ext = attendance_file.filename.lower().split('.')[-1]
+    if attendance_file and ext == 'csv':
+        # create unique file name
+        filename = get_attendance_file_name() + '.csv'
+        # save the source image
+        attendance_file.save(os.path.join(ATTENDANCE_DIR, filename))
+        return True
+    # return the index page if the form is not submitted rightly
+    return False
+
+
+def get_attendance_file_name():
+    return str(len(os.listdir(ATTENDANCE_DIR)) + 1)
+
+
+def remove_existing_attendance(filename):
+    """
+    Removes an already existing attendance
+    """
+    files = os.listdir(ATTENDANCE_DIR)
+    for name in files:
+        if name.startswith(filename):
+            os.remove(os.path.join(ATTENDANCE_DIR, name))
+            break
     
 
 def allowed_file(filename):
@@ -467,3 +507,27 @@ def load_assembly_data():
         group_names[assembly_name] = read_assembly_config(dir_name)['group']
     ministry_names = list(set(ministry_names))
     return assembly_names, ministry_names, group_names
+
+
+def get_latest_updates(assembly_name):
+    assembly_group_data = read_assembly_config(assembly_name)['group']
+    bible_studies_groups = len(assembly_group_data)
+    water_baptism_count = db.session.query(Baptism).count()
+    birth_count = db.session.query(Birth).count()
+    death_count = db.session.query(Death).count()
+    rallies_and_conventions_count = db.session.query(RalliesAndConventions).count()
+    transfer_count = db.session.query(Transfer).count()
+    promotion_count = db.session.query(Promotion).count()
+    transfer_and_promotion_count = transfer_count + promotion_count
+    dedication_count = db.session.query(Dedication).count()
+    latest_updates = {
+        "water_baptism":water_baptism_count,
+        "births":birth_count,
+        "deaths":death_count,
+        "rallies_and_conventions":rallies_and_conventions_count,
+        "transfers_and_promotions":transfer_and_promotion_count,
+        "dedications":dedication_count,
+        "bible_studies_groups": bible_studies_groups
+    }
+    return latest_updates
+

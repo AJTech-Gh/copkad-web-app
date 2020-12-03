@@ -365,14 +365,12 @@
                     <div class="form-group row">
                         <!--Select from combobox.-->    <label class="col-form-label col-lg-3 col-sm-12">Assembly</label>
                             <div class="col-lg-4 col-md-9 col-sm-12">
-                                <select class="form-control" name="assembly" id="assembly">
-                                    <option value="All">All</option>
-                                    <option value="Emmanuel">Emmanuel</option>
-                                    <option value="Hope">Hope</option>
-                                    <option value="Glory">Glory</option>
-                                    <option value="Emmanuel and Glory">Emmanuel and Glory</option>
-                                    <option value="Emmanuel and Hope">Emmanuel and Hope</option>
-                                    <option value="Hope and Glory">Hope and Glory</option>
+                                <select class="form-control kt-select2" id="kt_select2_3_b" name="assembly" value="{{ cr_data['assembly'] }}" multiple>
+                                    <optgroup id ="assembly" label="Assembly" selected>
+                                        {% for assembly in assembly_names %}    
+                                            <option value="{{assembly}}">{{ assembly }}</option>
+                                        {% endfor %}
+                                    </optgroup>
                                 </select>
                             </div>
                         </div>
@@ -672,6 +670,7 @@
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/components/extended/sweetalert2.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/datatables/basic/ralies-and-conventions.js') }}" type="text/javascript"></script>
             <script src="{{ url_for('static', filename='assets/js/demo2/pages/dashboard.js') }}" type="text/javascript"></script>
+            <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/forms/widgets/select2.js') }}" type="text/javascript"></script>
                             <!--end::Page Scripts -->
             </body>
     <!-- end::Body -->

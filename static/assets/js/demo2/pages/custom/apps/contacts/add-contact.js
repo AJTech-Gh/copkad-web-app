@@ -658,7 +658,7 @@ let printDetails =  (elementId, member_data) => {
 													<label>` + member_data.ministry + `</label>
 												</div>
 												<div class="col">
-													<strong>Bible Studie Group:</strong><br/>
+													<strong>Bible Studies Group:</strong><br/>
 													<label>` + member_data.group + `</label>
 												</div>
 											</div>

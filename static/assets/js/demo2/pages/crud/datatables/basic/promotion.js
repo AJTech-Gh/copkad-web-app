@@ -79,23 +79,23 @@ var KTDatatablesBasicPaginations1 = function() {
                         </a>`;
 					},
 				},
-				{
-					targets: 4,
-					render: function(data, type, full, meta) {
+				// {
+				// 	targets: 4,
+				// 	render: function(data, type, full, meta) {
 
-						var assembly = {
-							EEA: {'title': 'Emmanuel'},
-							GA: {'title': 'Glory'},
-							HA: {'title': 'Hope'}
-						}
+				// 		var assembly = {
+				// 			EEA: {'title': 'Emmanuel'},
+				// 			GA: {'title': 'Glory'},
+				// 			HA: {'title': 'Hope'}
+				// 		}
 						
-						if(typeof assembly[data] === 'undefined') {
-							return data;
-						}
+				// 		if(typeof assembly[data] === 'undefined') {
+				// 			return data;
+				// 		}
 
-						return assembly[data].title;
-					}
-				},
+				// 		return assembly[data].title;
+				// 	}
+				// },
 			],
 		});
 	};
@@ -138,14 +138,8 @@ $("#pro_member_id").on("keyup", function(e) {
                     if (res.other_names) {
                         fullName = fullName + " " + res.other_names;
                     }
-                    document.querySelector("#pro_full_name").value = fullName;
-                    let assemblies = {
-                        EEA: "Emmanuel",
-                        GA: "Glory",
-                        HA: "Hope"
-                    }
-				   
-					document.querySelector("#pro_assembly").value = assemblies[res.assembly];
+                    document.querySelector("#pro_full_name").value = fullName;				   
+					document.querySelector("#pro_assembly").value = res.assembly;
 						
                 } else {
                     let img_url = "/static/assets/media/users/thecopkadna-users.png";

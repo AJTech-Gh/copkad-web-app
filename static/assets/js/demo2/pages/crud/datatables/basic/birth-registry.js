@@ -78,23 +78,23 @@ var KTDatatablesBasicPaginations = function() {
                         </a>`;
 					},
 				},
-				{
-					targets: 7,
-					render: function(data, type, full, meta) {
+				// {
+				// 	targets: 7,
+				// 	render: function(data, type, full, meta) {
 
-						var assembly = {
-							EEA: {'title': 'Emmanuel'},
-							GA: {'title': 'Glory'},
-							HA: {'title': 'Hope'}
-						}
+				// 		var assembly = {
+				// 			EEA: {'title': 'Emmanuel'},
+				// 			GA: {'title': 'Glory'},
+				// 			HA: {'title': 'Hope'}
+				// 		}
 						
-						if(typeof assembly[data] === 'undefined') {
-							return data;
-						}
+				// 		if(typeof assembly[data] === 'undefined') {
+				// 			return data;
+				// 		}
 
-						return assembly[data].title;
-					}
-				},
+				// 		return assembly[data].title;
+				// 	}
+				// },
 				{
 					targets: 1,
 					render: function(data, type, full, meta) {
@@ -207,12 +207,7 @@ let viewRowData = (row) => {
 	document.querySelector("#child_dob").value = jsonRowData.child_dob.split(" ")[0];
 	document.querySelector("#kt_datetimepicker_2").value = jsonRowData.ceremony_date;
 	document.querySelector("#officiating_minister").value = jsonRowData.officiating_minister;
-	let assemblies = {
-		"Emmanuel": "EEA",
-		"Glory": "GA",
-		"Hope": "HA"
-	};
-	document.querySelector("#kt_select2_3").value = assemblies[jsonRowData.assembly];
+	document.querySelector("#kt_select2_3").value = jsonRowData.assembly;
 	$("#kt_select2_3").trigger("change");
 
 	KTUtil.scrollTop();
@@ -238,7 +233,7 @@ $("#member_id_father").on("keyup", function(e) {
 			
 			success: function(res) {
 				$("#find_father_id").attr("hidden", true);
-				if(res.gender==="M"){
+				if(res.gender==="Male"){
 					if (res.first_name) {
 						let img_url = "/" + res.img;
 						$('#modal_father_image').attr("src", img_url);
@@ -248,12 +243,7 @@ $("#member_id_father").on("keyup", function(e) {
 						}
 						document.querySelector("#modal_father_name").textContent = fullName;
 						document.querySelector("#father_name").value = fullName;
-						let assemblies = {
-							EEA: "Emmanuel English Assembly",
-							GA: "Glory Assembly",
-							HA: "Hope Assembly"
-						}
-						document.querySelector("#modal_father_assembly").textContent = assemblies[res.assembly];
+						document.querySelector("#modal_father_assembly").textContent = res.assembly;
 						//document.querySelector("#modal_father_id").textContent = res.member_id;
 					} else {
 						let img_url = "/static/assets/media/users/thecopkadna-users.png";
@@ -322,7 +312,7 @@ $("#member_id_mother").on("keyup", function(e) {
 			
 			success: function(res) {
 				$("#find_mother_id").attr("hidden", true);
-				if(res.gender === "F"){
+				if(res.gender === "Female"){
 					if (res.first_name) {
 						let img_url = "/" + res.img;
 						$('#modal_mother_image').attr("src", img_url);
@@ -332,12 +322,7 @@ $("#member_id_mother").on("keyup", function(e) {
 						}
 						document.querySelector("#modal_mother_name").textContent = fullName;
 						document.querySelector("#mother_name").value = fullName;
-						let assemblies = {
-							EEA: "Emmanuel English Assembly",
-							GA: "Glory Assembly",
-							HA: "Hope Assembly"
-						}
-						document.querySelector("#modal_mother_assembly").textContent = assemblies[res.assembly];
+						document.querySelector("#modal_mother_assembly").textContent = res.assembly;
 						//document.querySelector("#modal_mother_id").textContent = res.member_id;
 					} else {
 						$("#find_mother_id").attr("hidden", true);

@@ -228,12 +228,7 @@ $("#member_id").on("keyup", function(e) {
                         fullName = fullName + " " + res.other_names;
                     }
                     document.querySelector("#full_name").value = fullName;
-                    let assemblies = {
-                        EEA: "Emmanuel English Assembly",
-                        GA: "Glory Assembly",
-                        HA: "Hope Assembly"
-                    }
-                    document.querySelector("#assembly").value = assemblies[res.assembly];
+                    document.querySelector("#assembly").value = res.assembly;
                     let contacts = res.contact_1;
                     if (res.contact_2) {
                         contacts = contacts + ", " + res.contact_2;

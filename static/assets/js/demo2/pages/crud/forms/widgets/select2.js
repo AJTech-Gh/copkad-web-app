@@ -56,6 +56,11 @@ var KTSelect2 = function() {
             maximumSelectionLength: 1
               });
 
+        $("#kt_select2_3_b").select2({
+            placeholder: "Select assembly",
+            allowClear: true,
+            });
+
         $("#kt_select2_4").select2({
             maximumSelectionLength: 3,
             placeholder: "Select ministries",

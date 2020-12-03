@@ -79,23 +79,23 @@ var KTDatatablesBasicPaginations = function() {
                         </a>`;
 					},
 				},
-				{
-					targets: 3,
-					render: function(data, type, full, meta) {
+				// {
+				// 	targets: 3,
+				// 	render: function(data, type, full, meta) {
 
-						var assembly = {
-							EEA: {'title': 'Emmanuel'},
-							GA: {'title': 'Glory'},
-							HA: {'title': 'Hope'}
-						}
+				// 		var assembly = {
+				// 			EEA: {'title': 'Emmanuel'},
+				// 			GA: {'title': 'Glory'},
+				// 			HA: {'title': 'Hope'}
+				// 		}
 						
-						if(typeof assembly[data] === 'undefined') {
-							return data;
-						}
+				// 		if(typeof assembly[data] === 'undefined') {
+				// 			return data;
+				// 		}
 
-						return assembly[data].title;
-					}
-				},
+				// 		return assembly[data].title;
+				// 	}
+				// },
 				// {
 				// 	targets: 4,
 				// 	render: function(data, type, full, meta) {
@@ -144,14 +144,8 @@ $("#member_id").on("keyup", function(e) {
                     if (res.other_names) {
                         fullName = fullName + " " + res.other_names;
                     }
-                    document.querySelector("#full_name").value = fullName;
-                    let assemblies = {
-                        EEA: "Emmanuel",
-                        GA: "Glory",
-                        HA: "Hope"
-                    }
-				   
-					document.querySelector("#assembly").value = assemblies[res.assembly];
+                    document.querySelector("#full_name").value = fullName;				   
+					document.querySelector("#assembly").value = res.assembly;
 					document.querySelector("#ministry").value = res.ministry;
 					document.querySelector("#date_of_birth").value = res.dob;
 						
