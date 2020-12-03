@@ -221,7 +221,7 @@ def upload_attendance():
     ext = attendance_file.filename.lower().split('.')[-1]
     if attendance_file and ext == 'csv':
         # create unique file name
-        filename = get_attendance_file_name() + '.csv'
+        filename = get_attendance_filename() + '.csv'
         # save the source image
         attendance_file.save(os.path.join(ATTENDANCE_DIR, filename))
         return True
@@ -229,8 +229,13 @@ def upload_attendance():
     return False
 
 
-def get_attendance_file_name():
-    return str(len(os.listdir(ATTENDANCE_DIR)) + 1)
+def get_attendance_filename():
+    """
+    Returns the filename of the attendance file
+    """
+    count = str(len(os.listdir(ATTENDANCE_DIR)) + 1)
+    timestamp = get_timestamp()
+    return "_".join([count, timestamp])
 
 
 def remove_existing_attendance(filename):
