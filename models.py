@@ -295,7 +295,7 @@ class Attendance(db.Model):
 
     def set_date(self, date):
         date = date.split('-')
-        self.date = datetime(int(date[0]), int(date[1]), int(date[2]))
+        self.date = datetime(int(date[2]), int(date[1]), int(date[0]))
 
     def get_date(self, date):
         return '{}-{}-{}'.format(date.year, date.month, date.day)

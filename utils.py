@@ -1,7 +1,7 @@
 import os
 import time
 from app import db, app, mail
-from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth
+from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth, Attendance
 from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
@@ -222,11 +222,41 @@ def upload_attendance():
     if attendance_file and ext == 'csv':
         # create unique file name
         filename = get_attendance_filename() + '.csv'
-        # save the source image
+        # save
         attendance_file.save(os.path.join(ATTENDANCE_DIR, filename))
+        # add attendance to database 
+        ret_val = add_attendance_to_db(filename)
+        if not ret_val:
+            return False
         return True
     # return the index page if the form is not submitted rightly
     return False
+
+
+def add_attendance_to_db(filename):
+    """
+    Adds an attendance data to the database
+    """
+    attendance_file = open(os.path.join(ATTENDANCE_DIR, filename), 'r')
+    attendance_data = attendance_file.readlines()
+    attendance_file.close()
+    for i, row in enumerate(attendance_data):
+        name, member_id, event, date, status, time_in, time_out = row.split(",")
+        date = date.split('-')[0].strip()
+        date = date.replace('/', '-')
+        if i > 0:
+            if i == 1:
+                date_for_comp = date.split('-')
+                date_for_comp = datetime(int(date_for_comp[2]), int(date_for_comp[1]), int(date_for_comp[0]))
+                result = Attendance.query.filter_by(member_id=member_id, event=event,date=date_for_comp, status=status, time_in=time_in, time_out=time_out).first()
+                if result:
+                    remove_existing_attendance(filename)
+                    return False
+            attendance = Attendance(member_id=member_id, event=event, status=status, time_in=time_in, time_out=time_out)
+            attendance.set_date(date)
+            db.session.add(attendance)
+    db.session.commit()
+    return True
 
 
 def get_attendance_filename():
