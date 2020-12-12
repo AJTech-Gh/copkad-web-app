@@ -7,6 +7,7 @@ from werkzeug.utils import redirect
 from app import app, db
 from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth
 import utils
+from constants import *
 
 
 # @app.after_request
@@ -127,14 +128,22 @@ def admin_dashboard():
 @app.route('/overview')
 def overview():
     latest_updates = utils.get_latest_updates("Emmanuel English Assembly")
-    return render_template('overview.html', latest_updates=latest_updates)
+    attendance_notifs = utils.get_attendance_notifs()
+    return render_template('overview.html', latest_updates=latest_updates, attendance_notifs=attendance_notifs)
 
 
 @app.route('/upload_attendance', methods=['POST'])
 def upload_attendance():
     try:
-        if not utils.upload_attendance():
-            return Response(json.dumps({'status':'FAIL', 'message': 'Image error. Invalid photo.'}), status=400, mimetype='application/json')
+        ret_val = utils.upload_attendance()
+        if ret_val == NO_FILE_ERROR:
+            return Response(json.dumps({'status':'FAIL', 'message': 'No attendance file selected.'}), status=400, mimetype='application/json')
+        elif ret_val == INVALID_FORMAT_ERROR:
+            return Response(json.dumps({'status':'FAIL', 'message': 'Invalid file format. Choose a .csv file'}), status=400, mimetype='application/json')
+        elif ret_val == FATAL_ERROR:
+            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+        else:
+            pass
         return Response(json.dumps({'status':'SUCCESS', 'message': 'Attendance uploaded successfully'}), status=200, mimetype='application/json')
     except Exception as e:
         print(e)

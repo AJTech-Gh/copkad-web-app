@@ -15,6 +15,7 @@ from io import BytesIO
 from PIL import Image
 from datetime import datetime
 from file_encrypter import FileEncrypter
+from constants import *
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -210,13 +211,13 @@ def upload_attendance():
     Uploads attendance
     """
     # check if the post request has the file part
-    attendance_file = request.files.get("file")
+    attendance_file = request.files.get("attendance_file")
     if not attendance_file:
-        return False
+        return NO_FILE_ERROR
     # if user does not select file, browser also
     # submit an empty part without filename
     if attendance_file.filename == '':
-        return False
+        return NO_FILE_ERROR
     # get file extension
     ext = attendance_file.filename.lower().split('.')[-1]
     if attendance_file and ext == 'csv':
@@ -225,38 +226,49 @@ def upload_attendance():
         # save
         attendance_file.save(os.path.join(ATTENDANCE_DIR, filename))
         # add attendance to database 
-        ret_val = add_attendance_to_db(filename)
-        if not ret_val:
-            return False
-        return True
+        return add_attendance_to_db(filename)
     # return the index page if the form is not submitted rightly
-    return False
+    return INVALID_FORMAT_ERROR
 
 
 def add_attendance_to_db(filename):
     """
     Adds an attendance data to the database
     """
-    attendance_file = open(os.path.join(ATTENDANCE_DIR, filename), 'r')
-    attendance_data = attendance_file.readlines()
-    attendance_file.close()
-    for i, row in enumerate(attendance_data):
-        name, member_id, event, date, status, time_in, time_out = row.split(",")
-        date = date.split('-')[0].strip()
-        date = date.replace('/', '-')
-        if i > 0:
-            if i == 1:
+    try:
+        attendance_file = open(os.path.join(ATTENDANCE_DIR, filename), 'r')
+        attendance_data = attendance_file.readlines()
+        attendance_file.close()
+        for i, row in enumerate(attendance_data):
+            name, member_id, event, date, status, time_in, time_out = row.split(",")
+            date = date.split('-')[0].strip()
+            date = date.replace('/', '-')
+            #Skip the head of the csv file
+            if i > 0:
+                #compare the first lines of last file and new file to be submitted 
                 date_for_comp = date.split('-')
                 date_for_comp = datetime(int(date_for_comp[2]), int(date_for_comp[1]), int(date_for_comp[0]))
-                result = Attendance.query.filter_by(member_id=member_id, event=event,date=date_for_comp, status=status, time_in=time_in, time_out=time_out).first()
-                if result:
-                    remove_existing_attendance(filename)
-                    return False
-            attendance = Attendance(member_id=member_id, event=event, status=status, time_in=time_in, time_out=time_out)
-            attendance.set_date(date)
-            db.session.add(attendance)
-    db.session.commit()
-    return True
+                record_exists = Attendance.query.filter_by(member_id=member_id, event=event,date=date_for_comp, status=status, time_in=time_in, time_out=time_out).first()
+                if record_exists:
+                    row_dict = {
+                        "member_id": member_id,
+                        "event": event,
+                        "date": date_for_comp,
+                        "status": status,
+                        "time_in": time_in,
+                        "time_out": time_out,
+                    }
+                    Attendance.query.filter_by(member_id=member_id, event=event,date=date_for_comp, status=status, time_in=time_in, time_out=time_out).update(row_dict)
+                    db.session.commit()
+                else:
+                    attendance = Attendance(member_id=member_id, event=event, status=status, time_in=time_in, time_out=time_out)
+                    attendance.set_date(date)
+                    db.session.add(attendance)
+        db.session.commit()
+        return SUCCESS
+    except Exception as e:
+        print(e)
+        return FATAL_ERROR
 
 
 def get_attendance_filename():
@@ -367,7 +379,7 @@ def read_baptism_by_member_id(id):
     if (baptism):
         date_of_baptism = baptism.date_of_baptism
         date_of_baptism = '{}-{}-{}'.format(date_of_baptism.year, date_of_baptism.month, date_of_baptism.day)
-        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': baptism.place_of_baptism, 
+        data = {'date_of_baptism': date_of_baptism, 'place_of_baptism': baptism.place_of_baptism,
         'officiating_minister': baptism.officiating_minister, 'district': baptism.district, 'area': baptism.area, 
         'country': baptism.country, 'img': get_img_path(id, model='baptism')}
     return data
@@ -565,4 +577,29 @@ def get_latest_updates(assembly_name):
         "bible_studies_groups": bible_studies_groups
     }
     return latest_updates
+
+
+def get_attendance_notifs():
+    filenames_original = os.listdir(ATTENDANCE_DIR)
+    filenames = sorted(filenames_original, key=lambda x: int(x.split('_')[0]), reverse=True)[:10]
+    filenames = [name.split('.')[0] for name in filenames]
+    dates_list = [name.split('_')[1:] for name in filenames]
+    msgs = []
+    for i in range(len(filenames)):
+        msg_data = dict()
+        msg_data['bva_data'] = f'/static/storage/attendance/{filenames_original[i]}'
+        # compose the message
+        dt = datetime(int(dates_list[i][0]), int(dates_list[i][1]), int(dates_list[i][2]), int(dates_list[i][3]), int(dates_list[i][4]), int(dates_list[i][5]))
+        msg_data['msg'] = f"BVA submitted successfully on {dt.strftime('%A, %B %d, %Y')}"
+        # get the event
+        attendance_file = open(os.path.join(ATTENDANCE_DIR, filenames_original[i]), 'r')
+        attendance_data = attendance_file.readlines()
+        for i, line in enumerate(attendance_data):
+            if i == 1 and line.strip() != "":
+                msg_data['event_name'] = line.split(',')[2].strip()
+                msg_data['event_date'] = line.split(',')[3].split('-')[0].strip()
+                break
+        attendance_file.close()
+        msgs.append(msg_data)
+    return msgs
 
