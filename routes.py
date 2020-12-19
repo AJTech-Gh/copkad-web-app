@@ -377,7 +377,8 @@ def member_datatable():
 
 @app.route('/edit_settings/<assembly_name>')
 def edit_settings(assembly_name):
-    assembly_data = utils.read_assembly_config()
+    assembly_data = utils.read_assembly_config(assembly_name)
+    # print(assembly_data)
     return render_template('edit-settings.html', assembly_data=assembly_data)
 
 @app.route('/settings')

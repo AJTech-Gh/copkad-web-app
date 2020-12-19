@@ -496,7 +496,13 @@ def read_assembly_config(assembly_name, active=True):
     encrypted_json_data = json_file.read()
     decrypted_json_data = decrypt_json_data(encrypted_json_data)
     json_file.close()
-    return json.loads(decrypted_json_data)
+    decrypted_json_data = json.loads(decrypted_json_data)
+    # load the document and file paths
+    decrypted_json_data['logo'] = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'logo.jpg') if os.path.exists(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'logo.jpg')) else ''
+    decrypted_json_data['letter_head'] = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'letter_head.jpg') if os.path.exists(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'letter_head.jpg')) else ''
+    decrypted_json_data['dedication_cert_template'] = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'dedication_cert_template.pdf') if os.path.exists(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'dedication_cert_template.pdf')) else ''
+    decrypted_json_data['baptism_cert_template'] = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'baptism_cert_template.pdf') if os.path.exists(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, 'baptism_cert_template.pdf')) else ''
+    return decrypted_json_data
 
 
 def upload_assembly_config_files(assembly_name):

@@ -286,6 +286,7 @@ class Dedication(db.Model):
 
 class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
     member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
     event = db.Column(db.String(50), unique=False, nullable=False, index=True)
     date = db.Column(db.DateTime(), unique=False, nullable=False)
@@ -299,3 +300,18 @@ class Attendance(db.Model):
 
     def get_date(self, date):
         return '{}-{}-{}'.format(date.year, date.month, date.day)
+
+
+class Accessibility(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
+    password_hash = db.Column(db.String(128), unique=True, nullable=False)
+    position = db.Column(db.String(50), unique=False, nullable=False, index=True)
+    assembly = assembly = db.Column(db.String(30), unique=False, nullable=False)
+    assembly_status = db.Column(db.String(10), unique=False, nullable=False)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)

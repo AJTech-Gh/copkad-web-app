@@ -131,8 +131,12 @@ $(".assembly_ui_toggle_activate").on("click", function(e) {
 		success: function(res) {
 			if (activate_status === "deactivate") {
 				document.querySelector("#" + assembly_name).innerHTML = `<span class="kt-badge kt-badge--success kt-badge--inline">Activate</span>`;
+				$("#edit_settings_" + assembly_name).attr("target", "");
+				$("#edit_settings_" + assembly_name).attr("href", "javascript:void(0)");
 			} else {
 				document.querySelector("#" + assembly_name).innerHTML = `<span class="kt-badge kt-badge--danger kt-badge--inline">Deactivate</span>`;
+				$("#edit_settings_" + assembly_name).attr("target", "_blank");
+				$("#edit_settings_" + assembly_name).attr("href", "/edit_settings/" + assembly_name);
 			}
 			$("#" + assembly_name + "_spinner").attr("hidden", true);
 		},
