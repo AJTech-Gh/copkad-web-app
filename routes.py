@@ -63,10 +63,6 @@ def login_v2():
 def messaging():
     return render_template('messaging.html')
 
-@app.route('/statistical_updates')
-def statistical_updates():
-    return render_template('statistical-updates.html')
-
 @app.route('/finance_info')
 def finance_info():
     return render_template('finance-info.html')
@@ -120,22 +116,195 @@ def change_password():
 def admin_pledges_overview():
     return render_template('personal-information.html')
 
+@app.route('/reports')
+def reports():
+    return render_template('report.html')
+
+@app.route('/transfers_and_promotions')
+def transfers_and_promotions():
+    return render_template('report.html')
+
+@app.route('/new_converts')
+def new_converts():
+    return render_template('report.html')
+
+@app.route('/holyghost_baptism')
+def holyghost_baptism():
+    return render_template('report.html')
+
+@app.route('/general_finance')
+def general_finance():
+    return render_template('report.html')
+
+@app.route('/tithes')
+def tithes():
+    return render_template('report.html')
+
+@app.route('/missions_offering')
+def missions_offering():
+    return render_template('report.html')
+
+@app.route('/daily_offering')
+def daily_offering():
+    return render_template('report.html')
+
+@app.route('/welfare')
+def welfare():
+    return render_template('report.html')
+
+@app.route('/donations')
+def donations():
+    return render_template('report.html')
+
+@app.route('/books_stationary')
+def books_stationary():
+    return render_template('report.html')
+
+@app.route('/donations_out')
+def donations_out():
+    return render_template('report.html')
+
+@app.route('/other_expenditure')
+def other_expenditure():
+    return render_template('report.html')
+
+@app.route('/pledges')
+def pledges():
+    return render_template('report.html')
+
+@app.route('/special_offering')
+def special_offering():
+    return render_template('report.html')
+
+@app.route('/utility_expense')
+def utility_expense():
+    return render_template('report.html')
+
+@app.route('/wages_salaries')
+def wages_salaries():
+    return render_template('report.html')
+
+@app.route('/member_dashboard')
+def member_dashboard():
+    return render_template('report.html')
+
+@app.route('/bible_studies_group')
+def bible_studies_group():
+    return render_template('report.html')
+
+@app.route('/activate_assembly/<assembly_name>', methods=['POST'])
+def activate_assembly(assembly_name):
+    try:
+        assembly_name_original = ' '.join([p.capitalize() for p in assembly_name.split('_')])
+        if not utils.activate_assembly(assembly_name):
+            return Response(json.dumps({'status':'FAIL', 'message': f'Failed to activate {assembly_name_original}'}), status=400, mimetype='application/json')
+        return Response(json.dumps({'status': 'SUCCESS', 'message': f'{assembly_name_original} activated successfully'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route('/deactivate_assembly/<assembly_name>', methods=['POST'])
+def deactivate_assembly(assembly_name):
+    try:
+        assembly_name_original = ' '.join([p.capitalize() for p in assembly_name.split('_')])
+        if not utils.deactivate_assembly(assembly_name):
+            return Response(json.dumps({'status':'FAIL', 'message': f'Failed to deactivate {assembly_name_original}'}), status=400, mimetype='application/json')
+        return Response(json.dumps({'status': 'SUCCESS', 'message': f'{assembly_name_original} deactivated successfully'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route('/assembly_forecast/<assembly_name>', methods=['POST'])
+def assembly_forecast(assembly_name):
+    try:
+        assembly_name = ' '.join([p.capitalize() for p in assembly_name.split('_')])
+        member_count = str(User.query.filter_by(assembly=assembly_name).count())
+        return Response(json.dumps({
+            'status':'SUCCESS', 
+            'member_count': member_count, 
+            'status': {'active': '0', 'inactive': '0', 'backslider': '0'}, 
+            'finance': {'income': '0.00', 'expenditure': '0.00'},
+            'welfare': '0.00'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route('/filtered_member_datatable/<assembly_name>')
+def filtered_member_datatable(assembly_name):
+    try:
+        assembly_name_list = assembly_name.split('_')
+        assembly_name = ' '.join([p.capitalize() for p in assembly_name_list])
+        data_1 = User.query.filter_by(assembly=assembly_name).all()
+        data_2 = utils.load_all_incomplete_reg()
+
+        member_data = []
+
+        for user in data_1:
+            row_data = {
+                'member_id': user.member_id,
+                'full_name': f'{user.last_name}, {user.first_name} {user.other_names}',
+                'gender': user.gender, 
+                'assembly': user.assembly, 
+                'contact': (f'{user.contact_phone_1}' if user.contact_phone_2.strip() == "" else f'{user.contact_phone_1}/{user.contact_phone_2}'), 
+                'marital_status': user.marital_status.capitalize(), 
+                'ministry': user.ministry, 
+                'status': "1"
+            }
+            member_data.append(row_data)
+
+        for user in data_2:
+            row_data = {
+                'member_id': user["member_id"],
+                'full_name': f'{user["last_name"]}, {user["first_name"]} {user["other_names"]}',
+                'gender': user['gender'], 
+                'assembly': ("" if user["assembly"] == None else user["assembly"]), 
+                'contact': (f'{user["contact_phone_1"]}' if user["contact_phone_2"].strip() == "" else f'{user["contact_phone_1"]}/{user["contact_phone_2"]}'), 
+                'marital_status': user["marital_status"].capitalize(), 
+                'ministry': user["ministry"], 
+                'status': "0"
+            }
+            member_data.append(row_data)
+
+        #print(death_data[0])
+        
+        return render_template('member-datatable.html', member_data=member_data)
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
 @app.route('/admin_dashboard')
 def admin_dashboard():
-    return render_template('admin-dashboard.html')
+    assembly_names, _, _ = utils.load_assembly_data()
+    registered_member_data = utils.assemblies_registration_summary()
+    attendance_notifs = utils.get_attendance_notifs()
+    assembly_ui_data = utils.get_assembly_ui_data()
+    return render_template('admin.html', assembly_names=assembly_names, registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data)
+
+
+@app.route('/statistical_updates')
+def statistical_updates():
+    stats_data = utils.get_statistical_updates()
+    return render_template('statistical-updates.html', stats_data=stats_data)
 
 
 @app.route('/overview')
 def overview():
+    assembly_names, _, _ = utils.load_assembly_data()
     latest_updates = utils.get_latest_updates("Emmanuel English Assembly")
     attendance_notifs = utils.get_attendance_notifs()
-    return render_template('overview.html', latest_updates=latest_updates, attendance_notifs=attendance_notifs)
+    return render_template('overview.html', latest_updates=latest_updates, attendance_notifs=attendance_notifs, assembly_names=assembly_names)
 
 
 @app.route('/upload_attendance', methods=['POST'])
 def upload_attendance():
     try:
-        ret_val = utils.upload_attendance()
+        form = request.form
+        assembly_name = form.get('assembly')
+        ret_val = utils.upload_attendance(assembly_name)
         if ret_val == NO_FILE_ERROR:
             return Response(json.dumps({'status':'FAIL', 'message': 'No attendance file selected.'}), status=400, mimetype='application/json')
         elif ret_val == INVALID_FORMAT_ERROR:
@@ -205,6 +374,12 @@ def member_datatable():
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
+
+@app.route('/edit_settings/<assembly_name>')
+def edit_settings(assembly_name):
+    assembly_data = utils.read_assembly_config()
+    return render_template('edit-settings.html', assembly_data=assembly_data)
+
 @app.route('/settings')
 def settings():
     return render_template('settings.html')
@@ -216,9 +391,10 @@ def settings_submit():
 
         multi_item_list = ['ministry', 'group', "name_of_offering"]
         offering_items = ['name_of_offering', 'type_of_offering', 'percentage_deduction', 'offering_code']
+        capitalized_assembly_name = ' '.join([p.capitalize().strip() for p in form.get('assembly_name').strip().split(' ')])
         config_dict = dict({
             'church_name':form.get('church_name'),
-            'assembly_name':form.get('assembly_name'),
+            'assembly_name':capitalized_assembly_name,
             'district_name':form.get('district_name'),
             'area_name':form.get('area_name'),
             'address_line_1':form.get('address_line_1'),
@@ -258,8 +434,8 @@ def settings_submit():
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
-@app.route('/birth')
-def birth():
+@app.route('/births')
+def births():
     try:
         assembly_names, _, _ = utils.load_assembly_data()
         birth_data = Birth.query.all()
@@ -526,8 +702,8 @@ def promotion_submit():
             # print(form)
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
-@app.route('/death')
-def death():
+@app.route('/deaths')
+def deaths():
     try:
         data_1 = db.session.query(Death, User).join(User).all()
         death_data = []

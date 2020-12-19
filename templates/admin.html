@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="en" >
+    <!-- begin::Head -->
+    
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+        <meta charset="utf-8"/>
+        
+        <title>The COP | Dashboard</title>
+        <meta name="description" content="Latest updates and statistic charts"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+         <!--begin::Fonts -->
+         <script src="{{ url_for('static', filename='assets/ajax/libs/webfont/1.6.16/webfont.js') }}"></script>
+         <script>
+             WebFont.load({
+                 google: {"families":["Poppins:300,400,500,600,700"]},
+                 active: function() {
+                     sessionStorage.fonts = true;
+                 }
+             });
+         </script>
+         <!--end::Fonts -->
+
+                    <!--begin::Page Vendors Styles(used by this page) -->
+                            <link href="{{ url_for('static', filename='assets/vendors/custom/fullcalendar/fullcalendar.bundle.css') }}" rel="stylesheet" type="text/css" />
+                        <!--end::Page Vendors Styles -->
+        
+        
+        <!--begin::Global Theme Styles(used by all pages) -->
+                    <link href="{{ url_for('static', filename='assets/vendors/global/vendors.bundle.css') }}" rel="stylesheet" type="text/css" />
+                    <link href="{{ url_for('static', filename='assets/css/demo2/style.bundle.css') }}" rel="stylesheet" type="text/css" />
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+                <!--end::Global Theme Styles -->
+
+        <!--begin::Layout Skins(used by all pages) -->
+                <!--end::Layout Skins -->
+
+        <link rel="shortcut icon" href="{{ url_for('static', filename='assets/media/logos/thecopnsema-pentecost-logo.JPG') }}" />
+    </head>
+    <!-- end::Head -->
+
+    <!-- begin::Body -->
+    <body  class="kt-page--loading-enabled kt-page--loading kt-page--fluid kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header--minimize-topbar kt-header-mobile--fixed kt-subheader--enabled kt-subheader--transparent kt-aside--enabled kt-aside--fixed kt-page--loading"  >
+
+                   <!-- begin::Page loader -->
+	
+<!-- end::Page Loader -->        
+    	<!-- begin:: Page -->
+	<!-- begin:: Header Mobile -->
+<div id="kt_header_mobile" class="kt-header-mobile  kt-header-mobile--fixed " >
+	<div class="kt-header-mobile__logo">
+		<a href="{{ url_for('index') }}">
+			<img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-pentecost-logo.JPG') }}"/>
+		</a>
+	</div>
+	<div class="kt-header-mobile__toolbar">
+					<button class="kt-header-mobile__toolbar-toggler kt-header-mobile__toolbar-toggler--left" id="kt_aside_mobile_toggler"><span></span></button>
+		
+		<button class="kt-header-mobile__toolbar-toggler" id="kt_header_mobile_toggler"><span></span></button>
+		<button class="kt-header-mobile__toolbar-topbar-toggler" id="kt_header_mobile_topbar_toggler"><i class="flaticon-more-1"></i></button>
+	</div>
+</div>
+<!-- end:: Header Mobile -->
+	<div class="kt-grid kt-grid--hor kt-grid--root">
+		<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-page">
+			<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor kt-wrapper " id="kt_wrapper">
+				<!-- begin:: Header -->
+<div id="kt_header" class="kt-header kt-grid__item  kt-header--fixed "  data-ktheader-minimize="on" >
+	<div class="kt-header__top">
+		<div class="kt-container">
+			<!-- begin:: Brand -->
+<div class="kt-header__brand   kt-grid__item" id="kt_header_brand">
+	<div class="kt-header__brand-logo">
+		<a href="{{ url_for('index') }}">
+			<img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-2.png') }}" class="kt-header__brand-logo-default"/>
+			<img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-4.png') }}" class="kt-header__brand-logo-sticky"/>
+		</a>		
+	</div> 
+	<div class="kt-header__brand-nav">
+		<div class="dropdown">
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				The Church Of Pentecost - Nsema Assemblies 
+            </button>
+		</div>
+	</div>
+</div>
+<!-- end:: Brand -->			<!-- begin:: Header Topbar -->
+<div class="kt-header__topbar">
+	<!--begin: Search -->
+	<div class="kt-header__topbar-item kt-header__topbar-item--search dropdown kt-hidden-desktop" id="kt_quick_search_toggle">
+		<div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,10px">
+			<span class="kt-header__topbar-icon">
+				<!--<i class="flaticon2-search-1"></i>-->
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--info">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="bound" x="0" y="0" width="24" height="24"/>
+        <path d="M14.2928932,16.7071068 C13.9023689,16.3165825 13.9023689,15.6834175 14.2928932,15.2928932 C14.6834175,14.9023689 15.3165825,14.9023689 15.7071068,15.2928932 L19.7071068,19.2928932 C20.0976311,19.6834175 20.0976311,20.3165825 19.7071068,20.7071068 C19.3165825,21.0976311 18.6834175,21.0976311 18.2928932,20.7071068 L14.2928932,16.7071068 Z" id="Path-2" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+        <path d="M11,16 C13.7614237,16 16,13.7614237 16,11 C16,8.23857625 13.7614237,6 11,6 C8.23857625,6 6,8.23857625 6,11 C6,13.7614237 8.23857625,16 11,16 Z M11,18 C7.13400675,18 4,14.8659932 4,11 C4,7.13400675 7.13400675,4 11,4 C14.8659932,4 18,7.13400675 18,11 C18,14.8659932 14.8659932,18 11,18 Z" id="Path" fill="#000000" fill-rule="nonzero"/>
+    </g>
+</svg>	
+		</span>
+        </div>
+        
+		<div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-lg">
+			<div class="kt-quick-search kt-quick-search--inline" id="kt_quick_search_inline">
+    <form method="get" class="kt-quick-search__form">
+        <div class="input-group">
+            <div class="input-group-prepend"><span class="input-group-text"><i class="flaticon2-search-1"></i></span></div>
+            <input type="text" class="form-control kt-quick-search__input" placeholder="Search...">
+            <div class="input-group-append"><span class="input-group-text"><i class="la la-close kt-quick-search__close"></i></span></div>
+       	</div>
+    </form>
+    <div class="kt-quick-search__wrapper kt-scroll" data-scroll="true" data-height="300" data-mobile-height="200">
+    </div>
+</div>		</div>
+	</div>
+	<!--end: Search -->
+
+
+
+	
+
+	<!--begin: Quick panel -->
+	<div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
+		<div class="kt-header__topbar-wrapper">
+			<span class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn">
+				<!--<i class="flaticon2-cube-1"></i>-->
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--danger">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="bound" x="0" y="0" width="24" height="24"/>
+        <rect id="Rectangle-7" fill="#000000" x="4" y="4" width="7" height="7" rx="1.5"/>
+        <path d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z" id="Combined-Shape" fill="#000000" opacity="0.3"/>
+    </g>
+</svg>			</span>
+		</div>
+	</div>
+	<!--end: Quick panel -->
+
+	
+	<!--begin: User bar -->
+	<div class="kt-header__topbar-item kt-header__topbar-item--user">
+		<div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,10px" aria-expanded="false">
+			<span class="kt-header__topbar-welcome">Hi,</span>
+			<span class="kt-header__topbar-username">Prosper Ezekiel <!--Put name of admin here--></span>
+			<img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}">
+
+			<!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
+		    <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">S</span>
+		</div>
+		<div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
+			<!--begin: Head -->
+    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(assets/media/misc/bg-1.jpg)">
+        <div class="kt-user-card__avatar">
+            <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" /> <!--put user pic here-->
+            <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
+            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">E</span>
+        </div>
+        <div class="kt-user-card__name">
+            <!--Put name of administrator here-->Prosper Ezekiel
+        </div>
+        <div class="kt-user-card__badge">
+            <span class="btn btn-success btn-sm btn-bold btn-font-md">0 messages</span>
+        </div>
+    </div>
+<!--end: Head -->
+
+<!--begin: Navigation -->
+<div class="kt-notification">
+    <a href="{{ url_for('overview') }}" class="kt-notification__item">
+        <div class="kt-notification__item-icon">
+            <i class="flaticon2-calendar-3 kt-font-success"></i>
+        </div>
+        <div class="kt-notification__item-details">
+            <div class="kt-notification__item-title kt-font-bold">
+                My Profile
+            </div>
+            <div class="kt-notification__item-time">
+                Account settings and more
+            </div>
+        </div>
+    </a>
+    <a href="{{ url_for('messages') }}" class="kt-notification__item">
+        <div class="kt-notification__item-icon">
+            <i class="flaticon2-mail kt-font-warning"></i>
+        </div>
+        <div class="kt-notification__item-details">
+            <div class="kt-notification__item-title kt-font-bold">
+                My Messages
+            </div>
+            <div class="kt-notification__item-time">
+                Inbox and tasks
+            </div>
+        </div>
+    </a>
+    <a href="{{ url_for('my_activities') }}" class="kt-notification__item">
+        <div class="kt-notification__item-icon">
+            <i class="flaticon2-rocket-1 kt-font-danger"></i>
+        </div>
+        <div class="kt-notification__item-details">
+            <div class="kt-notification__item-title kt-font-bold">
+                My Activities
+            </div>
+            <div class="kt-notification__item-time">
+                Logs and notifications
+            </div>
+        </div>
+    </a>
+
+    <div class="kt-notification__custom kt-space-between">
+        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
+
+        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a>
+    </div>
+</div>
+<!--end: Navigation -->		</div>
+	</div>
+	<!--end: User bar -->		
+</div>
+<!-- end:: Header Topbar -->		</div>
+	</div>
+	<div class="kt-header__bottom">
+		<div class="kt-container">
+			</div>
+	</div>
+</div>
+<!-- end:: Header -->
+				<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-grid--stretch">
+					<div class="kt-container kt-body  kt-grid kt-grid--ver" id="kt_body">
+													<!-- begin:: Aside -->
+<button class="kt-aside-close " id="kt_aside_close_btn"><i class="la la-close"></i></button>
+
+<div class="kt-aside  kt-aside--fixed  kt-grid__item kt-grid kt-grid--desktop kt-grid--hor-desktop" id="kt_aside">
+	<!-- begin:: Aside Menu -->
+	<div class="kt-aside-menu-wrapper kt-grid__item kt-grid__item--fluid" id="kt_aside_menu_wrapper">
+		<div 
+			id="kt_aside_menu"
+			class="kt-aside-menu "
+			data-ktmenu-vertical="1"
+			 data-ktmenu-scroll="1"  
+			>		
+			
+			<ul class="kt-menu__nav ">
+                <li class="kt-menu__item " aria-haspopup="true" ><a  href="" class="kt-menu__link "><i class="kt-menu__link-icon"></i><span class="kt-menu__link-text"></span></a></li>
+                <li class="kt-menu__section ">
+                <h4 class="kt-menu__section-text">Navigation</h4>
+                <i class="kt-menu__section-icon flaticon-more-v2"></i>
+            </li>
+        
+            <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('reports') }}" target="_blank" class="kt-menu__link "><i class="kt-menu__link-icon 
+                flaticon-folder-1"></i><span class="kt-menu__link-text">Reports</span></a></li>
+            <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true"  data-ktmenu-submenu-toggle="hover"><a  href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon 
+                flaticon-coins"></i>
+                <span class="kt-menu__link-text">Database</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span><ul class="kt-menu__subnav">
+                    <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true" ><span class="kt-menu__link"><span class="kt-menu__link-text">Water Baptism</span></span></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('baptism_certificates') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Water Baptism</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('transfers_and_promotions') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Transfers & Promotions</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('births') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Births</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('new_converts') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">New Converts</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('holyghost_baptism') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Holy Ghost Baptism</span></a></li>
+                     <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('dedication') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Dedications</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('deaths') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Deaths</span></a></li></ul>
+                </div>
+            </li>
+            <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true"  data-ktmenu-submenu-toggle="hover"><a  href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon 
+                flaticon-rotate"></i>
+                <span class="kt-menu__link-text">Attendance</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span><ul class="kt-menu__subnav">
+                    <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true" ><span class="kt-menu__link"><span class="kt-menu__link-text">General</span></span></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('baptism_certificates') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Events and announcements</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('transfers_and_promotions') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">General</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('births') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Activities</span></a></li>
+                </div>
+            </li>
+            <li class="kt-menu__section ">
+                <h4 class="kt-menu__section-text">Finance</h4>
+                <i class="kt-menu__section-icon flaticon-more-v2"></i>
+            </li>
+            <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('general_finance') }}" target="_blank" class="kt-menu__link "><i class="kt-menu__link-icon fa flaticon2-files-and-folders"></i><span class="kt-menu__link-text">General</span></a></li>
+            <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('tithes') }}" target="_blank" class="kt-menu__link "><i class="kt-menu__link-icon fa flaticon-customer"></i><span class="kt-menu__link-text">Tithes</span></a></li>
+            <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('missions_offering') }}" target="_blank" class="kt-menu__link "><i class="kt-menu__link-icon fa flaticon-black"></i><span class="kt-menu__link-text">Missions Offering</span></a></li>
+            <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('daily_offering') }}" target="_blank" class="kt-menu__link "><i class="kt-menu__link-icon fa flaticon-event-calendar-symbol"></i><span class="kt-menu__link-text">Daily Offering</span></a></li>
+            <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true"  data-ktmenu-submenu-toggle="hover"><a  href="javascript:;" class="kt-menu__link kt-menu__toggle"><i class="kt-menu__link-icon fa fa-table"></i><span class="kt-menu__link-text">Special Offering</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
+                <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span>
+                    <ul class="kt-menu__subnav">
+                <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true" ><span class="kt-menu__link"><span class="kt-menu__link-text">Tithes</span></span></li><li class="kt-menu__item " aria-haspopup="true" >
+                    <a  href="{{ url_for('welfare') }}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Welfare</span></a></li>
+                    <li class="kt-menu__item " aria-haspopup="true" >
+                    <a  href="{{ url_for('donations') }}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Donations</span></a>
+                </li>
+                 <li class="kt-menu__item " aria-haspopup="true" >
+                    <a  href="{{ url_for('donations') }}" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Pledges</span></a>
+                </li>
+            </ul>
+        </div>
+    </li>
+    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('settings') }}" class="kt-menu__link "><i class="kt-menu__link-icon fa flaticon2-settings"></i><span class="kt-menu__link-text">Settings</span></a></li>
+	</ul>
+		</div>
+	</div>
+	<!-- end:: Aside Menu -->
+</div>
+<!-- end:: Aside -->							<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+			
+<!-- begin:: Content Head -->
+<div class="kt-subheader   kt-grid__item" id="kt_subheader">
+    <div class="kt-subheader__main">
+        
+        <h3 class="kt-subheader__title">Dashboard</h3>
+        
+        <span class="kt-subheader__separator kt-subheader__separator--v"></span>
+        
+        <span class="kt-subheader__desc">#XRS-45670</span>
+        
+        <a href="{{ url_for('add_user') }}" class="btn btn-label-primary btn-bold btn-icon-h kt-margin-l-10">
+			Add New
+		</a>
+    </div>
+    <!-- <div class="kt-subheader__toolbar">
+        <div class="kt-subheader__wrapper">
+                            <a href="#" class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
+                    <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
+                    <span class="kt-subheader__btn-daterange-date" id="kt_dashboard_daterangepicker_date">Aug 16</span>
+                    <i class="flaticon2-calendar-1"></i>
+                </a>
+                        
+            <a href="#" class="btn kt-subheader__btn-primary btn-icon">
+                <i class="flaticon2-file"></i>
+            </a>
+
+            <a href="#" class="btn kt-subheader__btn-primary btn-icon">
+                <i class="flaticon-download-1"></i>
+            </a>
+
+            <a href="#" class="btn kt-subheader__btn-primary btn-icon">
+                <i class="flaticon2-fax"></i>
+            </a>
+
+            <a href="#" class="btn kt-subheader__btn-primary btn-icon">
+                <i class="flaticon2-settings"></i>
+            </a>
+
+            <div class="dropdown dropdown-inline" data-toggle="kt-tooltip" title="Quick actions" data-placement="left">
+                <a href="#" class="btn btn-icon"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--success kt-svg-icon--md">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <polygon id="Shape" points="0 0 24 0 24 24 0 24"/>
+                        <path d="M5.85714286,2 L13.7364114,2 C14.0910962,2 14.4343066,2.12568431 14.7051108,2.35473959 L19.4686994,6.3839416 C19.8056532,6.66894833 20,7.08787823 20,7.52920201 L20,20.0833333 C20,21.8738751 19.9795521,22 18.1428571,22 L5.85714286,22 C4.02044787,22 4,21.8738751 4,20.0833333 L4,3.91666667 C4,2.12612489 4.02044787,2 5.85714286,2 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                        <path d="M11,14 L9,14 C8.44771525,14 8,13.5522847 8,13 C8,12.4477153 8.44771525,12 9,12 L11,12 L11,10 C11,9.44771525 11.4477153,9 12,9 C12.5522847,9 13,9.44771525 13,10 L13,12 L15,12 C15.5522847,12 16,12.4477153 16,13 C16,13.5522847 15.5522847,14 15,14 L13,14 L13,16 C13,16.5522847 12.5522847,17 12,17 C11.4477153,17 11,16.5522847 11,16 L11,14 Z" id="Combined-Shape" fill="#000000"/>
+                    </g>
+                </svg>                    <i class="flaticon2-plus"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-fit dropdown-menu-md dropdown-menu-right">
+                    < begin::Nav >
+                    <ul class="kt-nav">
+                        <li class="kt-nav__head">
+                            Export Options:                                    
+                            <i class="flaticon2-correct kt-font-warning" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
+                        </li>
+                        <li class="kt-nav__separator"></li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-drop"></i>
+                                <span class="kt-nav__link-text">Orders</span>
+                            </a>
+                        </li>                        
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-new-email"></i>
+                                <span class="kt-nav__link-text">Members</span>
+                                <span class="kt-nav__link-badge">
+                                    <span class="kt-badge kt-badge--brand kt-badge--rounded">15</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-calendar-8"></i>
+                                <span class="kt-nav__link-text">Reports</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__item">
+                            <a href="#" class="kt-nav__link">
+                                <i class="kt-nav__link-icon flaticon2-link"></i>
+                                <span class="kt-nav__link-text">Finance</span>
+                            </a>
+                        </li>
+                        <li class="kt-nav__separator"></li>
+                        <li class="kt-nav__foot">
+                            <a class="btn btn-label-brand btn-bold btn-sm" href="#">More options</a>                                    
+                            <a class="btn btn-clean btn-bold btn-sm kt-hidden" href="#" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more...">Learn more</a>
+                        </li>
+                    </ul>
+                    <!-end::Nav->
+                </div>
+            </div>
+        </div>
+    </div> -->
+</div>
+<!-- end:: Content Head -->		
+	<!-- begin:: Content -->
+	<div class="kt-content kt-grid__item kt-grid__item--fluid">
+		<!--Begin::Dashboard 1-->
+
+<!--Begin::Section-->
+<div class="row">
+	<div class="col-xl-4">
+		<!--begin:: Widgets/Activity-->
+<div class="kt-portlet kt-portlet--fit kt-portlet--head-lg kt-portlet--head-overlay kt-portlet--skin-solid kt-portlet--height-fluid">
+	<div class="kt-portlet__head kt-portlet__head--noborder kt-portlet__space-x">
+		<div class="kt-portlet__head-label">
+		   <h3 class="kt-portlet__head-title" id="assembly_forecast_title">
+                Assembly Forecast <!--put name of assembly here-->
+	       </h3>
+		</div>
+		<div class="kt-portlet__head-toolbar">
+            
+            <button style="min-width: 150px;" class="btn btn-label-light btn-sm btn-bold dropdown-toggle" data-toggle="dropdown">
+                <span style="background-color: inherit;" id="load_ass_data"><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color:whitesmoke;" ></i></span>
+                Select
+			</button>
+			<div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+				<ul class="kt-nav">
+    {% for name in assembly_names %}
+        <li class="kt-nav__item">
+            <div class="kt-nav__link assemblies">
+                <i class=""></i>
+                <span class="kt-nav__link-text">{{ name }}</span>
+            </div>
+        </li>
+    {% endfor %}
+</ul>			</div>
+		</div>
+	</div>
+	<div class="kt-portlet__body kt-portlet__body--fit">
+		<div class="kt-widget17">
+			<div class="kt-widget17__visual kt-widget17__visual--chart kt-portlet-fit--top kt-portlet-fit--sides" style="background-color: #fd397a">
+				<div class="kt-widget17__chart" style="height:320px;">
+					<canvas id="kt_chart_activities"></canvas>
+				</div>
+			</div>
+			<div class="kt-widget17__stats">
+				<div class="kt-widget17__items">
+					<div class="kt-widget17__item">
+						<span class="kt-widget17__icon">
+							<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--brand">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="bound" x="0" y="0" width="24" height="24"/>
+        <path d="M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z" id="Combined-Shape" fill="#000000"/>
+        <rect id="Rectangle-Copy-2" fill="#000000" opacity="0.3" transform="translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519) " x="16.3255682" y="2.94551858" width="3" height="18" rx="1"/>
+    </g>
+</svg>						</span> 
+						<a href="{{ url_for('baptism_certificates') }}"><span class="kt-widget17__subtitle">
+							Registration
+						</span> 
+						<span id="no_registration" class="kt-widget17__desc">
+							0 members registered
+						</span>  </a>
+					</div>
+
+					<div class="kt-widget17__item">
+						<span class="kt-widget17__icon">
+							<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--success">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Bound" points="0 0 24 0 24 24 0 24"/>
+        <path d="M12.9336061,16.072447 L19.36,10.9564761 L19.5181585,10.8312381 C20.1676248,10.3169571 20.2772143,9.3735535 19.7629333,8.72408713 C19.6917232,8.63415859 19.6104327,8.55269514 19.5206557,8.48129411 L12.9336854,3.24257445 C12.3871201,2.80788259 11.6128799,2.80788259 11.0663146,3.24257445 L4.47482784,8.48488609 C3.82645598,9.00054628 3.71887192,9.94418071 4.23453211,10.5925526 C4.30500305,10.6811601 4.38527899,10.7615046 4.47382636,10.8320511 L4.63,10.9564761 L11.0659024,16.0730648 C11.6126744,16.5077525 12.3871218,16.5074963 12.9336061,16.072447 Z" id="Shape" fill="#000000" fill-rule="nonzero"/>
+        <path d="M11.0563554,18.6706981 L5.33593024,14.122919 C4.94553994,13.8125559 4.37746707,13.8774308 4.06710397,14.2678211 C4.06471678,14.2708238 4.06234874,14.2738418 4.06,14.2768747 L4.06,14.2768747 C3.75257288,14.6738539 3.82516916,15.244888 4.22214834,15.5523151 C4.22358765,15.5534297 4.2250303,15.55454 4.22647627,15.555646 L11.0872776,20.8031356 C11.6250734,21.2144692 12.371757,21.2145375 12.909628,20.8033023 L19.7677785,15.559828 C20.1693192,15.2528257 20.2459576,14.6784381 19.9389553,14.2768974 C19.9376429,14.2751809 19.9363245,14.2734691 19.935,14.2717619 L19.935,14.2717619 C19.6266937,13.8743807 19.0546209,13.8021712 18.6572397,14.1104775 C18.654352,14.112718 18.6514778,14.1149757 18.6486172,14.1172508 L12.9235044,18.6705218 C12.377022,19.1051477 11.6029199,19.1052208 11.0563554,18.6706981 Z" id="Path" fill="#000000" opacity="0.3"/>
+    </g>
+</svg>						</span>  
+						<span class="kt-widget17__subtitle">
+							Status
+						</span> 
+						<span class="kt-widget17__desc">
+							<label id="status_active">active</label>  || <label id="status_inactive">inactive</label> || <label id="status_backslider">backslider</label>  <!--make reference from attendance database-->
+						</span>  
+					</div>					
+				</div>
+				<div class="kt-widget17__items">
+					<div class="kt-widget17__item">
+						<span class="kt-widget17__icon">
+							<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--warning">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="bound" x="0" y="0" width="24" height="24"/>
+        <path d="M12.7037037,14 L15.6666667,10 L13.4444444,10 L13.4444444,6 L9,12 L11.2222222,12 L11.2222222,14 L6,14 C5.44771525,14 5,13.5522847 5,13 L5,3 C5,2.44771525 5.44771525,2 6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,13 C19,13.5522847 18.5522847,14 18,14 L12.7037037,14 Z" id="Combined-Shape" fill="#000000" opacity="0.3"/>
+        <path d="M9.80428954,10.9142091 L9,12 L11.2222222,12 L11.2222222,16 L15.6666667,10 L15.4615385,10 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 L9.80428954,10.9142091 Z" id="Combined-Shape" fill="#000000"/>
+    </g>
+</svg>						</span>  
+						<span class="kt-widget17__subtitle">
+							Finance
+						</span> 
+						<span class="kt-widget17__desc">
+							 Income - GHS <b id="finance_income">0.00</b>
+                        </span>  
+                        <span class="kt-widget17__desc">
+                            Expenditure - GHS <b id="finance_expenditure">0.00</b>
+                        </span>
+					</div>	
+
+					<div class="kt-widget17__item">
+						<span class="kt-widget17__icon">
+							<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--danger">
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect id="bound" x="0" y="0" width="24" height="24"/>
+        <path d="M3,16 L5,16 C5.55228475,16 6,15.5522847 6,15 C6,14.4477153 5.55228475,14 5,14 L3,14 L3,12 L5,12 C5.55228475,12 6,11.5522847 6,11 C6,10.4477153 5.55228475,10 5,10 L3,10 L3,8 L5,8 C5.55228475,8 6,7.55228475 6,7 C6,6.44771525 5.55228475,6 5,6 L3,6 L3,4 C3,3.44771525 3.44771525,3 4,3 L10,3 C10.5522847,3 11,3.44771525 11,4 L11,19 C11,19.5522847 10.5522847,20 10,20 L4,20 C3.44771525,20 3,19.5522847 3,19 L3,16 Z" id="Combined-Shape" fill="#000000" opacity="0.3"/>
+        <path d="M16,3 L19,3 C20.1045695,3 21,3.8954305 21,5 L21,15.2485298 C21,15.7329761 20.8241635,16.200956 20.5051534,16.565539 L17.8762883,19.5699562 C17.6944473,19.7777745 17.378566,19.7988332 17.1707477,19.6169922 C17.1540423,19.602375 17.1383289,19.5866616 17.1237117,19.5699562 L14.4948466,16.565539 C14.1758365,16.200956 14,15.7329761 14,15.2485298 L14,5 C14,3.8954305 14.8954305,3 16,3 Z" id="Rectangle-102-Copy" fill="#000000"/>
+    </g>
+</svg>						</span>  
+						<span class="kt-widget17__subtitle">
+							Welfare Contribution
+						</span> 
+						<span class="kt-widget17__desc">
+                            GHS <b id="welfare"> 0.00</b>
+                            
+						</span>  
+					</div>				
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!--end:: Widgets/Activity-->	</div>	
+	<div class="col-xl-4">
+		<!--begin:: Widgets/Inbound Bandwidth-->
+<div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+	<div class="kt-portlet__head kt-portlet__space-x">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				Attendance Pattern
+			</h3>
+		</div>
+		<div class="kt-portlet__head-toolbar">
+			<a href="#" class="btn btn-label-success btn-sm btn-bold dropdown-toggle" data-toggle="dropdown">
+				Select
+			</a>
+			<div class="dropdown-menu dropdown-menu-fit dropdown-menu-right"> <!--registered assembly show here-->
+				<ul class="kt-nav">
+    {% for name in assembly_names %}
+        <li class="kt-nav__item">
+            <a href="#" class="kt-nav__link">
+                <i class=""></i>
+                <span class="kt-nav__link-text">{{ name }}</span>
+            </a>
+        </li>
+    {% endfor %}
+</ul>			</div>
+		</div>
+	</div>
+	<div class="kt-portlet__body kt-portlet__body--fluid">
+		<div class="kt-widget20">
+			<div class="kt-widget20__content kt-portlet__space-x">
+				<span class="kt-widget20__number kt-font-brand">+ 0</span>
+				<span class="kt-widget20__desc">attendance as of  today</span>
+			</div>
+			<div class="kt-widget20__chart" style="height:130px;">
+				<canvas id="kt_chart_bandwidth1"></canvas>
+			</div>
+		</div>			 
+	</div>
+</div>
+<!--end:: Widgets/Inbound Bandwidth-->		<div class="kt-space-20"></div>
+		<!--begin:: Widgets/Outbound Bandwidth-->
+<div class="kt-portlet kt-portlet--fit kt-portlet--head-noborder kt-portlet--height-fluid-half">
+	<div class="kt-portlet__head kt-portlet__space-x">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				Short Message System
+			</h3>
+		</div>
+	</div>
+	<div class="kt-portlet__body kt-portlet__body--fluid">
+		<div class="kt-widget20">
+			<div class="kt-widget20__content kt-portlet__space-x">
+				<span class="kt-widget20__number kt-font-danger">0</span>
+				<span class="kt-widget20__desc">SMS Bandwith - Used SMS data</span>
+			</div>
+			<div class="kt-widget20__chart" style="height:130px;">
+				<canvas id="kt_chart_bandwidth2"></canvas>
+			</div>
+		</div>			 
+	</div>
+</div>
+<!--end:: Widgets/Outbound Bandwidth-->	</div>
+	<div class="col-xl-4">
+		<!--Begin::Portlet-->
+<div class="kt-portlet kt-portlet--height-fluid">
+	<div class="kt-portlet__head">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				Biometric Attendance Panel
+			</h3>
+		</div>
+		<div class="kt-portlet__head-toolbar">
+			<!-- <div class="dropdown dropdown-inline">
+				<button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="flaticon-more-1"></i>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right dropdown-menu-fit dropdown-menu-md">
+                    <--begin::Nav->
+<ul class="kt-nav">
+    <li class="kt-nav__head">
+        Export Options                                    
+        <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
+    </li>
+    <li class="kt-nav__separator"></li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <i class="kt-nav__link-icon flaticon2-drop"></i>
+            <span class="kt-nav__link-text">Activity</span>
+        </a>
+    </li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <i class="kt-nav__link-icon flaticon2-calendar-8"></i>
+            <span class="kt-nav__link-text">FAQ</span>
+        </a>
+    </li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <i class="kt-nav__link-icon flaticon2-link"></i>
+            <span class="kt-nav__link-text">Settings</span>
+        </a>
+    </li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <i class="kt-nav__link-icon flaticon2-new-email"></i>
+            <span class="kt-nav__link-text">Support</span>
+            <span class="kt-nav__link-badge">
+                <span class="kt-badge kt-badge--success">5</span>
+            </span>
+        </a>
+    </li>
+    <li class="kt-nav__separator"></li>
+    <li class="kt-nav__foot">
+        <a class="btn btn-label-danger btn-bold btn-sm" href="#">Upgrade plan</a>                                    
+        <a class="btn btn-clean btn-bold btn-sm" href="#" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more...">Learn more</a>
+    </li>
+</ul>
+<--end::Nav->				</div>
+			</div> -->
+		</div>
+	</div>
+	<div class="kt-portlet__body">
+			<!--Begin::Timeline 3 -->
+			{% for notif in attendance_notifs %}
+				<div class="kt-widget2">
+					<div class="kt-widget2__item kt-widget2__item--primary">
+					    <div class="kt-widget2__checkbox">
+							<!-- <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+								<input type="checkbox"> 
+								<span></span>
+							</label> -->
+						</div> 
+						<div class="kt-widget2__info">
+							<a href="{{ notif['bva_data'] }}" class="kt-widget2__title">
+                                <!-- BVA for Friday, January 1, 2020 successful. -->
+                                {{ notif["msg"] }}
+							</a>							 
+							<a href="{{ notif['bva_data'] }}" class="kt-widget2__username">
+                                {{ notif["event_name"] }} held on {{ notif["event_date"] }}
+							</a>							 	 
+						</div>
+						<div class="kt-widget2__actions">
+							<!-- <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md"  data-toggle="modal" href="#" role="tab" data-target="#bva_modal">
+								<i class="flaticon2-calendar-1"></i>
+							</a> -->
+
+						</div>
+                    </div>
+                </div> 
+                {% endfor %}
+			<!--End::Timeline 3 -->
+	</div>
+</div>
+<!--End::Portlet-->	</div>	
+</div>
+<!--End::Section-->
+
+<!--Begin::Section-->
+<div class="row">
+	<div class="col-xl-8">
+		<div class="kt-portlet kt-portlet--height-fluid kt-portlet--mobile ">
+	<div class="kt-portlet__head kt-portlet__head--lg kt-portlet__head--noborder kt-portlet__head--break-sm">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				New registration
+			</h3>
+		</div>
+		<div class="kt-portlet__head-toolbar">
+			<!-- <div class="dropdown dropdown-inline">
+				<button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<i class="flaticon-more-1"></i>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit"> -->
+                    <!--begin::Nav-->
+<!-- <ul class="kt-nav">
+    <li class="kt-nav__head">
+        Export Options                                    
+        <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
+    </li>
+    <li class="kt-nav__separator"></li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <i class="kt-nav__link-icon fa fa-print"></i>
+            <span class="kt-nav__link-text">Print</span>
+        </a>
+    </li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <i class="kt-nav__link-icon fa fa-parking"></i>
+            <span class="kt-nav__link-text">PDF</span>
+        </a>
+    </li>
+</ul> -->
+<!--end::Nav-->				
+<!-- </div>
+			</div> -->
+		</div>
+	</div>
+	<div class="kt-portlet__body"  data-scroll="true">
+        <table class="table table-striped" id="kt_table_1">
+            <thead>
+              <tr>
+                    <th>#</th>
+                    <th>Area</th><!--name of registered area-->
+                    <th>District</th><!--name of district-->
+                    <th>Assembly</th><!--name of assembly-->
+                    <th>Registered Members</th><!--number of members registered in the name of the assembly-->
+                    <th>Action</th><!--view details of the assembly-->
+              </tr>
+            </thead>
+            <tbody>
+                {% for assembly_tuple in registered_member_data['member_count'] %}
+                    <tr>
+                        <th scope="row">{{ assembly_tuple[0] }}</th>
+                        <td>{{ registered_member_data['area'] }}</td>
+                        <td>{{ registered_member_data['district'] }}</td>
+                        <td>{{ assembly_tuple[1] }}</td>
+                        <td>{{ assembly_tuple[2] }}</td>
+                        <td><a href="{{ url_for('filtered_member_datatable', assembly_name=assembly_tuple[1].lower().replace(' ', '_')) }}" target="_blank" title="view"><i class="flaticon-squares"></i></a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+      </table>
+	</div>
+</div>     
+	</div>
+	<div class="col-xl-4">
+        <!--begin:: Widgets/Blog-->
+<div class="kt-portlet kt-portlet--height-fluid kt-widget19">
+    <div class="kt-portlet__body kt-portlet__body--fit kt-portlet__body--unfill">
+        <div class="kt-widget19__pic kt-portlet-fit--top kt-portlet-fit--sides" style="min-height: 300px; background-image: url({{ url_for('static', filename='assets/media/logos/thecopnsema-pentecost-logo.JPG') }})">
+            <h3 class="kt-widget19__title kt-font-light">
+					Introducing New Feature
+				</h3>
+			<div class="kt-widget19__shadow"></div>
+			<div class="kt-widget19__labels">
+				<a href="#" class="btn btn-label-light-o2 btn-bold btn-sm ">Recent</a>
+			</div>
+        </div>
+    </div>
+    <div class="kt-portlet__body">
+        <div class="kt-widget19__wrapper">
+            <div class="kt-widget19__content">
+                <div class="kt-widget19__userpic">
+                    <img src="{{ url_for('static', filename='assets/media/logos/thecopnsema-pentecost-logo.JPG') }}" alt="">
+                </div>
+                <div class="kt-widget19__info">
+                    <a href="#" class="kt-widget19__username">
+						Anna Krox  
+					</a>
+                    <span class="kt-widget19__time">
+						UX/UI Designer, Google
+					</span>
+                </div>
+                <div class="kt-widget19__stats">
+                    <div class="kt-portlet__head-toolbar">
+                        <div class="dropdown dropdown-inline">
+                            <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="flaticon-more-1"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
+                                <!--begin::Nav-->
+            <ul class="kt-nav">
+                <li class="kt-nav__head">
+                    Export Options                                    
+                    <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
+                </li>
+                <li class="kt-nav__separator"></li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-print"></i>
+                        <span class="kt-nav__link-text">Emmanuel English Assembly</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-parking"></i>
+                        <span class="kt-nav__link-text">Hope Assembly</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-parking"></i>
+                        <span class="kt-nav__link-text">Glory Assembly</span>
+                    </a>
+                </li>
+            </ul>
+            <!--end::Nav-->				</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kt-widget19__text">
+                <div class="form-group form-group-last">
+                    <label for="exampleTextarea">Enter message</label>
+                    <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="kt-widget19__action">
+            <a href="#" class="btn btn-sm btn-label-brand btn-bold">Send message</a>
+        </div>
+    </div>
+</div>
+<!--end:: Widgets/Blog-->	</div>	
+</div>
+<!--End::Section-->
+
+<!--Begin::Section-->
+<div class="row">
+	<div class="col-xl-8">
+		<!--begin:: Widgets/registered assemblies. Please refer to settings-->
+<div class="kt-portlet kt-portlet--height-fluid">
+	<div class="kt-portlet__head">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				Assembly UI
+			</h3>
+		</div>
+		<div class="kt-portlet__head-toolbar">
+
+		</div>
+	</div>
+	<div class="kt-portlet__body">
+		<div class="tab-content">
+			<div class="tab-pane active" id="kt_widget5_tab1_content" aria-expanded="true">
+                {% for assembly_ui in assembly_ui_data %}
+                    <div class="kt-widget5">
+                        <div class="kt-widget5__item">
+                            <div class="kt-widget5__content">
+                                <div class="kt-widget5__pic">
+                                    <img class="kt-widget7__img" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-2.png') }}" alt=""> <!--put uploaded logo of the registered assembly here-->
+                                </div>
+                                <div class="kt-widget5__section">
+                                    <a href="javascript:void(0)" class="kt-widget5__title">
+                                        {{ assembly_ui['assembly_name'] }} <!--put name of assembly here-->
+                                    </a>
+                                    <p class="kt-widget5__desc">
+                                        Ministries: {{ assembly_ui['ministries'] }} || Groups: {{ assembly_ui['groups'] }}
+                                    </p>
+                                    <div class="kt-widget5__info">
+                                        <a href="{{ url_for('edit_settings', assembly_name=assembly_ui['assembly_name'].lower().replace(' ', '_')) }}" target="_blank"><span class="kt-badge kt-badge--brand kt-badge--inline">Edit</span></a> <!--opens panel to assembly registration panel-->
+                                        <a href="javascript:void(0)" class="assembly_ui_toggle_activate" id="{{ assembly_ui['assembly_name'].lower().replace(' ', '_') }}"> <span class="kt-badge kt-badge--{{ 'danger' if assembly_ui['toggle_activate_btn_label']=='Deactivate' else 'success'}} kt-badge--inline">{{ assembly_ui['toggle_activate_btn_label'] }}</span></a> <!--freezes all process of the assembly-->
+                                        <span hidden style="background-color: inherit;" id="{{ assembly_ui['assembly_name'].lower().replace(' ', '_') }}_spinner"><i class="fa fa-circle-o-notch fa-spin" style="max-width: 20px; max-height: 20px; color:#fd397a;" ></i></span>
+                                    </div>
+                                </div>
+                            </div>						
+                            <div class="kt-widget5__content">
+                                <div class="kt-widget5__stats">
+                                    <span class="kt-widget5__number">{{ assembly_ui['total_registered'] }}</span>
+                                    <span class="kt-widget5__sales">Total Registered</span>
+                                </div>
+                                <div class="kt-widget5__stats">
+                                    <span class="kt-widget5__number">{{ assembly_ui['admins'] }}</span>
+                                    <span class="kt-widget5__votes">Administrators</span>
+                                </div>
+                            </div>	
+                        </div>				
+                    </div>
+                {% endfor %}
+			</div>
+		</div>
+	</div>
+</div> 
+<!--end:: Widgets/registrated assemblies-->
+
+
+ 	</div>    
+	<div class="col-xl-4">
+		<!--begin:: Widgets/New Users-->
+<div class="kt-portlet kt-portlet--tabs kt-portlet--height-fluid">
+	<div class="kt-portlet__head">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				Accessibility
+			</h3>
+		</div>
+		<div class="kt-portlet__head-toolbar">
+			<div class="dropdown dropdown-inline">
+				<button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;" data-toggle="modal" data-target="#accessibility-modal">
+					<i class="flaticon2-menu-2"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+    
+	<div class="kt-portlet__body">
+		<div class="tab-content">
+			<div class="tab-pane active" id="kt_widget4_tab1_content">
+				<div class="kt-widget4">
+					<div class="kt-widget4__item">
+						<div class="kt-widget4__pic kt-widget4__pic--pic">
+							<img src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" alt="">   
+						</div>
+						<div class="kt-widget4__info">
+							<a href="#" class="kt-widget4__username">
+								Prosper Ezekeiel
+							</a>
+							<p class="kt-widget4__text">
+								Emmanuel English Assembly
+                            </p>							 		 
+                        </div>					 
+                        <div class="kt-portlet__head-toolbar">
+                            <div class="dropdown dropdown-inline">
+                                <button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;" data-toggle="modal" data-target="#accessibility-modal-2">
+                                    <i class="flaticon2-console"></i>
+                                </button>
+                                <button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;"> <!--opens the login page of the user-->
+                                    <i class="flaticon2-graphic-design"></i>
+                                </button>
+                            </div>
+                        </div>						 
+					</div>  						 
+				</div>             
+			</div>
+
+
+		</div>
+	</div>
+</div>
+<!--end:: Widgets/New Users-->	</div>    
+</div>
+<!--End::Section-->
+
+<!--Begin::Section-->
+<div class="row">
+	<div class="col-xl-4">
+		<!--begin:: Widgets/tithes and missions offering-->
+<div class="kt-portlet kt-portlet--height-fluid">
+	<div class="kt-widget14" data-scroll="true" style="height: 500px">
+		<div class="kt-widget14__header kt-margin-b-30">
+			<h3 class="kt-widget14__title">
+			Tithes and Mission Offering       
+			</h3>
+			<span class="kt-widget14__desc">
+				Graphical representation by month
+			</span>
+		</div>
+		<div class="kt-widget14__chart" style="height:120px;">
+			<canvas  id="kt_chart_daily_sales"></canvas>
+        </div>
+        <div class="kt-widget14__header kt-margin-b-30">
+			<h3 class="kt-widget14__title">
+			Tithes and Mission Offering       
+			</h3>
+			<span class="kt-widget14__desc">
+				Graphical representation by month
+			</span>
+		</div>  
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                    <th>#</th>
+                    <th>Assembly</th> <!--show assembly-->
+                    <th>Inc (GHS)</th> <!--Sum of total income:: reference from offering-donations.html-->
+                    <th>Exp (GHS)</th> <!--sum of total expenditure :: reference from expenses.html-->
+                    <th>Difference</th> <!--difference of total income and expenditure-->
+                    <th>% Variance</th> <!--calculate (Difference / income) x 100 %-->
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                    <th scope="row">1</th>
+                    <td>Emmanuel</td>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td><i class="flaticon2-arrow-up kt-font-success"></i> 0.0 %</td>
+              </tr>
+              <tr>
+                    <th scope="row">2</th>
+                    <td>Hope</td>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td>0.00</td>
+                    <td><i class="flaticon2-arrow-down kt-font-danger"></i>0.0 %</td>
+              </tr>
+
+            </tbody>
+      </table>
+	</div>
+</div>	
+<!--end:: Widgets/attendance-->    </div>
+    <div class="col-xl-4">
+		<!--begin:: Widgets/attendance chart-->
+<div class="kt-portlet kt-portlet--height-fluid">
+	<div class="kt-widget14">
+		<div class="kt-widget14__header">
+			<h3 class="kt-widget14__title">
+				Attendance           
+			</h3>
+			<span class="kt-widget14__desc">
+				Attendance as recorded of the three assemblies   
+			</span>
+		</div>	 
+		<div class="kt-widget14__content">	
+			<div class="kt-widget14__chart">
+				<div class="kt-widget14__stat">0</div> <!--number of attendees-->
+				<canvas id="kt_chart_profit_share" style="height: 140px; width: 140px;"></canvas>
+			</div> 
+			<div class="kt-widget14__legends">
+				<div class="kt-widget14__legend">
+					<span class="kt-widget14__bullet kt-bg-success"></span>
+					<span class="kt-widget14__stats"> 0 Emmanuel</span>
+				</div>
+				<div class="kt-widget14__legend">
+					<span class="kt-widget14__bullet kt-bg-warning"></span>
+					<span class="kt-widget14__stats">0 Glory</span>
+				</div>
+				<div class="kt-widget14__legend">
+					<span class="kt-widget14__bullet kt-bg-brand"></span>
+					<span class="kt-widget14__stats">0 Hope</span>
+				</div>
+			</div>			
+		</div> 
+	</div>
+</div>		
+<!--end:: Widgets/Profit Share-->    </div>
+    <div class="col-xl-4">
+		<!--begin:: Widgets/Revenue Change-->
+<div class="kt-portlet kt-portlet--height-fluid">
+	<div class="kt-widget14">
+		<div class="kt-widget14__header">
+			<h3 class="kt-widget14__title">
+				Attendance format            
+			</h3>
+			<span class="kt-widget14__desc">
+				Sort by Abscent, Present & Visitors
+			</span>
+		</div>
+		<div class="kt-widget14__content">
+			<div class="kt-widget14__chart">
+				<div id="kt_chart_revenue_change" style="height: 150px; width: 150px;"></div>
+			</div>  		 
+			<div class="kt-widget14__legends">
+				<div class="kt-widget14__legend">
+					<span class="kt-widget14__bullet kt-bg-success"></span>
+					<span class="kt-widget14__stats">+10% New York</span>
+				</div>
+				<div class="kt-widget14__legend">
+					<span class="kt-widget14__bullet kt-bg-warning"></span>
+					<span class="kt-widget14__stats">-7% London</span>
+				</div>
+				<div class="kt-widget14__legend">
+					<span class="kt-widget14__bullet kt-bg-brand"></span>
+					<span class="kt-widget14__stats">+20% California</span>
+				</div>
+			</div>		 
+		</div> 	 
+	</div>
+</div>	
+<!--end:: Widgets/Revenue Change-->	</div>
+</div>
+<!--End::Section-->
+
+<!--Begin::Section-->
+<div class="row">
+	<div class="col-xl-4">
+		<!--begin:: Widgets/Tasks -->
+        <div class="kt-portlet kt-portlet--tabs kt-portlet--height-fluid">
+            <div class="kt-portlet__head">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title">
+                        System Updates
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-brand" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#kt_widget2_tab1_content" role="tab">
+                            Default Installed
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#kt_widget2_tab2_content" role="tab">
+                            New
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#kt_widget2_tab3_content" role="tab">
+                            Add
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="kt-portlet__body" data-scroll="true" style="height: 500px">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="kt_widget2_tab1_content">
+                        <div class="kt-widget2">
+                            <div class="kt-widget2__item kt-widget2__item--warning">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                        <input type="checkbox">
+                                        <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        baptism certificates
+                                    </a>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        All assemblies || Jan 2021
+                                    </a>							 	 
+                                </div>
+        
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('baptism_certificates') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-delete"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>						
+                            </div>
+        
+                            <div class="kt-widget2__item kt-widget2__item--brand">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        bible studies groups
+                                    </a>							 
+                                    <a href="#" class="kt-widget2__username">
+                                      Users:  All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('bible_studies_group') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-delete"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+        
+                            <div class="kt-widget2__item kt-widget2__item--success">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        births registry
+                                    </a>
+                                    <a class="kt-widget2__username">
+                                Users: All assemblies							 
+                                    </a>		 
+                                </div>
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('births') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-delete"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+        
+                            <div class="kt-widget2__item kt-widget2__item--danger">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        death registry
+                                    </a>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Users: All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('deaths') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-delete"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+
+        </ul>							</div>
+                                </div>
+                            </div>
+        
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        dedications registry
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Users: All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('dedication') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-delete"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        holyghost baptism
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Users: All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('holyghost_baptism') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-delete"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        rallies and conventions
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Users: All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('rallies_and_conventions') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        member dashboard
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Users: All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('member_dashboard') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        promotions and transfers
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Users: All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('transfers_and_promotions') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        books and stationary 
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('books_stationary') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        donations-out
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('donations_out') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        other expenditure
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                       finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('other_expenditure') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        pledges
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('pledges') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                       special offering
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('special_offering') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                                                        <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        utility expenditure
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('utility_expense') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="" class="kt-widget2__title">
+                                        wages and salaries
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('wages_salaries') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-send"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+
+                            <div class="kt-widget2__item kt-widget2__item--info">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+        
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                        welfare
+                                    </p>							 
+                                    <a href="#" class="kt-widget2__username">
+                                        Finance || All assemblies
+                                    </a>							 	 
+                                </div>
+                                
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+                                        <ul class="kt-nav">
+            <li class="kt-nav__item">
+                <a href="{{ url_for('welfare') }}" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                    <span class="kt-nav__link-text">View</span>
+                </a>
+            </li>
+            <li class="kt-nav__item">
+                <a href="#" class="kt-nav__link">
+                    <i class="kt-nav__link-icon flaticon2-delete"></i>
+                    <span class="kt-nav__link-text">Delete</span>
+                </a>
+            </li>
+        </ul>							</div>
+                                </div>
+                            </div>
+                        </div>            
+                    </div>
+        
+                    <div class="tab-pane" id="kt_widget2_tab2_content">
+                        <div class="kt-widget2">
+                            <div class="kt-widget2__item kt-widget2__item--brand">
+                                <div class="kt-widget2__checkbox">
+                                    <label class="kt-checkbox kt-checkbox--solid kt-checkbox--single">
+                                    <input type="checkbox">
+                                    <span></span>
+                                    </label>
+                                </div>
+                                <div class="kt-widget2__info">
+                                    <a href="#" class="kt-widget2__title">
+                                       No new updates available
+                                    </p>							 							 	 
+                                </div>						
+                                <div class="kt-widget2__actions">
+                                    <a href="#" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-toggle="dropdown">
+                                        <i class="flaticon-more-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right">
+							</div>
+                                </div>
+                            </div>
+                        </div>	
+                    </div>	
+        
+                    <div class="tab-pane" id="kt_widget2_tab3_content">
+                        <div class="alert alert-secondary" role="alert">
+                            <div class="alert-icon"><i class="flaticon-warning kt-font-brand"></i></div>
+                              <div class="alert-text">
+                                Add new  <code>system update</code>. Update will affect selected assemblies 
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <label class="col-xl-3 col-lg-3 col-form-label">Name</label>
+                            <div class="col-lg-9 col-xl-9">
+                                <input class="form-control" type="text" value="" >
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xl-3 col-lg-3 col-form-label">Type</label>
+                            <div class="col-lg-9 col-xl-9">
+                                <input class="form-control" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xl-3 col-lg-3 col-form-label">Main folder</label>
+                            <div class="col-lg-9 col-xl-9">
+                                <input class="form-control" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-xl-3 col-lg-3 col-form-label">Sub folder</label>
+                            <div class="col-lg-9 col-xl-9">
+                                <input class="form-control" type="text" value="">
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-lg-3 col-sm-12">Multiple File Upload</label>
+                            <div class="col-lg-4 col-md-9 col-sm-12">
+                                <div class="kt-dropzone dropzone m-dropzone--primary" action="" id="m-dropzone-two">
+                                    <div class="kt-dropzone__msg dz-message needsclick">
+                                        <h3 class="kt-dropzone__msg-title">Drop files here or click to upload.</h3>
+                                        <span class="kt-dropzone__msg-desc">Upload up to 10 files</span>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                            <button type="button" class="btn btn-label-brand btn-bold btn-sm kt-margin-t-5 kt-margin-b-5">Upload</button>
+                        </div>
+
+
+                    </div>		
+                </div>
+            </div>
+        </div>
+        <!--end:: Widgets/Tasks -->
+    </div>
+    
+    <div class="col-xl-4">
+		<!--begin:: Widgets/Notifications-->
+<div class="kt-portlet kt-portlet--height-fluid">
+	<div class="kt-portlet__head">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				Notifications
+			</h3>
+        </div>
+        <div class="kt-portlet__head-toolbar">
+			<div class="dropdown dropdown-inline">
+				<button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="padding-top:30px;">
+					<i class="flaticon-more-1"></i>
+				</button>
+				<div class="dropdown-menu dropdown-menu-right dropdown-menu-fit dropdown-menu-md">
+                    <!--begin::Nav-->
+<ul class="kt-nav">
+    <li class="kt-nav__head">
+        Select assembly                                   
+        <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
+    </li>
+    <li class="kt-nav__separator"></li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <span class="kt-nav__link-text">Emmanuel English Assembly</span> <!--put name of assembly here -->
+        </a>
+    </li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <span class="kt-nav__link-text">Hope Assembly</span> <!--put name of assembly here -->
+        </a>
+    </li>
+    <li class="kt-nav__item">
+        <a href="#" class="kt-nav__link">
+            <span class="kt-nav__link-text">Glory</span> <!--put name of assembly here -->
+        </a>
+    </li>
+    <li class="kt-nav__separator"></li>
+    <li class="kt-nav__foot">
+        <a class="btn btn-label-success btn-bold btn-sm" href="#"> New Notification</a>                                    
+    </li>
+</ul>
+<!--end::Nav-->				</div>
+			</div>
+		</div>
+	</div>
+    <div class="kt-portlet__body">
+        <div class="kt-notes kt-scroll" data-scroll="true" style="height: 500px">
+            <div class="kt-notes__items">
+                <div class="kt-notes__item"> 
+                    <div class="kt-notes__media">
+                        <span class="kt-notes__icon">
+                            <i class="flaticon2-shield kt-font-brand"></i>                                    
+                        </span>                               
+                    </div>         
+                    <div class="kt-notes__content"> 
+                        <div class="kt-notes__section">     
+                            <div class="kt-notes__info">
+                                <a href="#" class="kt-notes__title">
+                                    Marriage Ceremony.                                                  
+                                </a>
+                                <span class="kt-notes__desc">
+                                    November 2, 2020. 9:40 am
+                                </span>
+                                <span class="kt-badge kt-badge--brand kt-badge--inline">Pending</span> <!--status can be pending, expired, ignored or attended depending on time frame
+                                if pending, then class="kt-badge kt-badge--brand kt-badge--inline" 
+                                if expired, then class="kt-badge kt-badge--danger kt-badge--inline"
+                                if ignored, then class="kt-badge" kt-badge--info kt-badge--inline"
+                                if attended, then class="kt-badge" kt-badge--success kt-badge--inline"
+                                -->
+                            </div>
+                            <div class="kt-notes__dropdown"> 
+                                <a href="#" class="btn btn-sm btn-icon-md btn-icon" data-toggle="dropdown">
+                                    <i class="flaticon-more-1 kt-font-brand"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="kt-nav">
+                                        <li class="kt-nav__item">
+                                        <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                                        <span class="kt-nav__link-text">Ignore</span>
+                                        </a>
+                                        </li>
+                                        <li class="kt-nav__item">
+                                        <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-send"></i>
+                                        <span class="kt-nav__link-text">Attended</span>
+                                        </a>
+                                        </li>
+                                        <li class="kt-nav__item">
+                                            <a href="#" class="kt-nav__link">
+                                            <i class="kt-nav__link-icon flaticon2-send"></i>
+                                            <span class="kt-nav__link-text">Delete</span>
+                                            </a>
+                                         </li>
+                                    </ul>                  
+                                </div>
+                            </div>
+                        </div>
+                        <span class="kt-notes__body">                                        
+                            Marriage ceremony between Grace Appiah and Badu Peperah Scheduled for November 1, 2020 at Nsema Auditorium
+                        </span>  
+                    </div>                                             
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<!--end:: Widgets/Notifications-->    </div>
+    <div class="col-xl-4">
+		<!--begin:: Widgets/Support Tickets -->
+<div class="kt-portlet kt-portlet--height-fluid">
+	<div class="kt-portlet__head">
+		<div class="kt-portlet__head-label">
+			<h3 class="kt-portlet__head-title">
+				FAQ 
+			</h3>
+		</div>
+	</div>
+    <div class="kt-portlet__body">
+        <div class="kt-notes kt-scroll" data-scroll="true" style="height: 500px">
+            <div class="kt-notes__items">
+                <div class="kt-notes__item"> 
+                    <div class="kt-notes__media">
+                        <span class="kt-notes__icon">
+                            <img src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" class="kt-widget3__img" alt="">                                   
+                        </span>                               
+                    </div>         
+                    <div class="kt-notes__content"> 
+                        <div class="kt-notes__section">     
+                            <div class="kt-notes__info">
+                                <a href="#" class="kt-notes__title">
+                                    Marriage Ceremony.                                                  
+                                </a>
+                                <span class="kt-notes__desc">
+                                    November 2, 2020. 9:40 am
+                                </span>
+                                <span class="kt-badge kt-badge--success kt-badge--inline">2 new messages</span> 
+                     
+                            </div>
+                            <div class="kt-notes__dropdown"> 
+                                <a href="#" class="btn btn-sm btn-icon-md btn-icon" data-toggle="dropdown">
+                                    <i class="flaticon-more-1 kt-font-brand"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <ul class="kt-nav">
+                                        <li class="kt-nav__item">
+                                        <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                                        <span class="kt-nav__link-text">Ignore</span>
+                                        </a>
+                                        </li>
+                                        <li class="kt-nav__item">
+                                        <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-send"></i>
+                                        <span class="kt-nav__link-text">Reply</span>
+                                        </a>
+                                        </li>
+                                        <li class="kt-nav__item">
+                                        <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-send"></i>
+                                        <span class="kt-nav__link-text">Delete</span>
+                                        </a>
+                                        </li>
+                                    </ul>                  
+                                </div>
+                            </div>
+                        </div>
+                        <span class="kt-notes__body">                                        
+                            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto.
+                        </span>  
+                    </div>                                             
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<!--end:: Widgets/Support Tickets -->	</div>
+</div>
+<!--End::Section-->
+
+<!--End::Dashboard 1-->	</div>
+	<!-- end:: Content -->
+</div>											</div>
+                </div>
+                
+
+                                <!--begin registration accessibility::Modal-->
+                                <div class="modal fade" id="accessibility-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                               <!--begin::Portlet-->
+                                <div class="kt-portlet kt-portlet--tabs">
+                                    <div class="kt-portlet__head">
+                                        <div class="kt-portlet__head-toolbar">
+                                            <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-left nav-tabs-line-primary" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link  active" data-toggle="tab" href="#kt_builder_page" role="tab">
+                                                        Accessibility registration
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!--begin::Form-->
+                                    <form class="kt-form kt-form--label-right" action="#" method="POST">
+
+                                        <div class="kt-portlet__body">
+                                            <input type="text" class="form-control" placeholder="Enter member ID to search"  />
+                                            <div class="tab-content">
+                                                <div class="tab-pane  active" id="kt_builder_page">
+                                                    <div class="kt-section kt-margin-t-30">
+                                                        <div class="kt-section__body">   
+                                                            <div class="form-group row">
+                                                                <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
+                                                                    <div class="kt-avatar__holder" style="background-image: url({{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }})"></div>
+                                                                    <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
+                                                                        
+                                                                        <input type="file" name="kt_apps_contacts_add_avatar">
+                                                                    </label>
+                                                                    <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
+                                                                        <i class="fa fa-times"></i>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-lg-9 col-xl-6">
+                                                                    <!--make reference from add-user database-->
+                                                                    <p> <b>Name: </b>               Prosper Ezekiel Boateng</p> 
+                                                                    <p> <b>Member ID:</b>          00023322</p>
+                                                                    <p> <b>Church Affiliations:</b>   <!--put district, assembly, ministries and bible studies group here--> Kwadaso Agric District | Emmanuel Assembly | Youth and Evangelism | Group 1</p> 
+                                                                    <p> <b>Email:</b>          www.epa04@gmail.com</p> 
+                                                                    <p>  <b>Password:</b> Kwaku101</p> 
+                                                                    <p> <b>Accessibility:</b>    Main Administrator     </p> 
+                                                                    <p> <b>Date of Registration:</b>  September 1, 2020</p> 
+                                                                    <p> <b>Bio Data:</b>  Biometric Registration | Facial Recognition
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>     
+                                            </div>
+                                        </div>
+                                        <div class="kt-portlet__foot">
+                                            <div class="kt-form__actions">
+                                                <div class="row">
+                                                    <div class="col-lg-3"></div>
+                                                    <div class="col-lg-9">
+                                                      &nbsp;
+                                                        <button type="submit" id="builder_export" data-demo="demo2" class="btn btn-success">
+                                                            <i class="la la-download"></i>
+                                                            Update <!--print -->
+                                                        </button>&nbsp;
+                                                        <button type="submit" name="builder_reset" data-demo="demo2" class="btn btn-danger">
+                                                            <i class="fa flaticon2-cross"></i>
+                                                            Cancel
+                                                        </button>
+                                                       
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!--end::Form-->
+                                </div>
+                                <!--end::Portlet-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end registration accessibility::Modal-->
+
+                                <!--begin registration accessibility-2::Modal-->
+                                <div class="modal fade" id="accessibility-modal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel"> 10023010 | Prosper Ezekiel |Emmanuel English Assembly </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                               <!--begin::Portlet-->
+                                <div class="kt-portlet kt-portlet--tabs">
+                                    <div class="kt-portlet__head">
+                                        <div class="kt-portlet__head-toolbar">
+                                            <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-left nav-tabs-line-primary" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link  active" data-toggle="tab" href="#kt_builder_page" role="tab">
+                                                        Accessibility registration
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!--begin::Form-->
+                                    <form class="kt-form kt-form--label-right" action="#" method="POST">
+                                        <div class="kt-portlet__body">
+                                            <div class="kt-form__section kt-form__section--first">
+                                                <div class="form-group row">
+                                                    <label class="col-lg-2 col-form-label">Email address:</label>
+                                                    <div class="col-lg-4">
+                                                        <input type="email" class="form-control" placeholder="Enter email">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-2 col-form-label">Password</label>
+                                                    <div class="col-lg-4">
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend"><span class="input-group-text" ><i class="la la-chain"></i></span></div>
+                                                            <input type="text" class="form-control" placeholder="Password" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label class="col-lg-2 col-form-label">Accessibility:</label>
+                                                    <div class="col-xl-8 col-lg-8 col-sm-12 col-md-12">
+                                                        <div class="kt-checkbox-inline">
+                                                            <label class="kt-checkbox">
+                                                               <input type="checkbox"> Super Administrator 
+                                                               <span></span>
+                                                               </label><br>
+                                                            <label class="kt-checkbox">
+                                                                <input type="checkbox"> Sub Administrator 1 - Emmanuel English Assembly 
+                                                                <span></span>
+                                                                </label>
+                                                            <label class="kt-checkbox">
+                                                                <input type="checkbox"> Sub Administrator 2 - Hope Assembly
+                                                                <span></span>
+                                                                </label>
+                                                            <label class="kt-checkbox">
+                                                               <input type="checkbox"> Sub Administrator 3 - Glory Assembly 
+                                                               <span></span>
+                                                               </label><br>
+                                                            <label class="kt-checkbox">
+                                                               <input type="checkbox"> Chief Finance 
+                                                               <span></span>
+                                                            </label><br>
+                                                            <label class="kt-checkbox">
+                                                                <input type="checkbox"> Finance Officer 1 - Emmanuel English Assembly
+                                                                <span></span>
+                                                             </label><br>
+                                                             <label class="kt-checkbox">
+                                                                <input type="checkbox"> Finance Officer 2 - Glory Assembly
+                                                                <span></span>
+                                                             </label><br>
+                                                             <label class="kt-checkbox">
+                                                                <input type="checkbox"> Finance Officer 3 - Hope Assembly
+                                                                <span></span>
+                                                             </label><br>
+                                                        </div>
+                                                    </div>
+                                                </div>        
+                                            </div>
+                                        </div>
+
+                                        <div class="kt-portlet__foot">
+                                            <div class="kt-form__actions">
+                                                <div class="row">
+                                                    <div class="col-lg-3"></div>
+                                                    <div class="col-lg-9">
+                                                      &nbsp;
+                                                        <button type="submit" id="builder_export" data-demo="demo2" class="btn btn-success">
+                                                            <i class="la la-download"></i>
+                                                            Update 
+                                                        </button>&nbsp;
+                                                        <button type="submit" name="builder_reset" data-demo="demo2" class="btn btn-danger">
+                                                            <i class="fa flaticon2-cross"></i>
+                                                            Cancel
+                                                        </button>
+                                                       
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!--end::Form-->
+                                </div>
+                                <!--end::Portlet-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--end registration accessibility-2::Modal-->
+
+				<!-- begin:: Footer -->
+                <div class="kt-footer  kt-footer--extended  kt-grid__item" id="kt_footer">
+                    <div class="kt-footer__top">
+                    <div class="kt-container">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div  class="kt-footer__section">
+                                    <h3 class="kt-footer__title">About</h3>
+                                    <div class="kt-footer__content">
+                                            This application  is developed for the Church of Pentecost
+                                            Kwadaso Agric District. The three Assemblies:
+                                            Emmanuel, Glory and Hope Assemblies
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div  class="kt-footer__section">
+                                    <h3 class="kt-footer__title">Quick Links</h3>
+                                    <div class="kt-footer__content">
+                                        <div class="kt-footer__nav">
+                                            <div class="kt-footer__nav-section">
+                                                    <a href="{{ url_for('index') }}">News feed</a>
+                                                    <a href="{{ url_for('publications') }}">Publications</a>
+                                                    <a href="../../https://www.thecophq.org">The Church of Pentecost</a>
+                                            </div>
+                                            <div class="kt-footer__nav-section">
+                                                    <a href="{{ url_for('office_of_the_district_pastor') }}">Office of the District Pastor</a>
+                                                    <a href="{{ url_for('office_of_the_district_secretary') }}">Office of the District Secretary</a>
+                                                    <a href="{{ url_for('records') }}">Records</a>
+                                                </div>
+                                        </div>	
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div  class="kt-footer__section">
+                                    <h3 class="kt-footer__title">Get In Touch</h3>
+                                    <div class="kt-footer__content">
+                                        <form action="#" class="kt-footer__subscribe">
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" placeholder="Enter Your Email">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-brand" type="button">Join</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>				
+                        </div>				
+                    </div>	
+                </div> 	 
+                <div class="kt-footer__bottom">
+                <div class="kt-container">
+                    <div class="kt-footer__wrapper">
+                        <div class="kt-footer__logo">
+                            <a href="https://www.epawebsgh.com">
+                                <img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/epawebsgh.png') }}" height="40px" width="40px">
+                            </a>		 			 
+                            <div class="kt-footer__copyright">
+                                    2020&nbsp;&copy;&nbsp;  
+                                    <a href="https ://www.epawebsgh.com" target="_blank">Epahub Solutions - Ghana</a>
+                                </div>
+                            </div>				 	
+                    </div>
+                </div>	
+                </div> 
+                </div>
+                <!-- end:: Footer -->					</div>
+                        </div>
+                    </div>
+                    
+                <!-- end:: Page -->
+                
+                            <!-- begin::Quick Panel -->
+                            <div id="kt_quick_panel" class="kt-quick-panel">
+                                <a href="#" class="kt-quick-panel__close" id="kt_quick_panel_close_btn"><i class="flaticon2-delete"></i></a>
+                            
+                                <div class="kt-quick-panel__nav">
+                                    <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand  kt-notification-item-padding-x" role="tablist">
+                                        <li class="nav-item active">
+                                            <a class="nav-link active" data-toggle="tab" href="#kt_quick_panel_tab_notifications" role="tab">Notifications</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#kt_quick_panel_tab_logs" role="tab">Audit Logs</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-toggle="tab" href="#kt_quick_panel_tab_settings" role="tab">Settings</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            
+                                <div class="kt-quick-panel__content">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show kt-scroll active" id="kt_quick_panel_tab_notifications" role="tabpanel">
+                                            <div class="kt-notification">
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-line-chart kt-font-success"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New order has been received
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            2 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-box-1 kt-font-brand"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New customer is registered
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            3 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-chart2 kt-font-danger"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            Application has been approved
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            3 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-image-file kt-font-warning"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New file has been uploaded
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            5 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-bar-chart kt-font-info"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New user feedback received
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            8 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-pie-chart-2 kt-font-success"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            System reboot has been successfully completed
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            12 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-favourite kt-font-danger"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New order has been placed
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            15 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item kt-notification__item--read">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-safe kt-font-primary"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            Company meeting canceled
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            19 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-psd kt-font-success"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New report has been received
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            23 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon-download-1 kt-font-danger"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            Finance report has been generated
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            25 hrs ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon-security kt-font-warning"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New customer comment recieved
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            2 days ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                                <a href="#" class="kt-notification__item">
+                                                    <div class="kt-notification__item-icon">
+                                                        <i class="flaticon2-pie-chart kt-font-warning"></i>
+                                                    </div>
+                                                    <div class="kt-notification__item-details">
+                                                        <div class="kt-notification__item-title">
+                                                            New customer is registered
+                                                        </div>
+                                                        <div class="kt-notification__item-time">
+                                                            3 days ago
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade kt-scroll" id="kt_quick_panel_tab_logs" role="tabpanel">
+                                            <!--this options show all audit logs-->
+                                            <div class="kt-notification-v2">
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon-bell kt-font-brand"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            5 new user generated report
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            Reports based on sales
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                            
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon2-box kt-font-danger"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            2 new items submited
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            by Grog John
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                            
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon-psd kt-font-brand"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            79 PSD files generated
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            Reports based on sales
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                            
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon2-supermarket kt-font-warning"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            $2900 worth producucts sold
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            Total 234 items
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                            
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon-paper-plane-1 kt-font-success"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            4.5h-avarage response time
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            Fostest is Barry
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                            
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon2-information kt-font-danger"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            Database server is down
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            10 mins ago
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                            
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon2-mail-1 kt-font-brand"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            System report has been generated
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            Fostest is Barry
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                            
+                                                <a href="#" class="kt-notification-v2__item">
+                                                    <div class="kt-notification-v2__item-icon">
+                                                        <i class="flaticon2-hangouts-logo kt-font-warning"></i>
+                                                    </div>
+                                                    <div class="kt-notification-v2__itek-wrapper">
+                                                        <div class="kt-notification-v2__item-title">
+                                                            4.5h-avarage response time
+                                                        </div>
+                                                        <div class="kt-notification-v2__item-desc">
+                                                            Fostest is Barry
+                                                        </div>
+                                                    </div>	
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane kt-quick-panel__content-padding-x fade kt-scroll" id="kt_quick_panel_tab_settings" role="tabpanel">
+                                            <form class="kt-form">
+                                                <div class="kt-heading kt-heading--sm kt-heading--space-sm">Global Settings</div>
+                            
+                                                <div class="form-group form-group-xs row">
+                                                    <label class="col-8 col-form-label">Enable Notifications:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--success kt-switch--sm">
+                                                            <label>
+                                                                <input type="checkbox" checked="checked" name="quick_panel_notifications_1">
+                                                                <span></span> <!--switching this option off will stop notifications from being received-->
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-xs row">
+                                                    <label class="col-8 col-form-label">Cloud Auto Saver:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--success kt-switch--sm">
+                                                            <label>
+                                                                <input type="checkbox"  name="quick_panel_notifications_2">
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-last form-group-xs row">
+                                                    <label class="col-8 col-form-label">Sync Biometric Verification:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--success kt-switch--sm">
+                                                            <label>
+                                                                <input type="checkbox" checked="checked" name="quick_panel_notifications_2">
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="kt-separator kt-separator--space-md kt-separator--border-dashed"></div>
+                            
+                                                <div class="kt-heading kt-heading--sm kt-heading--space-sm">Reports</div>
+                            
+                                                <div class="form-group form-group-xs row">
+                                                    <label class="col-8 col-form-label">Generate Reports:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--sm kt-switch--danger"> <!--turning this option off will stop reports from generation-->
+                                                            <label>
+                                                                <input type="checkbox" checked="checked" name="quick_panel_notifications_3">
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-xs row">
+                                                    <label class="col-8 col-form-label">Enable Report Export:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--sm kt-switch--danger">
+                                                            <label>
+                                                                <input type="checkbox"  name="quick_panel_notifications_3"> <!--stop or start exporting of data -->
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-last form-group-xs row">
+                                                    <label class="col-8 col-form-label">Allow Data Collection:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--sm kt-switch--danger">
+                                                            <label>
+                                                                <input type="checkbox" checked="checked" name="quick_panel_notifications_4"> <!--allow downloading and uploading of data -->
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                            
+                                                <div class="kt-separator kt-separator--space-md kt-separator--border-dashed"></div>
+                            
+                                                <div class="kt-heading kt-heading--sm kt-heading--space-sm">Members</div>
+                            
+                                                <div class="form-group form-group-xs row">
+                                                    <label class="col-8 col-form-label">Enable Member singup:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--sm kt-switch--brand">
+                                                            <label>
+                                                                <input type="checkbox" checked="checked" name="quick_panel_notifications_5">
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-xs row">
+                                                    <label class="col-8 col-form-label">Allow User Feedbacks:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--sm kt-switch--brand">
+                                                            <label>
+                                                                <input type="checkbox"  name="quick_panel_notifications_5">
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group form-group-last form-group-xs row">
+                                                    <label class="col-8 col-form-label">Enable Member Portal:</label>
+                                                    <div class="col-4 kt-align-right">
+                                                        <span class="kt-switch kt-switch--sm kt-switch--brand">
+                                                            <label>
+                                                                <input type="checkbox" checked="checked" name="quick_panel_notifications_6">
+                                                                <span></span>
+                                                        </label>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                </div>
+                <!-- end::Quick Panel -->    
+                    <!-- begin::Scrolltop -->
+        <script>
+            var KTAppOptions = {"colors":{"state":{"brand":"#374afb","light":"#ffffff","dark":"#282a3c","primary":"#5867dd","success":"#34bfa3","info":"#36a3f7","warning":"#ffb822","danger":"#fd3995"},"base":{"label":["#c5cbe3","#a1a8c3","#3d4465","#3e4466"],"shape":["#f0f3ff","#d9dffa","#afb4d4","#646c9a"]}}};
+        </script>
+        <!-- end::Global Config -->
+
+    	<!--begin::Global Theme Bundle(used by all pages) -->
+    	    	   <script src="{{ url_for('static', filename='assets/vendors/global/vendors.bundle.js') }}" type="text/javascript"></script>
+                   <script src="{{ url_for('static', filename='assets/js/demo2/scripts.bundle.js') }}" type="text/javascript"></script>
+                   <script src="{{ url_for('static', filename='assets/vendors/custom/datatables/datatables.bundle.js') }}" type="text/javascript"></script>
+				<!--end::Global Theme Bundle -->
+
+         
+            <!--begin::Page Vendors(used by this page) -->
+                    <script src="{{ url_for('static', filename='assets/vendors/custom/fullcalendar/fullcalendar.bundle.js') }}" type="text/javascript"></script>
+                    <script src="http://maps.google.com/maps/api/js?key=AIzaSyBTGnKT7dt597vo9QgeQ7BFhvSRP4eiMSM" type="text/javascript"></script>
+                    <script src="{{ url_for('static', filename='assets/vendors/custom/gmaps/gmaps.js') }}" type="text/javascript"></script>
+                    <!-- <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/datatables/advanced/member-datatable.js') }}" type="text/javascript"></script> -->
+                    <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/datatables/advanced/admin-dashboard.js') }}" type="text/javascript"></script>
+            <!--end::Page Vendors -->
+          
+
+                    
+            <!--begin::Page Scripts(used by this page) -->
+                            <script src="{{ url_for('static', filename='assets/js/demo2/pages/dashboard.js') }}" type="text/javascript"></script>
+                  
+                        <!--end::Page Scripts -->
+            </body>
+    <!-- end::Body -->
+
+
+</html>

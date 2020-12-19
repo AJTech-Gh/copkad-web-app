@@ -166,3 +166,8 @@ $("#reset_form").on("click", function() {
 // 		}
 // 	});
 // });
+
+
+$("#kt_select2_3").select2({
+	dropdownAutoWidth : true
+});

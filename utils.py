@@ -1,5 +1,9 @@
 import os
 import time
+import shutil
+
+from sqlalchemy.util.langhelpers import group_expirable_memoized_property
+from sqlalchemy import func
 from app import db, app, mail
 from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth, Attendance
 from flask import request, render_template
@@ -26,6 +30,7 @@ PSEUDO_PROFILE_PHOTOS_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplet
 PSEUDO_DATA_DIR = os.path.join(app.config['UPLOAD_FOLDER'], "incomplete_reg_acc", "data")
 PUSH_NOTIF_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'push_notifications')
 ASSEMBLY_CONFIG_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'assembly_config')
+ASSEMBLY_DEACTIVATED_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'deactivated_assembly')
 ATTENDANCE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'attendance')
 
 def remove_contact_symbols(contact):
@@ -206,7 +211,7 @@ def upload_baptism_photo(member_id):
     return False
 
 
-def upload_attendance():
+def upload_attendance(assembly_name):
     """
     Uploads attendance
     """
@@ -222,7 +227,7 @@ def upload_attendance():
     ext = attendance_file.filename.lower().split('.')[-1]
     if attendance_file and ext == 'csv':
         # create unique file name
-        filename = get_attendance_filename() + '.csv'
+        filename = get_attendance_filename(assembly_name) + '.csv'
         # save
         attendance_file.save(os.path.join(ATTENDANCE_DIR, filename))
         # add attendance to database 
@@ -271,13 +276,14 @@ def add_attendance_to_db(filename):
         return FATAL_ERROR
 
 
-def get_attendance_filename():
+def get_attendance_filename(assembly_name):
     """
     Returns the filename of the attendance file
     """
+    assembly_name = assembly_name.lower().replace(' ', '_')
     count = str(len(os.listdir(ATTENDANCE_DIR)) + 1)
     timestamp = get_timestamp()
-    return "_".join([count, timestamp])
+    return "_".join([count, timestamp]) + '_' + assembly_name
 
 
 def remove_existing_attendance(filename):
@@ -479,11 +485,14 @@ def save_assembly_config(config_dict):
     json_file.close()
 
 
-def read_assembly_config(assembly_name):
+def read_assembly_config(assembly_name, active=True):
     # load the data
     json_filename = 'config.json'
     dir_name = re.sub(r"[\+\-\s]+", "_", assembly_name.lower())
-    json_file = open(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, json_filename), 'rb')
+    if active:
+        json_file = open(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name, json_filename), 'rb')
+    else:
+        json_file = open(os.path.join(ASSEMBLY_DEACTIVATED_BASE_DIR, dir_name, json_filename), 'rb')
     encrypted_json_data = json_file.read()
     decrypted_json_data = decrypt_json_data(encrypted_json_data)
     json_file.close()
@@ -583,14 +592,15 @@ def get_attendance_notifs():
     filenames_original = os.listdir(ATTENDANCE_DIR)
     filenames = sorted(filenames_original, key=lambda x: int(x.split('_')[0]), reverse=True)[:10]
     filenames = [name.split('.')[0] for name in filenames]
-    dates_list = [name.split('_')[1:] for name in filenames]
+    dates_assembly_names_list = [name.split('_')[1:] for name in filenames]
     msgs = []
     for i in range(len(filenames)):
         msg_data = dict()
         msg_data['bva_data'] = f'/static/storage/attendance/{filenames_original[i]}'
         # compose the message
-        dt = datetime(int(dates_list[i][0]), int(dates_list[i][1]), int(dates_list[i][2]), int(dates_list[i][3]), int(dates_list[i][4]), int(dates_list[i][5]))
-        msg_data['msg'] = f"BVA submitted successfully on {dt.strftime('%A, %B %d, %Y')}"
+        dt = datetime(int(dates_assembly_names_list[i][0]), int(dates_assembly_names_list[i][1]), int(dates_assembly_names_list[i][2]), int(dates_assembly_names_list[i][3]), int(dates_assembly_names_list[i][4]), int(dates_assembly_names_list[i][5]))
+        assembly_name = ' '.join([p.capitalize() for p in dates_assembly_names_list[i][6:]])
+        msg_data['msg'] = f"BVA for {assembly_name} submitted successfully on {dt.strftime('%A, %B %d, %Y')}"
         # get the event
         attendance_file = open(os.path.join(ATTENDANCE_DIR, filenames_original[i]), 'r')
         attendance_data = attendance_file.readlines()
@@ -603,3 +613,344 @@ def get_attendance_notifs():
         msgs.append(msg_data)
     return msgs
 
+
+def get_statistical_updates():
+    stats_data_dict = dict()
+    # get dates
+    date_now = datetime.now()
+    date_13_years_ago = datetime(date_now.year - 13, date_now.month, date_now.day)
+    date_20_years_ago = datetime(date_now.year - 20, date_now.month, date_now.day)
+    date_36_years_ago = datetime(date_now.year - 36, date_now.month, date_now.day)
+    
+    # get dedicated children membership
+    ded_child_below_13_yrs_dict = dict()
+    ded_child_below_13_yrs_dict['male'] = 'N/A'
+    ded_child_below_13_yrs_dict['female'] = 'N/A'
+    ded_child_below_13_yrs_dict['total'] = str(Dedication.query.filter(Dedication.child_dob > date_13_years_ago).count())
+    stats_data_dict['1'] = ded_child_below_13_yrs_dict
+
+    # get teenagers 13 to 19 years
+    teens_13_to_19_yrs_dict = dict()
+    teens_13_to_19_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Male').count())
+    teens_13_to_19_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Female').count())
+    teens_13_to_19_yrs_dict['total'] = str(int(teens_13_to_19_yrs_dict['male']) + int(teens_13_to_19_yrs_dict['female']))
+    stats_data_dict['2'] = teens_13_to_19_yrs_dict
+
+    # young adults 20 to 35 years
+    adults_20_to_35_yrs_dict = dict()
+    adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Male').count())
+    adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Female').count())
+    adults_20_to_35_yrs_dict['total'] = str(int(adults_20_to_35_yrs_dict['male']) + int(adults_20_to_35_yrs_dict['female']))
+    stats_data_dict['3'] = adults_20_to_35_yrs_dict
+
+    # youth from 13 to 35 years
+    adults_20_to_35_yrs_dict = dict()
+    adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Male').count())
+    adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Female').count())
+    adults_20_to_35_yrs_dict['total'] = str(int(adults_20_to_35_yrs_dict['male']) + int(adults_20_to_35_yrs_dict['female']))
+    stats_data_dict['4'] = adults_20_to_35_yrs_dict
+
+    # adults above 35
+    adults_above_35_yrs_dict = dict()
+    adults_above_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Male').count())
+    adults_above_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Female').count())
+    adults_above_35_yrs_dict['total'] = str(int(adults_above_35_yrs_dict['male']) + int(adults_above_35_yrs_dict['female']))
+    stats_data_dict['5'] = adults_above_35_yrs_dict
+
+    # total adults 13 and above
+    total_adults_13_and_above = str(User.query.filter(User.dob <= date_13_years_ago).count())
+    stats_data_dict['6'] = total_adults_13_and_above
+
+    # overall membership
+    overall_membership = str(int(ded_child_below_13_yrs_dict['total']) + int(total_adults_13_and_above))
+    stats_data_dict['7'] = overall_membership
+
+    # officers
+    officers_dict = dict()
+    officers_dict['ministers'] = 'N/A'
+    officers_dict['ministers_wives'] = 'N/A'
+    officers_dict['retired_ministers'] = 'N/A'
+    officers_dict['rtd_ministers_wives'] = 'N/A'
+    officers_dict['elders'] = 'N/A'
+    officers_dict['deacons'] = 'N/A'
+    officers_dict['deaconesses'] = 'N/A'
+    officers_dict['leaders'] = 'N/A'
+    stats_data_dict['8'] = officers_dict
+
+    # rallies and conventions count
+    outreach_programmes = str(RalliesAndConventions.query.count())
+    stats_data_dict['9'] = outreach_programmes
+
+    # adult souls won
+    adult_souls_won = 'N/A'
+    stats_data_dict['10'] = adult_souls_won
+
+    # number of souls won through gospel sunday morning
+    souls_won_on_gospel_sunday_morning = 'N/A'
+    stats_data_dict['11'] = souls_won_on_gospel_sunday_morning
+
+    # new converts baptized in water
+    new_converts_baptized_in_water = str(Baptism.query.count())
+    stats_data_dict['12'] = new_converts_baptized_in_water
+
+    # new converts baptized in water
+    new_converts_baptized_in_holy_spirit = 'N/A'
+    stats_data_dict['13'] = new_converts_baptized_in_holy_spirit
+
+    # new converts baptized in water
+    old_adults_baptized_in_holy_spirit = 'N/A'
+    stats_data_dict['14'] = old_adults_baptized_in_holy_spirit
+
+    # transfers in 
+    transfers_in_dict = dict()
+    transfers_in_dict['teens_13_19'] = str(Transfer.query.filter(Transfer.age >= 13, Transfer.age < 20).count())
+    transfers_in_dict['young_adults_20_35'] = str(Transfer.query.filter(Transfer.age >= 20, Transfer.age < 36).count())
+    transfers_in_dict['adults_36'] = str(Transfer.query.filter(Transfer.age >= 36).count())
+    transfers_in_dict['total'] = str(int(transfers_in_dict['teens_13_19'])+int(transfers_in_dict['young_adults_20_35'])+int(transfers_in_dict['adults_36']))
+    stats_data_dict['15'] = transfers_in_dict
+
+    #transfers out
+    transfers_out_dict = dict()
+    transfers_out_dict['teens_13_19'] = str(Transfer.query.filter(Transfer.age >= 13, Transfer.age < 20).count())
+    transfers_out_dict['young_adults_20_35'] = str(Transfer.query.filter(Transfer.age >= 20, Transfer.age < 36).count())
+    transfers_out_dict['adults_36'] = str(Transfer.query.filter(Transfer.age >= 36).count())
+    transfers_out_dict['total'] = str(int(transfers_in_dict['teens_13_19'])+int(transfers_in_dict['young_adults_20_35'])+int(transfers_in_dict['adults_36']))
+    stats_data_dict['16'] = transfers_in_dict
+
+    # back sliders 
+    backsliders_dict = dict()
+    backsliders_dict['won_back'] = 'N/A'
+    backsliders_dict['being_followed'] = 'N/A'
+    stats_data_dict['17'] = backsliders_dict
+
+    # deaths
+    user_death_data = db.session.query(Death, User).join(User).all()
+    adult_deaths = 0
+    for death, user in user_death_data:
+        aged = (death.death_date - user.dob).days / 365
+        if aged >= 20:
+            adult_deaths += 1
+    stats_data_dict['18'] = adult_deaths
+
+    # number of home cells
+    number_of_home_cells = 'N/A'
+    stats_data_dict['19'] = number_of_home_cells
+
+    # number of members in home cells
+    number_of_members_in_home_cells_dict = dict()
+    number_of_members_in_home_cells_dict['male'] = 'N/A'
+    number_of_members_in_home_cells_dict['female'] = 'N/A'
+    number_of_members_in_home_cells_dict['total'] = 'N/A' # number_of_members_in_home_cells_dict['male'] + number_of_members_in_home_cells_dict['female'] = 'N/A'
+    stats_data_dict['20'] = number_of_members_in_home_cells_dict
+
+    # number of home cells held
+    number_of_home_cells_held = 'N/A'
+    stats_data_dict['21'] = number_of_home_cells_held
+
+    # number of bible study groups
+    latest_updates = get_latest_updates('Emmanuel English Assembly')
+    number_of_bible_study_groups = latest_updates['bible_studies_groups']
+    stats_data_dict['22'] = number_of_bible_study_groups
+
+    # number of trained bible study group teachers/leaders
+    number_of_bible_study_teachers = 'N/A'
+    stats_data_dict['23'] = number_of_bible_study_teachers
+
+    # number of active members in bible studies
+    number_of_active_members_bible_studies = 'N/A'
+    stats_data_dict['24'] = number_of_active_members_bible_studies
+
+    # number of sunday morning bible studies held
+    number_of_sunday_morning_bible_studies_held = 'N/A'
+    stats_data_dict['25'] = number_of_sunday_morning_bible_studies_held
+
+    # number of public reading sessions held
+    number_of_public_reading_sessions_held = 'N/A'
+    stats_data_dict['26'] = number_of_public_reading_sessions_held
+
+    # Adult church attendance 31 Dec.
+    church_attendance_31_dec = 'N/A'
+    stats_data_dict['27'] = church_attendance_31_dec
+
+    # avg sunday morning church attendance
+    avg_sunday_morning_church_attendance = 'N/A'
+    stats_data_dict['28'] = avg_sunday_morning_church_attendance
+
+    # avg attendance in communion sundays
+    avg_attendance_communion_sundays = 'N/A'
+    stats_data_dict['29'] = avg_attendance_communion_sundays
+
+    # avg lord's supper participants
+    avg_lords_supper_participants = 'N/A'
+    stats_data_dict['30'] = avg_lords_supper_participants
+
+    # num attending new converts class
+    num_attending_new_converts_class = 'N/A'
+    stats_data_dict['31'] = num_attending_new_converts_class
+
+    # new converts retained in church
+    new_converts_retained = 'N/A'
+    stats_data_dict['32'] = new_converts_retained
+
+    # num of times p/elder visited new converts
+    num_of_times_p_elder_visited_new_converts = 'N/A'
+    stats_data_dict['33'] = num_of_times_p_elder_visited_new_converts
+
+    #num of times new convert class held
+    num_of_times_new_converts_class_held = 'N/A'
+    stats_data_dict['34'] = num_of_times_new_converts_class_held
+
+    # num of mid-week church study
+    num_of_mid_week_church_study = 'N/A'
+    stats_data_dict['35'] = num_of_mid_week_church_study
+
+    # avg attendance on friday prayer meeting
+    avg_attendance_on_friday_prayer_meetings = 'N/A'
+    stats_data_dict['36'] = avg_attendance_on_friday_prayer_meetings
+
+    # num of holy ghost prayer sessions held
+    num_of_holy_ghost_prayer_sess_held = 'N/A'
+    stats_data_dict['37'] = num_of_holy_ghost_prayer_sess_held
+
+    # num of times family/marriage life teachings held
+    num_of_times_teachings_on_family_and_marriage_held = 'N/A'
+    stats_data_dict['38'] = num_of_times_teachings_on_family_and_marriage_held
+
+    # num of marriages blessed 
+    num_of_marriages_blessed = 'N/A'
+    stats_data_dict['39'] = num_of_marriages_blessed
+
+    # num of adult and children service held
+    num_of_adult_and_children_service_held = 'N/A'
+    stats_data_dict['40'] = num_of_adult_and_children_service_held
+
+    # num of children dedicated
+    num_of_children_dedicated = str(Dedication.query.count())
+    stats_data_dict['41'] = num_of_children_dedicated
+
+    # children won for christ and retained
+    children_won_and_retained = 'N/A'
+    stats_data_dict['42'] = children_won_and_retained
+
+    # children baptized with the holy spirit
+    children_baptized_with_the_holy_spirit = 'N/A'
+    stats_data_dict['43'] = children_baptized_with_the_holy_spirit
+
+    # children baptized with water
+    children_baptized_in_water = 'N/A'
+    stats_data_dict['44'] = children_baptized_in_water
+
+    # num of children ministry teachers
+    num_of_children_ministry_teachers = 'N/A'
+    stats_data_dict['45'] = num_of_children_ministry_teachers
+
+    # num of children attending children ministry but not dedicated
+    non_dedicated_children_in_CM = 'N/A'
+    stats_data_dict['46'] = non_dedicated_children_in_CM
+
+    # children transfered in
+    children_transfered_in = 'N/A'
+    stats_data_dict['47'] = children_transfered_in
+
+    # children transfered out
+    children_transfered_out = 'N/A'
+    stats_data_dict['48'] = children_transfered_out
+
+    # births
+    num_births = str(Birth.query.count())
+    stats_data_dict['49'] = num_births
+
+    # deaths
+    num_deaths = str(Death.query.count())
+    stats_data_dict['50'] = num_deaths
+
+    # number of classes held
+    num_of_classes_held_dict = dict()
+    num_of_classes_held_dict['women'] = 'N/A'
+    num_of_classes_held_dict['men'] = 'N/A'
+    num_of_classes_held_dict['youth'] = 'N/A'
+    num_of_classes_held_dict['evangelism'] = 'N/A'
+    num_of_classes_held_dict['children'] = 'N/A'
+    stats_data_dict['51'] = num_of_classes_held_dict
+
+    # number of active members in classes, ministries
+    num_of_active_members_classes_ministries_dict = dict()
+    num_of_active_members_classes_ministries_dict['women'] = 'N/A'
+    num_of_active_members_classes_ministries_dict['men'] = 'N/A'
+    num_of_active_members_classes_ministries_dict['youth'] = 'N/A'
+    num_of_active_members_classes_ministries_dict['evangelism'] = 'N/A'
+    num_of_active_members_classes_ministries_dict['children'] = 'N/A'
+    stats_data_dict['52'] = num_of_active_members_classes_ministries_dict
+
+    # number of visits by ministers
+    num_of_visits_by_ministers_dict = dict()
+    num_of_visits_by_ministers_dict['women'] = 'N/A'
+    num_of_visits_by_ministers_dict['men'] = 'N/A'
+    num_of_visits_by_ministers_dict['youth'] = 'N/A'
+    num_of_visits_by_ministers_dict['evangelism'] = 'N/A'
+    num_of_visits_by_ministers_dict['children'] = 'N/A'
+    stats_data_dict['53'] = num_of_visits_by_ministers_dict
+
+    # return data
+    return stats_data_dict
+
+
+def assemblies_registration_summary():
+    """
+    Gets summary data for the assemblies
+    """
+    member_count = db.session.query(User.assembly, func.count(User.assembly)).group_by(User.assembly).all()
+    for i, count in enumerate(member_count):
+        member_count[i] = (i + 1, count[0], count[1])
+    data = {
+        "area": "Kwadaso",
+        "district": "Kwadaso Agric",
+        "member_count": member_count
+    }
+    return data
+
+def activate_assembly(assembly_name):
+    """
+    Activates an assembly
+    """
+    deactivated_assembly_dir = os.path.join(ASSEMBLY_DEACTIVATED_BASE_DIR, assembly_name)
+    specific_assembly_dir = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, assembly_name)
+    dest = shutil.move(deactivated_assembly_dir, specific_assembly_dir)
+
+    return dest
+
+def deactivate_assembly(assembly_name):
+    """
+    Deactivates an assembly
+    """
+    specific_assembly_dir = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, assembly_name)
+    destination = os.path.join(ASSEMBLY_DEACTIVATED_BASE_DIR, assembly_name)
+
+    dest = shutil.move(specific_assembly_dir, destination)
+
+    return dest
+    
+def get_assembly_ui_data():
+    """
+    Gets data the assembly ui panel
+    """
+    assembly_ui_data = []
+    for dir_name in os.listdir(ASSEMBLY_CONFIG_BASE_DIR):
+        assembly_dict = dict()
+        assembly_dict['toggle_activate_btn_label'] = 'Deactivate'
+        assembly_dict['assembly_name'] = read_assembly_config(dir_name)['assembly_name']
+        assembly_dict['ministries'] = str(len(read_assembly_config(dir_name)['ministry']))
+        assembly_dict['groups'] = str(len(read_assembly_config(dir_name)['group']))
+        assembly_dict['total_registered'] = str(User.query.filter_by(assembly=assembly_dict['assembly_name']).count())
+        assembly_dict['admins'] = '2' #str(Admins.query.filter_by(assembly=assembly_dict['assembly_name']).count())
+        assembly_ui_data.append(assembly_dict)
+    for dir_name in os.listdir(ASSEMBLY_DEACTIVATED_BASE_DIR):
+        assembly_dict = dict()
+        assembly_dict['toggle_activate_btn_label'] = 'Activate'
+        assembly_dict['assembly_name'] = read_assembly_config(dir_name, active=False)['assembly_name']
+        assembly_dict['ministries'] = str(len(read_assembly_config(dir_name, active=False)['ministry']))
+        assembly_dict['groups'] = str(len(read_assembly_config(dir_name, active=False)['group']))
+        assembly_dict['total_registered'] = str(User.query.filter_by(assembly=assembly_dict['assembly_name']).count())
+        assembly_dict['admins'] = '2' #str(Admins.query.filter_by(assembly=assembly_dict['assembly_name']).count())
+        assembly_ui_data.append(assembly_dict)
+    return assembly_ui_data

@@ -21,6 +21,7 @@
         </script>
         <!--end::Fonts -->
 
+
                     <!--begin::Page Vendors Styles(used by this page) -->
                             <link href="{{ url_for('static', filename='assets/vendors/custom/fullcalendar/fullcalendar.bundle.css') }}" rel="stylesheet" type="text/css" />
                         <!--end::Page Vendors Styles -->
@@ -385,9 +386,150 @@
     <div class="kt-grid__item kt-grid__item--fluid kt-app__content">
         <div class="row">
             <div class="col-xl-6">
-<!--begin:: Widgets/Order Statistics-->
-
-<!--end:: Widgets/Order Statistics-->            </div>
+                <!--begin:: Widgets/Last Updates-->
+                <div class="kt-portlet kt-portlet--height-fluid">
+                    <div class="kt-portlet__head">
+                        <div class="kt-portlet__head-label">
+                            <h3 class="kt-portlet__head-title">
+                                Latest Updates
+                            </h3>
+                        </div>
+                        <div class="kt-portlet__head-toolbar">
+                            <!-- <a href="#" class="btn btn-label-brand btn-bold btn-sm dropdown-toggle" data-toggle="dropdown">
+                                Today
+                            </a> -->
+                            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-md dropdown-menu-right">
+                                <!--begin::Nav-->
+                <ul class="kt-nav">
+                    <li class="kt-nav__head">
+                        Export Options                                    
+                        <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
+                    </li>
+                    <li class="kt-nav__separator"></li>
+                    <li class="kt-nav__item">
+                        <a href="#" class="kt-nav__link">
+                            <i class="kt-nav__link-icon flaticon2-drop"></i>
+                            <span class="kt-nav__link-text">Activity</span>
+                        </a>
+                    </li>
+                    <li class="kt-nav__item">
+                        <a href="#" class="kt-nav__link">
+                            <i class="kt-nav__link-icon flaticon2-calendar-8"></i>
+                            <span class="kt-nav__link-text">FAQ</span>
+                        </a>
+                    </li>
+                    <li class="kt-nav__item">
+                        <a href="#" class="kt-nav__link">
+                            <i class="kt-nav__link-icon flaticon2-link"></i>
+                            <span class="kt-nav__link-text">Settings</span>
+                        </a>
+                    </li>
+                    <li class="kt-nav__item">
+                        <a href="#" class="kt-nav__link">
+                            <i class="kt-nav__link-icon flaticon2-new-email"></i>
+                            <span class="kt-nav__link-text">Support</span>
+                            <span class="kt-nav__link-badge">
+                                <span class="kt-badge kt-badge--success">5</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="kt-nav__separator"></li>
+                    <li class="kt-nav__foot">
+                        <a class="btn btn-label-danger btn-bold btn-sm" href="#">Upgrade plan</a>                                    
+                        <a class="btn btn-clean btn-bold btn-sm" href="#" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more...">Learn more</a>
+                    </li>
+                </ul>
+                <!--end::Nav-->			</div>
+                        </div>
+                    </div>
+                    <div class="kt-portlet__body">
+                        <!--begin::widget 12-->
+                        <div class="kt-widget4">
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon-pie-chart-1 kt-font-info"></i>
+                                </span>	
+                                <a href="baptism_certificates" class="kt-widget4__title kt-widget4__title--light">
+                                    Water Baptism
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-info">{{ latest_updates['water_baptism'] }}</span> <!--show by number of registrants-->
+                            </div>
+                
+                            <!-- <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon-safe-shield-protection  kt-font-success"></i>
+                                </span>	
+                                <a href="#" class="kt-widget4__title kt-widget4__title--light">
+                                    Holy Ghost Baptism
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-success">0</span>
+                            </div> -->
+                
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon2-line-chart kt-font-danger"></i>
+                                </span>	
+                                <a href="#" class="kt-widget4__title kt-widget4__title--light">
+                                    Bible Studies Groups
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-danger">{{ latest_updates['bible_studies_groups'] }}</span>
+                            </div>
+                
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon2-pie-chart-1 kt-font-primary"></i>
+                                </span>	
+                                <a href="birth" class="kt-widget4__title kt-widget4__title--light">
+                                    Births
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-primary">{{ latest_updates['births'] }}</span>
+                            </div>
+                
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon2-rocket kt-font-brand"></i>
+                                </span>	
+                                <a href="death" class="kt-widget4__title kt-widget4__title--light">
+                                    Deaths
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-brand">{{ latest_updates['deaths'] }}</span>
+                            </div>
+                
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon2-notification kt-font-warning"></i>
+                                </span>	
+                                <a href="rallies_and_conventions" class="kt-widget4__title kt-widget4__title--light">
+                                    Rallies and Conventions
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-warning">{{ latest_updates['rallies_and_conventions'] }}</span>
+                            </div>
+                
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon2-file kt-font-success"></i>
+                                </span>	
+                                <a href="promotion_and_transfer" class="kt-widget4__title kt-widget4__title--light">
+                                    Transfers and Promotions
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-success">{{ latest_updates['transfers_and_promotions'] }}</span>
+                            </div>
+                            
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon2-gift-1 kt-font-success"></i>
+                                </span>	
+                                <a href="dedication" class="kt-widget4__title kt-widget4__title--light">
+                                    Dedications
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-success">{{ latest_updates['dedications'] }}</span>
+                            </div>
+                        </div>
+                        <!--end::Widget 12-->
+                    </div>
+                </div>
+                <!--end:: Widgets/Last Updates-->           
+            </div>
             <div class="col-xl-6">
                 <!--begin:: Widgets/Tasks -->
 <div class="kt-portlet kt-portlet--tabs kt-portlet--height-fluid">
@@ -461,158 +603,6 @@
 <!--end:: Widgets/Tasks -->
             </div>   
         </div>   
-        <div class="row">
-            <div class="col-xl-6">
-                <!--begin:: Widgets/Last Updates-->
-<div class="kt-portlet kt-portlet--height-fluid">
-	<div class="kt-portlet__head">
-		<div class="kt-portlet__head-label">
-			<h3 class="kt-portlet__head-title">
-				Latest Updates
-			</h3>
-		</div>
-		<div class="kt-portlet__head-toolbar">
-			<!-- <a href="#" class="btn btn-label-brand btn-bold btn-sm dropdown-toggle" data-toggle="dropdown">
-				Today
-			</a> -->
-			<div class="dropdown-menu dropdown-menu-fit dropdown-menu-md dropdown-menu-right">
-				<!--begin::Nav-->
-<ul class="kt-nav">
-    <li class="kt-nav__head">
-        Export Options                                    
-        <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
-    </li>
-    <li class="kt-nav__separator"></li>
-    <li class="kt-nav__item">
-        <a href="#" class="kt-nav__link">
-            <i class="kt-nav__link-icon flaticon2-drop"></i>
-            <span class="kt-nav__link-text">Activity</span>
-        </a>
-    </li>
-    <li class="kt-nav__item">
-        <a href="#" class="kt-nav__link">
-            <i class="kt-nav__link-icon flaticon2-calendar-8"></i>
-            <span class="kt-nav__link-text">FAQ</span>
-        </a>
-    </li>
-    <li class="kt-nav__item">
-        <a href="#" class="kt-nav__link">
-            <i class="kt-nav__link-icon flaticon2-link"></i>
-            <span class="kt-nav__link-text">Settings</span>
-        </a>
-    </li>
-    <li class="kt-nav__item">
-        <a href="#" class="kt-nav__link">
-            <i class="kt-nav__link-icon flaticon2-new-email"></i>
-            <span class="kt-nav__link-text">Support</span>
-            <span class="kt-nav__link-badge">
-                <span class="kt-badge kt-badge--success">5</span>
-            </span>
-        </a>
-    </li>
-    <li class="kt-nav__separator"></li>
-    <li class="kt-nav__foot">
-        <a class="btn btn-label-danger btn-bold btn-sm" href="#">Upgrade plan</a>                                    
-        <a class="btn btn-clean btn-bold btn-sm" href="#" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more...">Learn more</a>
-    </li>
-</ul>
-<!--end::Nav-->			</div>
-		</div>
-	</div>
-	<div class="kt-portlet__body">
-		<!--begin::widget 12-->
-		<div class="kt-widget4">
-			<div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon-pie-chart-1 kt-font-info"></i>
-				</span>	
-				<a href="baptism_certificates" class="kt-widget4__title kt-widget4__title--light">
-					Water Baptism
-				</a> 		
-				<span class="kt-widget4__number kt-font-info">{{ latest_updates['water_baptism'] }}</span> <!--show by number of registrants-->
-			</div>
-
-			<!-- <div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon-safe-shield-protection  kt-font-success"></i>
-				</span>	
-				<a href="#" class="kt-widget4__title kt-widget4__title--light">
-					Holy Ghost Baptism
-				</a> 		
-				<span class="kt-widget4__number kt-font-success">0</span>
-			</div> -->
-
-			<div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon2-line-chart kt-font-danger"></i>
-				</span>	
-				<a href="#" class="kt-widget4__title kt-widget4__title--light">
-					Bible Studies Groups
-				</a> 		
-				<span class="kt-widget4__number kt-font-danger">{{ latest_updates['bible_studies_groups'] }}</span>
-			</div>
-
-			<div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon2-pie-chart-1 kt-font-primary"></i>
-				</span>	
-				<a href="birth" class="kt-widget4__title kt-widget4__title--light">
-					Births
-				</a> 		
-				<span class="kt-widget4__number kt-font-primary">{{ latest_updates['births'] }}</span>
-			</div>
-
-			<div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon2-rocket kt-font-brand"></i>
-				</span>	
-				<a href="death" class="kt-widget4__title kt-widget4__title--light">
-					Deaths
-				</a> 		
-				<span class="kt-widget4__number kt-font-brand">{{ latest_updates['deaths'] }}</span>
-			</div>
-
-			<div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon2-notification kt-font-warning"></i>
-				</span>	
-				<a href="rallies_and_conventions" class="kt-widget4__title kt-widget4__title--light">
-					Rallies and Conventions
-				</a> 		
-				<span class="kt-widget4__number kt-font-warning">{{ latest_updates['rallies_and_conventions'] }}</span>
-			</div>
-
-			<div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon2-file kt-font-success"></i>
-				</span>	
-				<a href="promotion_and_transfer" class="kt-widget4__title kt-widget4__title--light">
-					Transfers and Promotions
-				</a> 		
-				<span class="kt-widget4__number kt-font-success">{{ latest_updates['transfers_and_promotions'] }}</span>
-            </div>
-            
-            <div class="kt-widget4__item">
-				<span class="kt-widget4__icon">
-					<i class="flaticon2-gift-1 kt-font-success"></i>
-				</span>	
-				<a href="dedication" class="kt-widget4__title kt-widget4__title--light">
-					Dedications
-				</a> 		
-				<span class="kt-widget4__number kt-font-success">{{ latest_updates['dedications'] }}</span>
-			</div>
-		</div>
-		<!--end::Widget 12-->
-	</div>
-</div>
-<!--end:: Widgets/Last Updates-->            </div>
-            <div class="col-xl-6">
-<!-- begin:: Widgets/Notifications -->
-
-
-<!--end:: Widgets/Notifications-->            </div>   
-        </div>  
-
     </div>
     <!--End:: App Content-->
 </div>
@@ -634,17 +624,39 @@
             <div class="modal-body">
                 <form class="kt-form" action="upload_attendance" method="POST" id="attendance_form">
                     <div class="kt-heading kt-heading--md">Select the attendance file (Only .csv files are allowed)</div>
-						<div class="row">
-							<div class="col-xl-6">
-								<div class="form-group">
-									<div class="custom-file">
-                                        <!-- https://www.codegrepper.com/code-examples/html/accept+only+csv+file+in+html+input -->
-										<input type="file" class="custom-file-input" name="attendance_file" id="attendance_file" accept=".csv, application/vnd.ms-excel">
-										<label class="custom-file-label" id="attendance_file_label" for="attendance_file">Choose file</label>
-									</div>
-								</div>
-							</div>
-						</div>
+                    <div class="row">  
+                        <div class="col-xl-6">
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="attendance_file" id="attendance_file" accept=".csv, application/vnd.ms-excel">
+                                    <label class="custom-file-label" id="attendance_file_label" for="attendance_file">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <select class="form-control kt-select2" name="assembly">
+                                <optgroup id ="assembly" label="Select Assembly" selected>
+                                {% for assembly in assembly_names %}    
+                                    {% if assembly == "" %}
+                                        <option value="{{assembly}}" selected>{{ assembly }}</option>
+                                    {% else %}
+                                        <option value="{{assembly}}" >{{ assembly }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                                </optgroup>
+                            </select>
+                            <!-- <span class="form-text text-muted">Select assembly, ministry and bible studies group of the member. Selection will be saved to the database </span> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </div>    
                     <!-- <div class="alert alert-secondary" role="alert">
                         <div class="alert-icon"><i class="flaticon-warning kt-font-brand"></i></div>
                           <div class="alert-text">
@@ -936,13 +948,14 @@
 
     	<!--begin::Global Theme Bundle(used by all pages) -->
     	    	   <script src="{{ url_for('static', filename='assets/vendors/global/vendors.bundle.js') }}" type="text/javascript"></script>
-		    	   <script src="{{ url_for('static', filename='assets/js/demo2/scripts.bundle.js') }}" type="text/javascript"></script>
+                   <script src="{{ url_for('static', filename='assets/js/demo2/scripts.bundle.js') }}" type="text/javascript"></script>
 				<!--end::Global Theme Bundle -->
 
 
                     
             <!--begin::Page Scripts(used by this page) -->
                             <script src="{{ url_for('static', filename='assets/js/demo2/pages/dashboard.js') }}" type="text/javascript"></script>
+                            <script src="{{ url_for('static', filename='assets/js/demo2/pages/crud/forms/widgets/select2.js') }}" type="text/javascript"></script>
                             <script src="{{ url_for('static', filename='assets/js/demo2/pages/custom/apps/user/overview.js') }}" type="text/javascript"></script>
                         <!--end::Page Scripts -->
             </body>
