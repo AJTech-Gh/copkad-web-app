@@ -1,11 +1,13 @@
 import os
 import time
 import shutil
+import random
+import string
 
 from sqlalchemy.util.langhelpers import group_expirable_memoized_property
 from sqlalchemy import func
 from app import db, app, mail
-from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth, Attendance
+from models import Accessibility, User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth, Attendance
 from flask import request, render_template
 from werkzeug.utils import secure_filename
 from flask_mail import Message
@@ -32,6 +34,7 @@ PUSH_NOTIF_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'push_notificati
 ASSEMBLY_CONFIG_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'assembly_config')
 ASSEMBLY_DEACTIVATED_BASE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'deactivated_assembly')
 ATTENDANCE_DIR = os.path.join(app.config['UPLOAD_FOLDER'], 'attendance')
+PERMISSION_MAP = dict(chief='Chief Finance', super='Super Admin', admin=f'Sub Admin', finance=f'Finance Officer')
 
 def remove_contact_symbols(contact):
     return re.sub(r"\D+", "", contact)
@@ -52,6 +55,10 @@ def gen_pseudo_id(first_name, last_name, contact_phone_1):
     last_name = remove_name_symbols(last_name)
     contact_phone_1 = remove_contact_symbols(contact_phone_1)
     return f'{first_name}_{last_name}_{contact_phone_1[-9:]}'
+
+def generate_password(length=8):
+    chars = string.ascii_letters + string.punctuation + string.digits
+    return ''.join(random.choice(chars) for i in range(length))
 
 def save_incomplete_reg(data_dict):
     # get the member id
@@ -86,7 +93,9 @@ def read_incomplete_reg(member_pseudo_id):
     encrypted_json_data = json_file.read()
     decrypted_json_data = decrypt_json_data(encrypted_json_data)
     json_file.close()
-    return json.loads(decrypted_json_data)
+    decrypted_json_data = json.loads(decrypted_json_data)
+    decrypted_json_data['img'] = get_img_path(member_pseudo_id, type='incomplete')
+    return decrypted_json_data
 
 def load_all_incomplete_reg():
     """
@@ -510,7 +519,7 @@ def upload_assembly_config_files(assembly_name):
     Uploads the letter head, baptism and dedication certificates templates to the assembly config folder
     """
     # get the assembly folder name
-    dir_name = re.sub(r"[\+\-\s]+", "_", assembly_name.lower())
+    dir_name = re.sub(r"[\s]+", "_", assembly_name.lower())
     dir_path = os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name)
     os.makedirs(dir_path, exist_ok=True)
     # check if the post request has the file part
@@ -960,3 +969,27 @@ def get_assembly_ui_data():
         assembly_dict['admins'] = '2' #str(Admins.query.filter_by(assembly=assembly_dict['assembly_name']).count())
         assembly_ui_data.append(assembly_dict)
     return assembly_ui_data
+
+def read_accessibility_by_member_id(id):
+    accessibility = Accessibility.query.filter_by(member_id=id).first()
+    data = dict()
+    if (accessibility):
+        permission_map = dict(chief='Chief Finance', super='Super Admin', admin=f'Sub Admin - {accessibility.assembly}', finance=f'Finance Officer - {accessibility.assembly}')
+        permission_edited = permission_map[accessibility.permission.split('_')[0]]
+        data = {'member_id': id, 'permission': accessibility.permission, 'permission_edited': permission_edited, 'assembly':accessibility.assembly, 'assembly_status':accessibility.assembly_status}
+    return data
+
+def remove_access(member_id):
+    """
+    Delete access privileges given to sub-admins
+    """
+    #print(member_id)
+    #sub_admin = Accessibility.query.get(member_id)
+    sub_admin = Accessibility.query.filter_by(member_id=member_id).first()
+    #print(sub_admin)
+    db.session.delete(sub_admin)
+    db.session.commit()
+    return sub_admin
+ 
+
+    

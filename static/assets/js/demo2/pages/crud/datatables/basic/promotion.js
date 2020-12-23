@@ -117,7 +117,8 @@ jQuery(document).ready(function() {
 
 // search for user's data when member id field value length is 8
 $("#pro_member_id").on("keyup", function(e) {
-    if ($(this).val().length === 8) {
+	e.stopImmediatePropagation();
+    if ($(this).val().length >= 3) {
         $(".spin").attr("hidden", false);
         $.ajax({
             method: "POST",

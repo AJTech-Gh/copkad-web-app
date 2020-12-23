@@ -306,8 +306,8 @@ class Accessibility(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
     password_hash = db.Column(db.String(128), unique=True, nullable=False)
-    position = db.Column(db.String(50), unique=False, nullable=False, index=True)
-    assembly = assembly = db.Column(db.String(30), unique=False, nullable=False)
+    permission = db.Column(db.String(50), unique=False, nullable=False, index=True)
+    assembly = db.Column(db.String(30), unique=False, nullable=False)
     assembly_status = db.Column(db.String(10), unique=False, nullable=False)
 
     def set_password(self, password):

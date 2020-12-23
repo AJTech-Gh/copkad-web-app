@@ -2,10 +2,10 @@ from flask import render_template, request, make_response, jsonify, Response
 import json, os, re
 from datetime import datetime
 from flask.helpers import url_for
-
+from werkzeug.security import generate_password_hash
 from werkzeug.utils import redirect
 from app import app, db
-from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth
+from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth, Accessibility
 import utils
 from constants import *
 
@@ -192,6 +192,84 @@ def member_dashboard():
 def bible_studies_group():
     return render_template('report.html')
 
+
+@app.route('/view_accessibility/<member_id>', methods=['POST'])
+def view_accessibility(member_id):
+    try:
+        user_data = utils.read_user_by_member_id(member_id)
+        accessibility_data = utils.read_accessibility_by_member_id(member_id)
+        return Response(json.dumps({'status': 'SUCCESS', 'user_data': user_data, 'view_accessibility_data': accessibility_data}), status=200, mimetype='application/json') 
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
+@app.route('/remove_accessibility/<member_id>', methods=['POST'])
+def remove_accessibility(member_id):
+    print(member_id)
+    try:
+        utils.remove_access(member_id)
+        return Response(json.dumps({'status': 'SUCCESS', 'message': f'{member_id}\'s privileges has been removed '}), status=200, mimetype='application/json') 
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+@app.route('/accessibility_submit', methods=['POST'])
+def accessibility_submit():
+    try:
+        #get the form data transmitted by Ajax
+        #form is an ImmutableMultiDict object
+        #https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+        form = request.form
+        member_id = form.get('member_id').strip()
+        accessibility_password = utils.generate_password()
+        assembly = form.get('assembly').strip()
+        permission = form.get('permission').strip()
+        if assembly.lower().replace(' ', '_') in os.listdir(utils.ASSEMBLY_CONFIG_BASE_DIR):
+            assembly_status = 1
+        else:
+            assembly_status = 0
+            
+        assigned_assembly = ' '.join([p.strip().capitalize() for p in permission.split('_')[1:]]) + " Assembly"
+        exceptions = ['chief', 'super']
+        if  not exceptions.__contains__(permission.split('_')[0]) and User.query.filter_by(member_id=member_id, assembly=assigned_assembly).count() == 0: 
+            return Response(json.dumps({'status':'FAIL', 'message': f'{member_id} is not a member of {assigned_assembly}'}), status=400, mimetype='application/json')
+
+        if Accessibility.query.filter_by(permission=permission).count() == 0:
+            new_access = Accessibility(member_id=member_id, assembly=assembly, permission=permission, assembly_status=assembly_status)
+            new_access.set_password(accessibility_password)
+            db.session.add(new_access)
+            db.session.commit()
+        else:
+            member_id = member_id
+            row_dict = {
+                "member_id": member_id,
+                "password_hash": generate_password_hash(accessibility_password),
+                "assembly": assembly,
+                "permission": permission,
+                "assembly_status": assembly_status
+            }
+            Accessibility.query.filter_by(permission=permission).update(row_dict)
+            db.session.commit()
+
+        # data = {
+        #     "member_id": member_id,
+        #     "password": password,
+        #     "assembly_name": assembly_name,
+        #     "permission": permission,
+        #     "assembly_status": assembly_status
+        # }
+
+        return Response(json.dumps({'status': 'SUCCESS', 'message': f'Access granted successfully'}), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+    
+
 @app.route('/activate_assembly/<assembly_name>', methods=['POST'])
 def activate_assembly(assembly_name):
     try:
@@ -232,9 +310,10 @@ def assembly_forecast(assembly_name):
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
-@app.route('/filtered_member_datatable/<assembly_name>')
-def filtered_member_datatable(assembly_name):
+@app.route('/filtered_member_datatable')
+def filtered_member_datatable():
     try:
+        assembly_name = request.args.get("assembly_name")
         assembly_name_list = assembly_name.split('_')
         assembly_name = ' '.join([p.capitalize() for p in assembly_name_list])
         data_1 = User.query.filter_by(assembly=assembly_name).all()
@@ -282,7 +361,19 @@ def admin_dashboard():
     registered_member_data = utils.assemblies_registration_summary()
     attendance_notifs = utils.get_attendance_notifs()
     assembly_ui_data = utils.get_assembly_ui_data()
-    return render_template('admin.html', assembly_names=assembly_names, registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data)
+    access_admin_data = db.session.query(Accessibility, User).join(User).all()
+    # db.session.query(Accessibility, User.).join(Country).filter(User.user_email == 'abc@def.com').all()
+    # print(access_user_data[0])
+    accessibility_list = []
+    for access, user in access_admin_data:
+        admin_data = dict()
+        admin_data['member_id'] = user.member_id
+        admin_data['name'] = f'{user.last_name}, {user.first_name} {user.other_names}' 
+        admin_data['img'] = utils.get_img_path(user.member_id)
+        admin_data['assembly'] = user.assembly
+        admin_data['permission'] = access.permission
+        accessibility_list.append(admin_data)
+    return render_template('admin.html', accessibility_list=accessibility_list, assembly_names=assembly_names, registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data, permission_map=utils.PERMISSION_MAP)
 
 
 @app.route('/statistical_updates')
@@ -392,7 +483,8 @@ def settings_submit():
 
         multi_item_list = ['ministry', 'group', "name_of_offering"]
         offering_items = ['name_of_offering', 'type_of_offering', 'percentage_deduction', 'offering_code']
-        capitalized_assembly_name = ' '.join([p.capitalize().strip() for p in form.get('assembly_name').strip().split(' ')])
+        no_symbol_assembly_name = re.sub(r'[^\w\s]+', '', form.get('assembly_name'))
+        capitalized_assembly_name = ' '.join([p.capitalize().strip() for p in no_symbol_assembly_name.strip().split(' ')])
         config_dict = dict({
             'church_name':form.get('church_name'),
             'assembly_name':capitalized_assembly_name,
@@ -427,13 +519,14 @@ def settings_submit():
 
         utils.save_assembly_config(config_dict)
 
-        if utils.upload_assembly_config_files(form.get('assembly_name')):
+        if utils.upload_assembly_config_files(capitalized_assembly_name):
             return Response(json.dumps({'status':'FAIL', 'message': 'Could not upload all files'}), status=400, mimetype='application/json')
         # print(config_dict)
         return Response(json.dumps({'status':'SUCCESS', 'message': 'Settings saved successfully'}), status=200, mimetype='application/json')
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+        
 
 @app.route('/births')
 def births():
@@ -1096,7 +1189,6 @@ def baptism_certificates_submit():
             else: 
                 # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
                 # https://docs.sqlalchemy.org/en/13/core/dml.html
-                member_id = int(member_id)
                 row_dict = {
                     "date_of_baptism": date_of_baptism,
                     "place_of_baptism": place_of_baptism,
@@ -1205,7 +1297,6 @@ def add_user_submit():
         ministry = form.getlist('ministry')
         group = form.get('group')
 
-        password = form.get('password')
         comm_email = form.get('comm_email')
         comm_sms = form.get('comm_sms')
         comm_phone = form.get('comm_phone')
@@ -1216,6 +1307,8 @@ def add_user_submit():
         region = form.get('region').strip()
         district = form.get('district').strip()
         country = form.get('country')
+
+        password = utils.generate_password()
 
         try:
             if member_id == "": 

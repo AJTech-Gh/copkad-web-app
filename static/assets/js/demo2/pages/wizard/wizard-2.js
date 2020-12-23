@@ -206,7 +206,8 @@ let replaceAll = (string, search, replace) => {
 
 // search for user's data when member id field value length is 8
 $("#member_id").on("keyup", function(e) {
-    if ($(this).val().length === 8) {
+    e.stopImmediatePropagation();
+    if ($(this).val().length >= 3) {
         $(".spin").attr("hidden", false);
         $.ajax({
             method: "POST",
@@ -279,6 +280,7 @@ $("#member_id").on("keyup", function(e) {
 });
 
 $("#member_id").on("change", function(e) {
+    e.preventDefault();
     $("#member_id").trigger("keyup");
 });
 

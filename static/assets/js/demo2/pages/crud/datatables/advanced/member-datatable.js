@@ -121,7 +121,8 @@ let viewRowData = (row) => {
 		member_id: rowData[0].textContent,
 		status: rowData[7].textContent
 	};
-	if (jsonIdStatus.status.toLowerCase() === "incomplete") {
+	console.log(jsonIdStatus.status.toLowerCase());
+	if (jsonIdStatus.status.trim().toLowerCase() === "incomplete") {
 		jsonIdStatus.status = "0";
 	} else {
 		jsonIdStatus.status = "1";

@@ -222,7 +222,8 @@ $("#reset_birth_btn").on("click", function(e) {
 
 
 $("#member_id_father").on("keyup", function(e) {
-	if ($(this).val().length === 8) {
+	e.stopImmediatePropagation();
+	if ($(this).val().length >= 3) {
 		$("#find_father_id").attr("hidden", false);		
         $.ajax({
 			method: "POST",
@@ -301,7 +302,8 @@ $("#member_id_father").on("keyup", function(e) {
 
 // search for mother's data when member id field value length is 8
 $("#member_id_mother").on("keyup", function(e) {
-    if ($(this).val().length === 8) {
+	e.stopImmediatePropagation();
+    if ($(this).val().length >= 3) {
 		$("#find_mother_id").attr("hidden", false);
         $.ajax({
 			method: "POST",

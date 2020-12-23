@@ -29,7 +29,7 @@ var KTAppContactsAdd = function () {
 			KTUtil.scrollTop();
 
 			// set random password
-			setRandomPassword();
+			// setRandomPassword();
 
 			// set values for fullname in email in account settings
 			showFullName();
@@ -489,37 +489,37 @@ let showEmail = () => {
 	document.querySelector("#email_readonly").value = email;
 }
 
-let getRandomUpperCase = () => {
-	return String.fromCharCode((Math.floor(Math.random() * 26) + 65));
-}
+// let getRandomUpperCase = () => {
+// 	return String.fromCharCode((Math.floor(Math.random() * 26) + 65));
+// }
 
-let getRandomLowerCase = () => {
-	return String.fromCharCode((Math.floor(Math.random() * 26) + 97));
-}
+// let getRandomLowerCase = () => {
+// 	return String.fromCharCode((Math.floor(Math.random() * 26) + 97));
+// }
 
-let getRandomNumber = () => {
-	return String.fromCharCode((Math.floor(Math.random() * 10) + 48));
-}
+// let getRandomNumber = () => {
+// 	return String.fromCharCode((Math.floor(Math.random() * 10) + 48));
+// }
 
-let getRandomSymbol = () => {
-	let symbol = "!@#$%^&*(){}[]=<>/,.|~?";
-	return symbol[Math.floor(Math.random()*symbol.length)];
-}
+// let getRandomSymbol = () => {
+// 	let symbol = "!@#$%^&*(){}[]=<>/,.|~?";
+// 	return symbol[Math.floor(Math.random()*symbol.length)];
+// }
 
-let genRandomPassword = () => {
-	let password = "COP_";
-	let funcs = [getRandomUpperCase, getRandomNumber, getRandomSymbol, getRandomLowerCase];
-	for (let i = 0; i < 4; i++) {
-		for (let j = 0; j < 2; j++) {
-			password = password.concat([funcs[i]()]);
-		}
-	}
-	return password;
-}
+// let genRandomPassword = () => {
+// 	let password = "COP_";
+// 	let funcs = [getRandomUpperCase, getRandomNumber, getRandomSymbol, getRandomLowerCase];
+// 	for (let i = 0; i < 4; i++) {
+// 		for (let j = 0; j < 2; j++) {
+// 			password = password.concat([funcs[i]()]);
+// 		}
+// 	}
+// 	return password;
+// }
 
-let setRandomPassword = () => {
-	document.querySelector("#password").value = genRandomPassword();
-}
+// let setRandomPassword = () => {
+// 	document.querySelector("#password").value = genRandomPassword();
+// }
 
 // display the selected photo
 $("#kt_apps_contacts_add_avatar").on("change", function () {

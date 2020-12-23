@@ -737,7 +737,7 @@
                         <td>{{ registered_member_data['district'] }}</td>
                         <td>{{ assembly_tuple[1] }}</td>
                         <td>{{ assembly_tuple[2] }}</td>
-                        <td><a href="{{ url_for('filtered_member_datatable', assembly_name=assembly_tuple[1].lower().replace(' ', '_')) }}" target="_blank" title="view"><i class="flaticon-squares"></i></a></td>
+                        <td><a href="{{ url_for('filtered_member_datatable') }}?assembly_name={{ assembly_tuple[1].lower().replace(' ', '_') }}" target="_blank" title="view"><i class="flaticon-squares"></i></a></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -902,7 +902,7 @@
 		</div>
 		<div class="kt-portlet__head-toolbar">
 			<div class="dropdown dropdown-inline">
-				<button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;" data-toggle="modal" data-target="#accessibility-modal">
+				<button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;" data-toggle="modal" data-target="#accessibility-modal-2">
 					<i class="flaticon2-menu-2"></i>
 				</button>
 			</div>
@@ -913,29 +913,31 @@
 		<div class="tab-content">
 			<div class="tab-pane active" id="kt_widget4_tab1_content">
 				<div class="kt-widget4">
+                    {% for admin_data in accessibility_list %}
 					<div class="kt-widget4__item">
 						<div class="kt-widget4__pic kt-widget4__pic--pic">
-							<img src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" alt="">   
+							<img src="{{ admin_data['img'] }}" alt="">   
 						</div>
 						<div class="kt-widget4__info">
 							<a href="#" class="kt-widget4__username">
-								Prosper Ezekeiel
+								{{ admin_data['name'] }}
 							</a>
 							<p class="kt-widget4__text">
-								Emmanuel English Assembly
+								{{ permission_map[admin_data['permission'].split('_')[0]] }} - {{ admin_data['assembly'] }}
                             </p>							 		 
                         </div>					 
                         <div class="kt-portlet__head-toolbar">
                             <div class="dropdown dropdown-inline">
-                                <button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;" data-toggle="modal" data-target="#accessibility-modal-2">
+                                <button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon accessibility_view_details" name="{{ admin_data['member_id'] }}" style="padding-top:20px;" data-toggle="modal" data-target="#accessibility-modal">
                                     <i class="flaticon2-console"></i>
                                 </button>
-                                <button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;"> <!--opens the login page of the user-->
+                                <!-- <button type="button" class="btn btn-clean btn-sm btn-icon-md btn-icon" style="padding-top:20px;"> <-opens the login page of the user->
                                     <i class="flaticon2-graphic-design"></i>
-                                </button>
+                                </button> -->
                             </div>
                         </div>						 
-					</div>  						 
+                    </div> 
+                    {% endfor %} 						 
 				</div>             
 			</div>
 
@@ -2059,42 +2061,41 @@
                                             <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-left nav-tabs-line-primary" role="tablist">
                                                 <li class="nav-item">
                                                     <a class="nav-link  active" data-toggle="tab" href="#kt_builder_page" role="tab">
-                                                        Accessibility registration
+                                                        Accessibility registration details &nbsp;
+                                                        <span style="background-color: inherit;" id="accessibility_details_spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="max-width: 28px; max-height: 28px; color:blue;" ></i></span>
                                                     </a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                     <!--begin::Form-->
-                                    <form class="kt-form kt-form--label-right" action="#" method="POST">
+                                    <form class="kt-form kt-form--label-right" method="POST">
 
                                         <div class="kt-portlet__body">
-                                            <input type="text" class="form-control" placeholder="Enter member ID to search"  />
                                             <div class="tab-content">
                                                 <div class="tab-pane  active" id="kt_builder_page">
                                                     <div class="kt-section kt-margin-t-30">
                                                         <div class="kt-section__body">   
                                                             <div class="form-group row">
                                                                 <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
-                                                                    <div class="kt-avatar__holder" style="background-image: url({{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }})"></div>
-                                                                    <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
+                                                                    <div class="kt-avatar__holder" id="view_accessibility_kt-avatar__holder" style="background-image: url({{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }})"></div>
+                                                                    <!-- <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
                                                                         
                                                                         <input type="file" name="kt_apps_contacts_add_avatar">
                                                                     </label>
                                                                     <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
                                                                         <i class="fa fa-times"></i>
-                                                                    </span>
+                                                                    </span> -->
                                                                 </div>
                                                                 <div class="col-lg-9 col-xl-6">
                                                                     <!--make reference from add-user database-->
-                                                                    <p> <b>Name: </b>               Prosper Ezekiel Boateng</p> 
-                                                                    <p> <b>Member ID:</b>          00023322</p>
-                                                                    <p> <b>Church Affiliations:</b>   <!--put district, assembly, ministries and bible studies group here--> Kwadaso Agric District | Emmanuel Assembly | Youth and Evangelism | Group 1</p> 
-                                                                    <p> <b>Email:</b>          www.epa04@gmail.com</p> 
-                                                                    <p>  <b>Password:</b> Kwaku101</p> 
-                                                                    <p> <b>Accessibility:</b>    Main Administrator     </p> 
-                                                                    <p> <b>Date of Registration:</b>  September 1, 2020</p> 
-                                                                    <p> <b>Bio Data:</b>  Biometric Registration | Facial Recognition
+                                                                    <p> <b>Name: </b> <span id="view_accessibility_name"></span></p> 
+                                                                    <p> <b>Member ID: </b> <span id="view_accessibility_member_id"></span></p>
+                                                                    <p> <b>Church Affiliations: </b> <span id="view_accessibility_assembly"></span> | <span id="view_accessibility_ministry"></span> | <span id="view_accessibility_group"></span></p> 
+                                                                    <p> <b>Email: </b> <span id="view_accessibility_email"></span></p> 
+                                                                    <p> <b>Accessibility: </b> <span id="view_accessibility_permission"></span></p> 
+                                                                    <!-- <p> <b>Date of Registration:</b>  September 1, 2020</p>  -->
+                                                                    <!-- <p> <b>Bio Data:</b>  Biometric Registration | Facial Recognition -->
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -2108,13 +2109,14 @@
                                                     <div class="col-lg-3"></div>
                                                     <div class="col-lg-9">
                                                       &nbsp;
-                                                        <button type="submit" id="builder_export" data-demo="demo2" class="btn btn-success">
-                                                            <i class="la la-download"></i>
-                                                            Update <!--print -->
+                                                        <button type="button" id="close_admin_btn" class="btn btn-success" data-dismiss="modal">
+                                                            <i class="fa fa-check"></i>
+                                                            OK <!--print -->
                                                         </button>&nbsp;
-                                                        <button type="submit" name="builder_reset" data-demo="demo2" class="btn btn-danger">
-                                                            <i class="fa flaticon2-cross"></i>
-                                                            Cancel
+                                                        <button type="button" id="delete_admin_btn" class="btn btn-danger">
+                                                            <i class="fa fa-trash"></i>
+                                                            Delete
+                                                            <span style="background-color: inherit;" id="delete_accessibility_spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size:24px; color:whitesmoke;" ></i></span>
                                                         </button>
                                                        
                                                     </div>
@@ -2136,7 +2138,7 @@
                                     <div class="modal-dialog modal-lg" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel"> 10023010 | Prosper Ezekiel |Emmanuel English Assembly </h5>
+                                                <!-- <h5 class="modal-title" id="exampleModalLabel"> 10023010 | Prosper Ezekiel |Emmanuel English Assembly </h5> -->
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 </button>
                                             </div>
@@ -2155,60 +2157,86 @@
                                         </div>
                                     </div>
                                     <!--begin::Form-->
-                                    <form class="kt-form kt-form--label-right" action="#" method="POST">
+                                    <form class="kt-form kt-form--label-right" id="accessibility_form" method="POST">
                                         <div class="kt-portlet__body">
-                                            <div class="kt-form__section kt-form__section--first">
-                                                <div class="form-group row">
-                                                    <label class="col-lg-2 col-form-label">Email address:</label>
-                                                    <div class="col-lg-4">
-                                                        <input type="email" class="form-control" placeholder="Enter email">
+                                            <div class="form-group row">
+                                                <label class="col-lg-2 col-form-label">Member ID :</label>
+                                                <div class="col-lg-4">
+                                                    <div class="input-group">
+                                                        <input type="text" id="member_id" name="member_id" class="form-control" placeholder="Enter Member ID">
+                                                        <div class="input-group-append">
+                                                        <span class="input-group-text form-control spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size: 24px; color:blue;" ></i></span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="form-group row">
-                                                    <label class="col-lg-2 col-form-label">Password</label>
-                                                    <div class="col-lg-4">
-                                                        <div class="input-group">
-                                                            <div class="input-group-prepend"><span class="input-group-text" ><i class="la la-chain"></i></span></div>
-                                                            <input type="text" class="form-control" placeholder="Password" readonly>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-lg-2 col-form-label">Assembly :</label>
+                                                <div class="col-lg-4">
+                                                    <div class="input-group">
+                                                        <input type="text" id="assembly" name="assembly" class="form-control" placeholder="Assembly name here" readonly>
+                                                        <div class="input-group-append">
+                                                            <span class="input-group-text form-control spin" hidden><i class="fa fa-circle-o-notch fa-spin" style="font-size: 24px; color:blue;" ></i></span>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="form-group row" hidden>
+                                                <label class="col-lg-2 col-form-label">Password:</label>
+                                                <div class="col-lg-4">
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend"><span class="input-group-text" ><i class="la la-chain"></i></span></div>
+                                                        <input type="password" name="accessibility_password" id="accessibility_password" class="form-control" placeholder="Auto Generated Password" readonly>
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            
+                                            <div class="kt-form__section kt-form__section--first">
+                                                <div class="form-group row">
+                                                    <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
+                                                        <div class="kt-avatar__holder" id="update_kt-avatar__holder" style="background-image: url({{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }})"></div>
+                                                        <!-- <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
+                                                            
+                                                            <input type="file" name="kt_apps_contacts_add_avatar">
+                                                        </label>
+                                                        <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
+                                                            <i class="fa fa-times"></i>
+                                                        </span> -->
+                                                    </div>
+                                                    <div class="col-lg-9 col-xl-6">
+                                                        <!--make reference from add-user database-->
+                                                        <p> <b>Name : </b><span id="accessibility_full_name"></span></p>
+                                                        <p> <b>Church Affiliations : </b><span id="accessibility_ministry"></span> | <span id="accessibility_group"></span></p> 
+                                                        <p> <b>Email : </b><span id="accessibility_email"></span></p> 
+                                                        <!-- <p> <b>Accessibility : </b><span id="accessibility_permission">N/A </span></p> 
+                                                        <p> <b>Date of Registration : </b><span id="accessibility_date_of_reg">N/A </span></p>  -->
+                                                        <!-- <p> <b>Bio Data:</b>  Biometric Registration | Facial Recognition -->
                                                     </div>
                                                 </div>
                                                 <div class="form-group row">
                                                     <label class="col-lg-2 col-form-label">Accessibility:</label>
-                                                    <div class="col-xl-8 col-lg-8 col-sm-12 col-md-12">
-                                                        <div class="kt-checkbox-inline">
-                                                            <label class="kt-checkbox">
-                                                               <input type="checkbox"> Super Administrator 
-                                                               <span></span>
-                                                               </label><br>
-                                                            <label class="kt-checkbox">
-                                                                <input type="checkbox"> Sub Administrator 1 - Emmanuel English Assembly 
-                                                                <span></span>
-                                                                </label>
-                                                            <label class="kt-checkbox">
-                                                                <input type="checkbox"> Sub Administrator 2 - Hope Assembly
-                                                                <span></span>
-                                                                </label>
-                                                            <label class="kt-checkbox">
-                                                               <input type="checkbox"> Sub Administrator 3 - Glory Assembly 
-                                                               <span></span>
-                                                               </label><br>
-                                                            <label class="kt-checkbox">
-                                                               <input type="checkbox"> Chief Finance 
+                                                    <div class="col-xl-8 col-lg-8 col-sm-12 col-md-12"><br><br>
+                                                        <div class="radio-list">
+                                                            <label class="radio">
+                                                               <input name="permission" id="permission" value="super_admin" type="radio"> Super Administrator 
                                                                <span></span>
                                                             </label><br>
-                                                            <label class="kt-checkbox">
-                                                                <input type="checkbox"> Finance Officer 1 - Emmanuel English Assembly
+                                                            <label class="radio">
+                                                                <input name="permission" id="permission" value="chief_finance" type="radio"> Chief Finance 
                                                                 <span></span>
-                                                             </label><br>
-                                                             <label class="kt-checkbox">
-                                                                <input type="checkbox"> Finance Officer 2 - Glory Assembly
-                                                                <span></span>
-                                                             </label><br>
-                                                             <label class="kt-checkbox">
-                                                                <input type="checkbox"> Finance Officer 3 - Hope Assembly
-                                                                <span></span>
-                                                             </label><br>
+                                                            </label><br>
+                                                            {% for name in assembly_names %}
+                                                                <label class="radio">
+                                                                    <input name="permission" id="permission" value="admin_{{ name.lower().replace(' ', '_').replace('_assembly', '') }}" type="radio"> Sub Administrator - {{ name }}
+                                                                    <span></span>
+                                                                </label><br>
+                                                            {% endfor %}
+                                                            {% for name in assembly_names %}
+                                                                <label class="radio">
+                                                                    <input name="permission" id="permission" value="finance_{{ name.lower().replace(' ', '_').replace('_assembly', '') }}" type="radio"> Finance Officer - {{ name }}
+                                                                    <span></span>
+                                                                </label><br>
+                                                            {% endfor %}
                                                         </div>
                                                     </div>
                                                 </div>        
@@ -2221,11 +2249,11 @@
                                                     <div class="col-lg-3"></div>
                                                     <div class="col-lg-9">
                                                       &nbsp;
-                                                        <button type="submit" id="builder_export" data-demo="demo2" class="btn btn-success">
-                                                            <i class="la la-download"></i>
-                                                            Update 
+                                                        <button type="submit" id="assign_accessibility" class="btn btn-success">
+                                                            <i class="la la-check"></i>
+                                                            Assign 
                                                         </button>&nbsp;
-                                                        <button type="submit" name="builder_reset" data-demo="demo2" class="btn btn-danger">
+                                                        <button type="reset" name="cancel" class="btn btn-danger" data-dismiss="modal">
                                                             <i class="fa flaticon2-cross"></i>
                                                             Cancel
                                                         </button>
