@@ -1,10 +1,11 @@
 from flask import render_template, request, make_response, jsonify, Response
+from flask_login import current_user, login_user, logout_user, login_required
 import json, os, re
 from datetime import datetime
 from flask.helpers import url_for
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import redirect
-from app import app, db
+from app import app, db, login_manager
 from models import User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth, Accessibility
 import utils
 from constants import *
@@ -21,15 +22,6 @@ from constants import *
 #     r.headers["Expires"] = "0"
 #     r.headers['Cache-Control'] = 'public, max-age=0'
 #     return r
-
-@app.route('/')
-@app.route('/index')
-def index():
-    return render_template('login.html')
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
 
 @app.route('/publications')
 def publications():
@@ -192,6 +184,75 @@ def member_dashboard():
 def bible_studies_group():
     return render_template('report.html')
 
+@app.route('/')
+@app.route('/index')
+def index():
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/login_submit', methods=['POST'])
+def login_submit():
+    try:
+        print(current_user)
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission == 'super_admin':
+                    return redirect(url_for('admin_dashboard'))
+                if permission.startswith('admin'):
+                    assembly_name = f'{permission[6:]}_assembly'
+                    return redirect(url_for('overview', assembly_name=assembly_name))
+                if permission.startswith('chief'):
+                    assembly_name = f'{permission[6:]}_assembly'
+                    return render_template('login.html')
+                if permission.startswith('finance'):
+                    assembly_name = f'{permission[8:]}_assembly'
+                    return render_template('login.html')
+            else:
+                return redirect(url_for('personal_information'))
+        else:
+            # get the form data
+            form = request.form
+            username = form.get('username')
+            password = form.get('password')
+            remember = form.get('remember')
+            # login the user
+            admin = Accessibility.query.filter_by(permission=username).first()
+            # if the credentials doesn't match any admin, check the user's table
+            if admin is None or not admin.check_password(password):
+                # login as user else return to login screen
+                user = User.query.filter_by(member_id=username).first()
+                if user is None or not user.check_password(password):
+                    return redirect(url_for('login'))
+                login_user(user, remember=remember)
+                return redirect(url_for('personal_information'))
+            # login as the appropriate admin
+            permission = admin.permission
+            login_user(admin, remember=remember)
+            if permission == 'super_admin':
+                return redirect(url_for('admin_dashboard'))
+            if permission.startswith('admin'):
+                assembly_name = f'{permission[6:]}_assembly'
+                return redirect(url_for('overview', assembly_name=assembly_name))
+            if permission.startswith('chief'):
+                assembly_name = f'{permission[6:]}_assembly'
+                return render_template('login.html')
+            if permission.startswith('finance'):
+                assembly_name = f'{permission[8:]}_assembly'
+                return render_template('login.html')
+        return render_template('login.html')
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+    
 
 @app.route('/view_accessibility/<member_id>', methods=['POST'])
 def view_accessibility(member_id):
@@ -207,7 +268,6 @@ def view_accessibility(member_id):
 
 @app.route('/remove_accessibility/<member_id>', methods=['POST'])
 def remove_accessibility(member_id):
-    print(member_id)
     try:
         utils.remove_access(member_id)
         return Response(json.dumps({'status': 'SUCCESS', 'message': f'{member_id}\'s privileges has been removed '}), status=200, mimetype='application/json') 
@@ -222,17 +282,6 @@ def accessibility_submit():
         #get the form data transmitted by Ajax
         #form is an ImmutableMultiDict object
         #https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
-        form = request.form
-        member_id = form.get('member_id').strip()
-        accessibility_password = utils.generate_password()
-        assembly = form.get('assembly').strip()
-        permission = form.get('permission').strip()
-        if assembly.lower().replace(' ', '_') in os.listdir(utils.ASSEMBLY_CONFIG_BASE_DIR):
-            assembly_status = 1
-        else:
-            assembly_status = 0
-            
-        assigned_assembly = ' '.join([p.strip().capitalize() for p in permission.split('_')[1:]]) + " Assembly"
         exceptions = ['chief', 'super']
         if  not exceptions.__contains__(permission.split('_')[0]) and User.query.filter_by(member_id=member_id, assembly=assigned_assembly).count() == 0: 
             return Response(json.dumps({'status':'FAIL', 'message': f'{member_id} is not a member of {assigned_assembly}'}), status=400, mimetype='application/json')
@@ -356,6 +405,7 @@ def filtered_member_datatable():
 
 
 @app.route('/admin_dashboard')
+@login_required
 def admin_dashboard():
     assembly_names, _, _ = utils.load_assembly_data()
     registered_member_data = utils.assemblies_registration_summary()
@@ -382,10 +432,11 @@ def statistical_updates():
     return render_template('statistical-updates.html', stats_data=stats_data)
 
 
-@app.route('/overview')
-def overview():
+@app.route('/overview/<assembly_name>')
+@login_required
+def overview(assembly_name):
     assembly_names, _, _ = utils.load_assembly_data()
-    latest_updates = utils.get_latest_updates("Emmanuel English Assembly")
+    latest_updates = utils.get_latest_updates(assembly_name)
     attendance_notifs = utils.get_attendance_notifs()
     return render_template('overview.html', latest_updates=latest_updates, attendance_notifs=attendance_notifs, assembly_names=assembly_names)
 

@@ -1,11 +1,12 @@
 from enum import unique
 from sqlalchemy.orm import backref
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 from datetime import datetime
-from app import app, db
+from app import app, db, login_manager
 import re
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     # personal info page
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     member_id = db.Column(db.String(30), primary_key=True, nullable=False, index=True)
@@ -302,7 +303,7 @@ class Attendance(db.Model):
         return '{}-{}-{}'.format(date.year, date.month, date.day)
 
 
-class Accessibility(db.Model):
+class Accessibility(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     member_id = db.Column(db.String(20), db.ForeignKey('user.member_id'), nullable=False, index=True)
     password_hash = db.Column(db.String(128), unique=True, nullable=False)
@@ -315,3 +316,11 @@ class Accessibility(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def __repr__(self):
+        return f'Accessibility: {self.member_id}\nPermission: {self.permission}'
+
+
+@login_manager.user_loader
+def load_user(id):
+    return Accessibility.query.get(int(id))
