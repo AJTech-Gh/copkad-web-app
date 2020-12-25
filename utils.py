@@ -15,6 +15,7 @@ from threading import Thread
 import urllib
 import re
 import json
+from urllib.parse import urlparse
 import binascii
 import base64
 from io import BytesIO
@@ -582,15 +583,17 @@ def load_assembly_data():
 
 def get_latest_updates(assembly_name):
     assembly_group_data = read_assembly_config(assembly_name)['group']
+    assembly_name = ' '.join([p.capitalize().strip() for p in assembly_name.split('_')])
     bible_studies_groups = len(assembly_group_data)
-    water_baptism_count = db.session.query(Baptism).count()
-    birth_count = db.session.query(Birth).count()
-    death_count = db.session.query(Death).count()
-    rallies_and_conventions_count = db.session.query(RalliesAndConventions).count()
-    transfer_count = db.session.query(Transfer).count()
-    promotion_count = db.session.query(Promotion).count()
+    water_baptism_count = db.session.query(Baptism, User).join(User).filter_by(assembly=assembly_name).count()
+    birth_count = Birth.query.filter_by(assembly=assembly_name).count()
+    death_count = db.session.query(Death, User).join(User).filter_by(assembly=assembly_name).count()
+    rallies_and_conventions_count = RalliesAndConventions.query.filter(RalliesAndConventions.assembly.ilike(f'%{assembly_name}%')).count()
+    transfer_count = db.session.query(Transfer, User).join(User).filter_by(assembly=assembly_name).count()
+    promotion_count = db.session.query(Promotion, User).join(User).filter_by(assembly=assembly_name).count()
     transfer_and_promotion_count = transfer_count + promotion_count
-    dedication_count = db.session.query(Dedication).count()
+    dedication_count = Dedication.query.filter_by(assembly=assembly_name).count()
+    member_count = User.query.filter_by(assembly=assembly_name).count()
     latest_updates = {
         "water_baptism":water_baptism_count,
         "births":birth_count,
@@ -598,30 +601,34 @@ def get_latest_updates(assembly_name):
         "rallies_and_conventions":rallies_and_conventions_count,
         "transfers_and_promotions":transfer_and_promotion_count,
         "dedications":dedication_count,
-        "bible_studies_groups": bible_studies_groups
+        "bible_studies_groups": bible_studies_groups,
+        "member_count": member_count,
     }
     return latest_updates
 
 
-def get_attendance_notifs():
+def get_attendance_notifs(assembly):
+    assembly_dir_name = assembly.lower().replace(' ', '_')
     filenames_original = os.listdir(ATTENDANCE_DIR)
-    filenames = sorted(filenames_original, key=lambda x: int(x.split('_')[0]), reverse=True)[:10]
+    if not assembly.strip() == '%':
+        filenames_original = [name for name in filenames_original if name.__contains__(assembly_dir_name)]
+    filenames_original = sorted(filenames_original, key=lambda x: int(x.split('_')[0]), reverse=True)[:10]
+    filenames = sorted(filenames_original, key=lambda x: int(x.split('_')[0]), reverse=True)
     filenames = [name.split('.')[0] for name in filenames]
     dates_assembly_names_list = [name.split('_')[1:] for name in filenames]
     msgs = []
     for i in range(len(filenames)):
         msg_data = dict()
-        msg_data['bva_data'] = f'/static/storage/attendance/{filenames_original[i]}'
         # compose the message
         dt = datetime(int(dates_assembly_names_list[i][0]), int(dates_assembly_names_list[i][1]), int(dates_assembly_names_list[i][2]), int(dates_assembly_names_list[i][3]), int(dates_assembly_names_list[i][4]), int(dates_assembly_names_list[i][5]))
         assembly_name = ' '.join([p.capitalize() for p in dates_assembly_names_list[i][6:]])
+        msg_data['bva_data'] = f'/static/storage/attendance/{filenames_original[i]}'
         msg_data['msg'] = f"BVA for {assembly_name} submitted successfully on {dt.strftime('%A, %B %d, %Y')}"
         # get the event
         attendance_file = open(os.path.join(ATTENDANCE_DIR, filenames_original[i]), 'r')
         attendance_data = attendance_file.readlines()
         for i, line in enumerate(attendance_data):
-            if i == 1 and line.strip() != "":
-                msg_data['event_name'] = line.split(',')[2].strip()
+            if i > 0:
                 msg_data['event_date'] = line.split(',')[3].split('-')[0].strip()
                 break
         attendance_file.close()
@@ -992,4 +999,15 @@ def remove_access(member_id):
     return sub_admin
  
 
-    
+def get_notif_count():
+    """
+    Get the total number of notifications
+    """
+    counter = 0
+    for dir_name in os.listdir(PUSH_NOTIF_BASE_DIR):
+        counter += len(os.listdir(os.path.join(PUSH_NOTIF_BASE_DIR, dir_name)))
+    return counter
+
+
+def valid_next_param(next_param):
+    return (True if urlparse(next_param).netloc.strip() == '' else False)

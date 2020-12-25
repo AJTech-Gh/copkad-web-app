@@ -126,10 +126,10 @@
 	<!--end: Quick actions -->	
 
 	<!--begin: Quick panel -->
-	<div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
+	<!-- <div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
 		<div class="kt-header__topbar-wrapper">
 			<span class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn">
-				<!--<i class="flaticon2-cube-1"></i>-->
+				<i class="flaticon2-cube-1"></i>
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                         <rect id="bound" x="0" y="0" width="24" height="24"/>
@@ -138,20 +138,86 @@
                     </g>
                 </svg>			</span>
 		</div>
-	</div>
+	</div> -->
 	
 	
 	<!--begin: User bar -->
 	<div class="kt-header__topbar-item kt-header__topbar-item--user">
 		<div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,10px" aria-expanded="false">
 			<span class="kt-header__topbar-welcome">Hi,</span>
-			<span class="kt-header__topbar-username"><!--put the name of the user here-->Sean</span>
-			<!--put the picture of the user here--><img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/user-profile.png') }}">
-
-			<!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-		    <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">S</span>
+			<span class="kt-header__topbar-username">{{ logged_in_admin_data.last_name + ', ' + logged_in_admin_data.first_name + ' ' + logged_in_admin_data.other_names }} <!--Put name of admin here--></span>
+            <div class="kt-user-card__avatar">
+                <img class="" alt="Pic" src="{{ logged_in_admin_img }}">
+                <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
+                <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">{{ logged_in_admin_data.last_name[0] }}</span>
+            </div>
 		</div>
-	</div>
+		<div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
+			<!--begin: Head -->
+    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(static/assets/media/misc/bg-1.jpg)">
+        <div class="kt-user-card__avatar">
+            <img class="" alt="Pic" src="{{ logged_in_admin_img }}" /> <!--put user pic here-->
+        </div>
+
+        <div class="kt-user-card__name kt-user-card__avatar">
+            <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
+            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">{{logged_in_admin_data.last_name[0]}}</span>
+           {{ logged_in_admin_data.last_name +', '+logged_in_admin_data.first_name +' '+ logged_in_admin_data.other_names }}
+        </div>
+        <!-- <div class="kt-user-card__badge">
+            <span class="btn btn-success btn-sm btn-bold btn-font-md">Messages</span>
+        </div> -->
+    </div>
+    <!--begin: Navigation -->
+    <div class="kt-notification">
+        <!-- <a href="#" class="kt-notification__item">
+            <div class="kt-notification__item-icon">
+                <i class="flaticon2-calendar-3 kt-font-success"></i>
+            </div>
+            <div class="kt-notification__item-details">
+                <div class="kt-notification__item-title kt-font-bold">
+                    My Profile
+                </div>
+                <div class="kt-notification__item-time">
+                    Account settings and more
+                </div>
+            </div>
+        </a> -->
+        <!-- <a href="" class="kt-notification__item">
+            <div class="kt-notification__item-icon">
+                <i class="flaticon2-mail kt-font-warning"></i>
+            </div>
+            <div class="kt-notification__item-details">
+                <div class="kt-notification__item-title kt-font-bold">
+                    My Messages
+                </div>
+                <div class="kt-notification__item-time">
+                    Inbox and tasks
+                </div>
+            </div>
+        </a>
+        <a href="" class="kt-notification__item">
+            <div class="kt-notification__item-icon">
+                <i class="flaticon2-rocket-1 kt-font-danger"></i>
+            </div>
+            <div class="kt-notification__item-details">
+                <div class="kt-notification__item-title kt-font-bold">
+                    My Activities
+                </div>
+                <div class="kt-notification__item-time">
+                    Logs and notifications
+                </div>
+            </div>
+        </a> -->
+
+        <div class="kt-notification__custom kt-space-between">
+            <a href="{{ url_for('logout') }}" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
+
+            <!-- <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a> -->
+        </div>
+    </div>
+<!--end: Navigation -->	
+</div></div>
 	<!--end: User bar -->		
 </div>
 <!-- end:: Header Topbar -->		</div>
@@ -174,7 +240,7 @@
         
         <span class="kt-subheader__desc">#XRS-45670</span>
         
-        <a href="#" class="btn btn-label-primary btn-bold btn-icon-h kt-margin-l-10">
+        <a href="{{url_for('add_user')}}" class="btn btn-label-primary btn-bold btn-icon-h kt-margin-l-10">
 			Add New
 		</a>
     </div>
@@ -182,8 +248,8 @@
         <div class="kt-subheader__wrapper">
             <button class="btn kt-subheader__btn-primary" id="upload_attendance"/>
                 UPLOAD ATTENDANCE &nbsp;
-                <!--<i class="flaticon2-calendar-1"></i>-->
-                <!-- <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">
+                <!-- <i class="flaticon2-calendar-1"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">
 <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
     <rect id="bound" x="0" y="0" width="24" height="24"/>
     <rect id="Rectangle-8" fill="#000000" x="4" y="5" width="16" height="3" rx="1.5"/>
@@ -290,16 +356,16 @@
         <div class="kt-widget kt-widget--user-profile-1">
             <div class="kt-widget__head">
                 <div class="kt-widget__media">
-                    <img src="{{ url_for('static', filename='assets/media/users/100_1.jpg') }}" alt="image">
+                    <img src="{{ logged_in_admin_img }}" alt="image">
                 </div>
                 <div class="kt-widget__content">
                     <div class="kt-widget__section">
-                        <a href="#" class="kt-widget__username">
-                    Kwaku Boateng    
+                        <a href="javascript:void(0)" class="kt-widget__username">
+                            {{ logged_in_admin_data.last_name +', '+logged_in_admin_data.first_name+' '+logged_in_admin_data.other_names }}
                             <i class="flaticon2-correct kt-font-success"></i>                       
                         </a>
                         <span class="kt-widget__subtitle">
-                            Presiding Elder               
+                            Presiding Elder             
                         </span>
                     </div>
 
@@ -312,19 +378,19 @@
                 <div class="kt-widget__content">
                     <div class="kt-widget__info">
                         <span class="kt-widget__label">Assembly:</span>
-                        <a href="#" class="kt-widget__data">Emmanuel English Assembly</a>
+                        <a href="javascript:void(0)" class="kt-widget__data">{{ logged_in_admin_data.assembly }}</a>
                     </div>
                     <div class="kt-widget__info">
                         <span class="kt-widget__label">Affiliation:</span>
-                        <a href="#" class="kt-widget__data">Kwadaso Area | Kwadaso Agric District</a>
+                        <a href="javascript:void(0)" class="kt-widget__data">{{ logged_in_admin_data.ministry }} | {{ logged_in_admin_data.group }}</a>
                     </div>
                     <div class="kt-widget__info">
                         <span class="kt-widget__label">Contact :</span>
-                        <span class="kt-widget__data">+233 570 364 383</span>
+                        <span class="kt-widget__data">{{ logged_in_admin_data.contact_phone_1 }}</span>
                     </div>
                 </div>
                 <div class="kt-widget__items">
-                    <a href="{{ url_for('overview') }}" class="kt-widget__item kt-widget__item--active">
+                    <a href="javascript:void(0)" class="kt-widget__item kt-widget__item--active">
                         <span class="kt-widget__section">
                             <span class="kt-widget__icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
@@ -454,7 +520,15 @@
                                 </a> 		
                                 <span class="kt-widget4__number kt-font-info">{{ latest_updates['water_baptism'] }}</span> <!--show by number of registrants-->
                             </div>
-                
+                            <div class="kt-widget4__item">
+                                <span class="kt-widget4__icon">
+                                    <i class="flaticon-safe-shield-protection  kt-font-success"></i>
+                                </span>	
+                                <a href="member_datatable                   " class="kt-widget4__title kt-widget4__title--light">
+                                    Members
+                                </a> 		
+                                <span class="kt-widget4__number kt-font-success">{{ latest_updates['member_count'] }}</span>
+                            </div>
                             <!-- <div class="kt-widget4__item">
                                 <span class="kt-widget4__icon">
                                     <i class="flaticon-safe-shield-protection  kt-font-success"></i>
@@ -469,7 +543,7 @@
                                 <span class="kt-widget4__icon">
                                     <i class="flaticon2-line-chart kt-font-danger"></i>
                                 </span>	
-                                <a href="#" class="kt-widget4__title kt-widget4__title--light">
+                                <a href="javascript:void(0)" class="kt-widget4__title kt-widget4__title--light">
                                     Bible Studies Groups
                                 </a> 		
                                 <span class="kt-widget4__number kt-font-danger">{{ latest_updates['bible_studies_groups'] }}</span>
@@ -479,7 +553,7 @@
                                 <span class="kt-widget4__icon">
                                     <i class="flaticon2-pie-chart-1 kt-font-primary"></i>
                                 </span>	
-                                <a href="birth" class="kt-widget4__title kt-widget4__title--light">
+                                <a href="births" class="kt-widget4__title kt-widget4__title--light">
                                     Births
                                 </a> 		
                                 <span class="kt-widget4__number kt-font-primary">{{ latest_updates['births'] }}</span>
@@ -489,7 +563,7 @@
                                 <span class="kt-widget4__icon">
                                     <i class="flaticon2-rocket kt-font-brand"></i>
                                 </span>	
-                                <a href="death" class="kt-widget4__title kt-widget4__title--light">
+                                <a href="deaths" class="kt-widget4__title kt-widget4__title--light">
                                     Deaths
                                 </a> 		
                                 <span class="kt-widget4__number kt-font-brand">{{ latest_updates['deaths'] }}</span>
@@ -617,7 +691,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="attendanceModal">Update Attendance</h5>
+                <h5 class="modal-title" id="attendanceModal">Upload Attendancee</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 </button>
             </div>
@@ -638,13 +712,7 @@
                         <div class="col-xl-6">
                             <select class="form-control kt-select2" name="assembly">
                                 <optgroup id ="assembly" label="Select Assembly" selected>
-                                {% for assembly in assembly_names %}    
-                                    {% if assembly == "" %}
-                                        <option value="{{assembly}}" selected>{{ assembly }}</option>
-                                    {% else %}
-                                        <option value="{{assembly}}" >{{ assembly }}</option>
-                                    {% endif %}
-                                {% endfor %}
+                                    <option value="{{current_user.assembly}}" selected>{{ current_user.assembly }}</option>
                                 </optgroup>
                             </select>
                             <!-- <span class="form-text text-muted">Select assembly, ministry and bible studies group of the member. Selection will be saved to the database </span> -->
@@ -816,10 +884,10 @@
                                             <div class="kt-checkbox-inline">
 
                                                 <!--checkboxes should be checked only when check item is complete and verified-->
-                                                <label class="kt-checkbox">
+                                                <!-- <label class="kt-checkbox">
                                                     <input type="checkbox" readonly> New Converts Graduate
                                                     <span></span>
-                                                </label>
+                                                </label> -->
                                                 <label class="kt-checkbox">
                                                     <input type="checkbox"> Holy Ghost Baptism
                                                     <span></span>
@@ -924,9 +992,9 @@
 					</div>
 				</div>				 
 				<div class="kt-footer__menu">
-					<a href="http://keenthemes.com/metronic" target="_blank">Purchase Lisence</a>
-					<a href="http://keenthemes.com/metronic" target="_blank">Team</a>
-					<a href="http://keenthemes.com/metronic" target="_blank">Contact</a>
+					<a href="#" target="_blank">Donate</a>
+					<a href="#" target="_blank">Visit us</a>
+					<a href="#" target="_blank">Contact Us</a>
 				</div>	
 			</div>
 		</div>	
@@ -961,5 +1029,5 @@
             </body>
     <!-- end::Body -->
 
-<!-- Mirrored from keenthemes.com/metronic/preview/demo2/custom/apps/user/profile-1/{{ url_for('overview') }} by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 26 May 2019 08:29:23 GMT -->
+<!-- Mirrored from keenthemes.com/metronic/preview/demo2/custom/apps/user/profile-1/overview by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 26 May 2019 08:29:23 GMT -->
 </html>

@@ -407,6 +407,10 @@ $("#member_id").on("change", function(e) {
     $("#member_id").trigger("keyup");
 });
 
+$("#upload_attendance").on('click', function(e) {
+	$("#bva_modal").modal("toggle");
+});
+
 
 $(".accessibility_view_details").on("click", function(e) {
 	let member_id = $(this).attr("name");

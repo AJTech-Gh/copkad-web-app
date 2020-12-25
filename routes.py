@@ -1,4 +1,5 @@
 from flask import render_template, request, make_response, jsonify, Response
+from flask.signals import request_started
 from flask_login import current_user, login_user, logout_user, login_required
 import json, os, re
 from datetime import datetime
@@ -184,7 +185,7 @@ def member_dashboard():
 def bible_studies_group():
     return render_template('report.html')
 
-@app.route('/')
+
 @app.route('/index')
 def index():
     return render_template('login.html')
@@ -194,61 +195,73 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+@app.route('/')
 @app.route('/login')
 def login():
-    return render_template('login.html')
-
-@app.route('/login_submit', methods=['POST'])
-def login_submit():
-    try:
-        print(current_user)
-        if current_user.is_authenticated:
-            if str(current_user).split(':')[0].lower() == 'accessibility':
-                permission = current_user.permission
-                if permission == 'super_admin':
-                    return redirect(url_for('admin_dashboard'))
-                if permission.startswith('admin'):
-                    assembly_name = f'{permission[6:]}_assembly'
-                    return redirect(url_for('overview', assembly_name=assembly_name))
-                if permission.startswith('chief'):
-                    assembly_name = f'{permission[6:]}_assembly'
-                    return render_template('login.html')
-                if permission.startswith('finance'):
-                    assembly_name = f'{permission[8:]}_assembly'
-                    return render_template('login.html')
-            else:
-                return redirect(url_for('personal_information'))
-        else:
-            # get the form data
-            form = request.form
-            username = form.get('username')
-            password = form.get('password')
-            remember = form.get('remember')
-            # login the user
-            admin = Accessibility.query.filter_by(permission=username).first()
-            # if the credentials doesn't match any admin, check the user's table
-            if admin is None or not admin.check_password(password):
-                # login as user else return to login screen
-                user = User.query.filter_by(member_id=username).first()
-                if user is None or not user.check_password(password):
-                    return redirect(url_for('login'))
-                login_user(user, remember=remember)
-                return redirect(url_for('personal_information'))
-            # login as the appropriate admin
-            permission = admin.permission
-            login_user(admin, remember=remember)
+    if current_user.is_authenticated:
+        if str(current_user).split(':')[0].lower() == 'accessibility':
+            permission = current_user.permission
             if permission == 'super_admin':
                 return redirect(url_for('admin_dashboard'))
             if permission.startswith('admin'):
-                assembly_name = f'{permission[6:]}_assembly'
-                return redirect(url_for('overview', assembly_name=assembly_name))
+                return redirect(url_for('overview'))
             if permission.startswith('chief'):
-                assembly_name = f'{permission[6:]}_assembly'
-                return render_template('login.html')
+                return redirect(url_for('finance_info'))
             if permission.startswith('finance'):
-                assembly_name = f'{permission[8:]}_assembly'
-                return render_template('login.html')
-        return render_template('login.html')
+                return redirect(url_for('finance_info'))
+        else:
+            return redirect(url_for('personal_information'))
+    return render_template('login.html')
+
+@app.route('/login_submit', methods=['GET', 'POST'])
+def login_submit():
+    try:
+        if request.method == 'GET':
+            next_param = request.args.get('next')
+            if utils.valid_next_param(next_param):
+                return redirect(url_for('login'))
+        if request.method == 'POST':
+            if current_user.is_authenticated:
+                if str(current_user).split(':')[0].lower() == 'accessibility':
+                    permission = current_user.permission
+                    if permission == 'super_admin':
+                        return Response(json.dumps({'status': 'SUCCESS', 'url': ' '}), status=200, mimetype='application/json')
+                    if permission.startswith('admin'):
+                        return Response(json.dumps({'status': 'SUCCESS', 'url': 'overview'}), status=200, mimetype='application/json')
+                    if permission.startswith('chief'):
+                        return Response(json.dumps({'status': 'SUCCESS', 'url': 'finance_info'}), status=200, mimetype='application/json')
+                    if permission.startswith('finance'):
+                        return Response(json.dumps({'status': 'SUCCESS', 'url': 'finance_info'}), status=200, mimetype='application/json')
+                else:
+                    return Response(json.dumps({'status': 'SUCCESS', 'url': 'personal_information'}), status=200, mimetype='application/json')
+            else:
+                # get the form data
+                form = request.form
+                username = form.get('username')
+                password = form.get('password')
+                remember = form.get('remember')
+                # login the user
+                admin = Accessibility.query.filter_by(permission=username).first()
+                # if the credentials doesn't match any admin, check the user's table
+                if admin is None or not admin.check_password(password):
+                    # login as user else return to login screen
+                    user = User.query.filter_by(member_id=username).first()
+                    if user is None or not user.check_password(password):
+                        return Response(json.dumps({'status': 'FAIL', 'message': 'Login failed'}), status=400, mimetype='application/json') #redirect(url_for('login'))
+                    login_user(user, remember=remember)
+                    return Response(json.dumps({'status': 'SUCCESS', 'url': 'personal_information'}), status=200, mimetype='application/json')
+                # login as the appropriate admin
+                permission = admin.permission
+                login_user(admin, remember=remember)
+                if permission == 'super_admin':
+                    return Response(json.dumps({'status': 'SUCCESS', 'url': 'admin_dashboard'}), status=200, mimetype='application/json')
+                if permission.startswith('admin'):
+                    return Response(json.dumps({'status': 'SUCCESS', 'url': 'overview'}), status=200, mimetype='application/json')
+                if permission.startswith('chief'):
+                    return Response(json.dumps({'status': 'SUCCESS', 'url': 'finance_info'}), status=200, mimetype='application/json')
+                if permission.startswith('finance'):
+                    return Response(json.dumps({'status': 'SUCCESS', 'url': 'finance_info'}), status=200, mimetype='application/json')
+        return redirect(url_for('login'))
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -278,6 +291,13 @@ def remove_accessibility(member_id):
 
 @app.route('/accessibility_submit', methods=['POST'])
 def accessibility_submit():
+    form = request.form
+    member_id = form.get('member_id').strip()
+    permission = form.get('permission')
+    assembly = form.get('assembly')
+    assembly_status = form.get('assembly_status')
+    accessibility_password = utils.generate_password()
+    assigned_assembly = ' '.join([p.capitalize().strip() for p in permission.split('_')[1:]]) + ' Assembly'
     try:
         #get the form data transmitted by Ajax
         #form is an ImmutableMultiDict object
@@ -407,23 +427,39 @@ def filtered_member_datatable():
 @app.route('/admin_dashboard')
 @login_required
 def admin_dashboard():
-    assembly_names, _, _ = utils.load_assembly_data()
-    registered_member_data = utils.assemblies_registration_summary()
-    attendance_notifs = utils.get_attendance_notifs()
-    assembly_ui_data = utils.get_assembly_ui_data()
-    access_admin_data = db.session.query(Accessibility, User).join(User).all()
-    # db.session.query(Accessibility, User.).join(Country).filter(User.user_email == 'abc@def.com').all()
-    # print(access_user_data[0])
-    accessibility_list = []
-    for access, user in access_admin_data:
-        admin_data = dict()
-        admin_data['member_id'] = user.member_id
-        admin_data['name'] = f'{user.last_name}, {user.first_name} {user.other_names}' 
-        admin_data['img'] = utils.get_img_path(user.member_id)
-        admin_data['assembly'] = user.assembly
-        admin_data['permission'] = access.permission
-        accessibility_list.append(admin_data)
-    return render_template('admin.html', accessibility_list=accessibility_list, assembly_names=assembly_names, registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data, permission_map=utils.PERMISSION_MAP)
+    try:
+        if current_user.is_authenticated:
+                if str(current_user).split(':')[0].lower() == 'accessibility':
+                    permission = current_user.permission
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+                        assembly_names, _, _ = utils.load_assembly_data()
+                        registered_member_data = utils.assemblies_registration_summary()
+                        attendance_notifs = utils.get_attendance_notifs('%')
+                        assembly_ui_data = utils.get_assembly_ui_data()
+                        access_admin_data = db.session.query(Accessibility, User).join(User).all()
+
+                        logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                        logged_in_admin_img = utils.get_img_path(current_user.member_id)
+                        
+                        accessibility_list = []
+                        for access, user in access_admin_data:
+                            admin_data = dict()
+                            admin_data['member_id'] = user.member_id
+                            admin_data['name'] = f'{user.last_name}, {user.first_name} {user.other_names}' 
+                            admin_data['img'] = utils.get_img_path(user.member_id)
+                            admin_data['assembly'] = user.assembly
+                            admin_data['permission'] = access.permission
+                            accessibility_list.append(admin_data)
+                        return render_template('admin.html', accessibility_list=accessibility_list, assembly_names=assembly_names, 
+                        registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data, 
+                        permission_map=utils.PERMISSION_MAP, logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img,
+                        message_count=message_count
+                        )
+        return redirect(url_for('login'))
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
 @app.route('/statistical_updates')
@@ -432,13 +468,25 @@ def statistical_updates():
     return render_template('statistical-updates.html', stats_data=stats_data)
 
 
-@app.route('/overview/<assembly_name>')
+@app.route('/overview')
 @login_required
-def overview(assembly_name):
-    assembly_names, _, _ = utils.load_assembly_data()
-    latest_updates = utils.get_latest_updates(assembly_name)
-    attendance_notifs = utils.get_attendance_notifs()
-    return render_template('overview.html', latest_updates=latest_updates, attendance_notifs=attendance_notifs, assembly_names=assembly_names)
+def overview():
+    try:
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin'):
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+                    underscored_assembly_name = current_user.assembly.lower().replace(' ', '_')
+                    latest_updates = utils.get_latest_updates(underscored_assembly_name)
+                    attendance_notifs = utils.get_attendance_notifs(current_user.assembly)
+                    return render_template('overview.html', latest_updates=latest_updates, attendance_notifs=attendance_notifs, 
+                    logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img)
+        return redirect(url_for('login'))
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
 @app.route('/upload_attendance', methods=['POST'])
@@ -478,40 +526,56 @@ def view_member_data():
 @app.route('/member_datatable')
 def member_datatable():
     try:
-        data_1 = User.query.all()
-        data_2 = utils.load_all_incomplete_reg()
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
 
-        member_data = []
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
 
-        for user in data_1:
-            row_data = {
-                'member_id': user.member_id,
-                'full_name': f'{user.last_name}, {user.first_name} {user.other_names}',
-                'gender': user.gender, 
-                'assembly': user.assembly, 
-                'contact': (f'{user.contact_phone_1}' if user.contact_phone_2.strip() == "" else f'{user.contact_phone_1}/{user.contact_phone_2}'), 
-                'marital_status': user.marital_status.capitalize(), 
-                'ministry': user.ministry, 
-                'status': "1"
-            }
-            member_data.append(row_data)
+                    data_1 = None
+                    if permission == 'super_admin':
+                        data_1 = User.query.all()
+                    else:
+                        data_1 = User.query.filter_by(assembly=current_user.assembly).all()
+                    data_2 = utils.load_all_incomplete_reg()
 
-        for user in data_2:
-            row_data = {
-                'member_id': user["member_id"],
-                'full_name': f'{user["last_name"]}, {user["first_name"]} {user["other_names"]}',
-                'gender': user['gender'], 
-                'assembly': ("" if user["assembly"] == None else user["assembly"]), 
-                'contact': (f'{user["contact_phone_1"]}' if user["contact_phone_2"].strip() == "" else f'{user["contact_phone_1"]}/{user["contact_phone_2"]}'), 
-                'marital_status': user["marital_status"].capitalize(), 
-                'ministry': user["ministry"], 
-                'status': "0"
-            }
-            member_data.append(row_data)
+                    member_data = []
 
-        #print(death_data[0])
-        
-        return render_template('member-datatable.html', member_data=member_data)
+                    for user in data_1:
+                        row_data = {
+                            'member_id': user.member_id,
+                            'full_name': f'{user.last_name}, {user.first_name} {user.other_names}',
+                            'gender': user.gender, 
+                            'assembly': user.assembly, 
+                            'contact': (f'{user.contact_phone_1}' if user.contact_phone_2.strip() == "" else f'{user.contact_phone_1}/{user.contact_phone_2}'), 
+                            'marital_status': user.marital_status.capitalize(), 
+                            'ministry': user.ministry, 
+                            'status': "1"
+                        }
+                        member_data.append(row_data)
+
+                    for user in data_2:
+                        row_data = {
+                            'member_id': user["member_id"],
+                            'full_name': f'{user["last_name"]}, {user["first_name"]} {user["other_names"]}',
+                            'gender': user['gender'], 
+                            'assembly': ("" if user["assembly"] == None else user["assembly"]), 
+                            'contact': (f'{user["contact_phone_1"]}' if user["contact_phone_2"].strip() == "" else f'{user["contact_phone_1"]}/{user["contact_phone_2"]}'), 
+                            'marital_status': user["marital_status"].capitalize(), 
+                            'ministry': user["ministry"], 
+                            'status': "0"
+                        }
+                        member_data.append(row_data)
+
+                    #print(death_data[0])
+                    return render_template('member-datatable.html', member_data=member_data, logged_in_admin_data=logged_in_admin_data, 
+                    logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -582,14 +646,32 @@ def settings_submit():
 @app.route('/births')
 def births():
     try:
-        assembly_names, _, _ = utils.load_assembly_data()
-        birth_data = Birth.query.all()
-        user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
-        user_data_dict = {"": ""}
-        # print(user_data)
-        for user in user_data:
-            user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
-        return render_template('birth.html', birth_data=birth_data, user_data_dict=user_data_dict,assembly_names=assembly_names)
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    assembly_names, _, _ = utils.load_assembly_data()
+                    if permission == 'super_admin':
+                        birth_data = Birth.query.all()
+                    else:
+                        birth_data = Birth.query.filter_by(assembly=current_user.assembly).all()
+
+                    user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
+                    user_data_dict = {"": ""}
+                    # print(user_data)
+                    for user in user_data:
+                        user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
+
+                    return render_template('birth.html', birth_data=birth_data, user_data_dict=user_data_dict,assembly_names=assembly_names, 
+                    logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -850,25 +932,39 @@ def promotion_submit():
 @app.route('/deaths')
 def deaths():
     try:
-        data_1 = db.session.query(Death, User).join(User).all()
-        death_data = []
-        for death, user in data_1:
-            row_data = {
-                "record_id": str(death.id),
-                "member_id": death.member_id,
-                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
-                "assembly": user.assembly,
-                "ministry": user.ministry,
-                "aged": str(death.death_date.year - user.dob.year),
-                "date_of_birth": '{}-{}-{}'.format(user.dob.year, user.dob.month, user.dob.day),
-                "death_date": '{}-{}-{}'.format(death.death_date.year, death.death_date.month, death.death_date.day),
-                "burial_date": '{}-{}-{}'.format(death.burial_date.year, death.burial_date.month, death.burial_date.day),
-                "place_of_burial": death.place_of_burial,
-                "officiating_minister": death.officiating_minister
-            }
-            death_data.append(row_data)
-        #print(death_data[0])
-        return render_template('death.html', death_data=death_data)
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    data_1 = db.session.query(Death, User).join(User).all()
+                    death_data = []
+                    for death, user in data_1:
+                        if permission == 'super_admin' or current_user.assembly == user.assembly:
+                            row_data = {
+                                "record_id": str(death.id),
+                                "member_id": death.member_id,
+                                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                                "assembly": user.assembly,
+                                "ministry": user.ministry,
+                                "aged": str(death.death_date.year - user.dob.year),
+                                "date_of_birth": '{}-{}-{}'.format(user.dob.year, user.dob.month, user.dob.day),
+                                "death_date": '{}-{}-{}'.format(death.death_date.year, death.death_date.month, death.death_date.day),
+                                "burial_date": '{}-{}-{}'.format(death.burial_date.year, death.burial_date.month, death.burial_date.day),
+                                "place_of_burial": death.place_of_burial,
+                                "officiating_minister": death.officiating_minister
+                            }
+                            death_data.append(row_data)
+                    #print(death_data[0])
+                    return render_template('death.html', death_data=death_data, logged_in_admin_data=logged_in_admin_data, 
+                    logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -980,15 +1076,32 @@ def load_dedication_msg_id():
 @app.route('/dedication')
 def dedication():
     try:
-        assembly_names, _, _ = utils.load_assembly_data()
-        ded_data = Dedication.query.all()
-        user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
-        user_data_dict = {"": ""}
-        # print(user_data)
-        for user in user_data:
-            user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
 
-        return render_template('dedication.html', ded_data=ded_data, user_data_dict=user_data_dict, assembly_names=assembly_names)
+                    assembly_names, _, _ = utils.load_assembly_data()
+                    if permission == 'super_admin':
+                        ded_data = Dedication.query.all()
+                    else:
+                        ded_data = Dedication.query.filter_by(assembly=current_user.assembly)
+                    user_data = User.query.with_entities(User.member_id, User.first_name, User.last_name, User.other_names).all()
+                    user_data_dict = {"": ""}
+
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    # print(user_data)
+                    for user in user_data:
+                        user_data_dict[user[0]] = f"{user.last_name}, {user.first_name} {user.other_names}"
+
+                    return render_template('dedication.html', ded_data=ded_data, user_data_dict=user_data_dict, assembly_names=assembly_names, 
+                    logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -1003,62 +1116,6 @@ def dedication_submit():
         record_id = form.get('record_id').strip()
         member_id_father = form.get('member_id_father').strip()
         member_id_mother = form.get('member_id_mother').strip()
-        father_name = form.get('father_name').strip()
-        mother_name = form.get('mother_name').strip()
-        child_name = form.get('child_name').strip()
-        child_dob = form.get('child_dob')
-        dedication_date_time = form.get('dedication_date_time')
-        officiating_minister = form.get('officiating_minister').strip()
-        assembly = form.get('assembly')
-        place_of_ceremony = form.get('place_of_ceremony').strip()
-
-        try:
-            if record_id == "":
-                dedication = Dedication(member_id_father=member_id_father, member_id_mother=member_id_mother, child_name=child_name,
-                                        officiating_minister=officiating_minister, assembly=assembly, place_of_ceremony=place_of_ceremony)
-
-                dedication.set_child_dob(child_dob)
-                dedication.set_dedication_date_time(dedication_date_time)
-
-                db.session.add(dedication)
-                db.session.commit()
-            else:
-                record_id = int(record_id)
-                # child_dob = child_dob.split('-')
-                # child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
-                row_dict = {
-                    "id": record_id,
-                    "member_id_father": member_id_father,
-                    "member_id_mother": member_id_mother,
-                    "child_name": child_name,
-                    "officiating_minister": officiating_minister,
-                    "assembly": assembly,
-                    "place_of_ceremony": place_of_ceremony,
-                    "child_dob": child_dob,
-                    "dedication_date_time": utils.set_date_time(dedication_date_time)
-                }
-                Dedication.query.filter_by(id=record_id).update(row_dict)
-                db.session.commit()
-
-            data = {
-                "member_id_father": member_id_father,
-                "member_id_mother": member_id_mother,
-                "father_name": father_name,
-                "mother_name": mother_name,
-                "child_name": child_name,
-                "child_dob": child_dob,
-                "dedication_date_time": dedication_date_time,
-                "officiating_minister": officiating_minister,
-                "assembly": assembly,
-                "place_of_ceremony": place_of_ceremony
-            }
-
-            return Response(json.dumps(data), status=200, mimetype='application/json')
-        except Exception as e:
-            print(e)
-            # print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
-
 @app.route('/rallies_and_conventions')
 def rallies_and_conventions():
     try:
@@ -1183,25 +1240,39 @@ def load_baptism_by_id(src_id):
 @app.route('/baptism_certificates')
 def baptism_certificates():
      try:
-        data_1 = db.session.query(Baptism, User).join(User).all()
-        bc_data = []
-        for baptism, user in data_1:
-            row_data = {
-                "record_id": str(baptism.id),
-                "member_id": baptism.member_id,
-                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
-                "assembly": user.assembly,
-                "date_of_baptism": baptism.get_date_of_baptism(baptism.date_of_baptism),
-                "place_of_baptism": baptism.place_of_baptism,
-                "officiating_minister": baptism.officiating_minister,
-                "district": baptism.district,
-                "area": baptism.area,
-                "country": baptism.country,
-                "certificates": 2 if utils.get_img_path(baptism.member_id) == "" else 1
-            }
-            bc_data.append(row_data)
-        # print(bc_data[0])
-        return render_template('baptism-certificates.html', bc_data=bc_data)
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+                    
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    data_1 = db.session.query(Baptism, User).join(User).all()
+                    bc_data = []
+                    for baptism, user in data_1:
+                        if permission == 'super_admin' or user.assembly == current_user.assembly:
+                            row_data = {
+                                "record_id": str(baptism.id),
+                                "member_id": baptism.member_id,
+                                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                                "assembly": user.assembly,
+                                "date_of_baptism": baptism.get_date_of_baptism(baptism.date_of_baptism),
+                                "place_of_baptism": baptism.place_of_baptism,
+                                "officiating_minister": baptism.officiating_minister,
+                                "district": baptism.district,
+                                "area": baptism.area,
+                                "country": baptism.country,
+                                "certificates": 2 if utils.get_img_path(baptism.member_id) == "" else 1
+                            }
+                            bc_data.append(row_data)
+                    # print(bc_data[0])
+                    return render_template('baptism-certificates.html', bc_data=bc_data, logged_in_admin_data=logged_in_admin_data, 
+                    logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return render_template('login.html')
      except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -1274,12 +1345,18 @@ def baptism_certificates_submit():
             return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
         
 
-@app.route('/load_user_by_id/<src_id>', methods=['POST'])
-def load_user_by_id(src_id):
+@app.route('/load_user_by_id/<src_id_route>', methods=['POST'])
+def load_user_by_id(src_id_route):
     try:
         if request.method == 'POST':
-            member_id = request.form.get(src_id).strip()           
-            return Response(json.dumps(utils.read_user_by_member_id(member_id)), status=200, mimetype='application/json')
+            src_id_route = src_id_route.split('_')
+            member_id = request.form.get('member_id').strip()           
+            member_data = utils.read_user_by_member_id(member_id)
+            if member_data.get('assembly') and len(src_id_route) > 2:
+                route = src_id_route[-1].strip().lower()
+                if route == 'deaths' and not current_user.permission == 'super_admin' and not current_user.assembly == member_data['assembly']:
+                    member_data = dict()
+            return Response(json.dumps(member_data), status=200, mimetype='application/json')
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')

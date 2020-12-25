@@ -129,7 +129,7 @@ $("#member_id").on("keyup", function(e) {
         $.ajax({
             method: "POST",
 
-            url: "/load_user_by_id/member_id",
+            url: "/load_user_by_id/member_id_deaths",
 
             data: $(this).serialize(),
 

@@ -122,10 +122,10 @@
 	
 
 	<!--begin: Quick panel -->
-	<div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
+	<!-- <div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
 		<div class="kt-header__topbar-wrapper">
 			<span class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn">
-				<!--<i class="flaticon2-cube-1"></i>-->
+				<i class="flaticon2-cube-1"></i>
 				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--danger">
     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <rect id="bound" x="0" y="0" width="24" height="24"/>
@@ -134,7 +134,7 @@
     </g>
 </svg>			</span>
 		</div>
-	</div>
+	</div> -->
 	<!--end: Quick panel -->
 
 	
@@ -142,32 +142,33 @@
 	<div class="kt-header__topbar-item kt-header__topbar-item--user">
 		<div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,10px" aria-expanded="false">
 			<span class="kt-header__topbar-welcome">Hi,</span>
-			<span class="kt-header__topbar-username">Prosper Ezekiel <!--Put name of admin here--></span>
-			<img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}">
-
-			<!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-		    <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">S</span>
+			<span class="kt-header__topbar-username">{{ logged_in_admin_data.last_name + ', ' + logged_in_admin_data.first_name + ' ' + logged_in_admin_data.other_names }} <!--Put name of admin here--></span>
+            <div class="kt-user-card__avatar">
+                <img class="" alt="Pic" src="{{ logged_in_admin_img }}">
+                <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
+                <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">{{ logged_in_admin_data.last_name[0] }}</span>
+            </div>
 		</div>
 		<div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
 			<!--begin: Head -->
-    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(assets/media/misc/bg-1.jpg)">
+    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(static/assets/media/misc/bg-1.jpg)">
         <div class="kt-user-card__avatar">
-            <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" /> <!--put user pic here-->
+            <img class="" alt="Pic" src="{{ logged_in_admin_img }}" /> <!--put user pic here-->
             <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">E</span>
+            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">{{logged_in_admin_data.last_name[0]}}</span>
         </div>
         <div class="kt-user-card__name">
-            <!--Put name of administrator here-->Prosper Ezekiel
+           {{ logged_in_admin_data.last_name +', '+logged_in_admin_data.first_name +' '+ logged_in_admin_data.other_names }}
         </div>
         <div class="kt-user-card__badge">
-            <span class="btn btn-success btn-sm btn-bold btn-font-md">0 messages</span>
+            <span class="btn btn-success btn-sm btn-bold btn-font-md">{{ message_count }} Messages</span>
         </div>
     </div>
 <!--end: Head -->
 
 <!--begin: Navigation -->
 <div class="kt-notification">
-    <a href="{{ url_for('overview') }}" class="kt-notification__item">
+    <!-- <a href="#" class="kt-notification__item">
         <div class="kt-notification__item-icon">
             <i class="flaticon2-calendar-3 kt-font-success"></i>
         </div>
@@ -179,8 +180,8 @@
                 Account settings and more
             </div>
         </div>
-    </a>
-    <a href="{{ url_for('messages') }}" class="kt-notification__item">
+    </a> -->
+    <!-- <a href="" class="kt-notification__item">
         <div class="kt-notification__item-icon">
             <i class="flaticon2-mail kt-font-warning"></i>
         </div>
@@ -193,7 +194,7 @@
             </div>
         </div>
     </a>
-    <a href="{{ url_for('my_activities') }}" class="kt-notification__item">
+    <a href="" class="kt-notification__item">
         <div class="kt-notification__item-icon">
             <i class="flaticon2-rocket-1 kt-font-danger"></i>
         </div>
@@ -205,12 +206,12 @@
                 Logs and notifications
             </div>
         </div>
-    </a>
+    </a> -->
 
     <div class="kt-notification__custom kt-space-between">
-        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
 
-        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a>
+        <!-- <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a> -->
     </div>
 </div>
 <!--end: Navigation -->		</div>
@@ -253,11 +254,10 @@
                 flaticon-coins"></i>
                 <span class="kt-menu__link-text">Database</span><i class="kt-menu__ver-arrow la la-angle-right"></i></a>
                 <div class="kt-menu__submenu "><span class="kt-menu__arrow"></span><ul class="kt-menu__subnav">
-                    <li class="kt-menu__item  kt-menu__item--parent" aria-haspopup="true" ><span class="kt-menu__link"><span class="kt-menu__link-text">Water Baptism</span></span></li>
+                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('member_datatable') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Member Datatable</span></a></li>
                     <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('baptism_certificates') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Water Baptism</span></a></li>
                     <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('transfers_and_promotions') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Transfers & Promotions</span></a></li>
                     <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('births') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Births</span></a></li>
-                    <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('new_converts') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">New Converts</span></a></li>
                     <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('holyghost_baptism') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Holy Ghost Baptism</span></a></li>
                      <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('dedication') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Dedications</span></a></li>
                     <li class="kt-menu__item " aria-haspopup="true" ><a  href="{{ url_for('deaths') }}" target ="_blank" class="kt-menu__link "><i class="kt-menu__link-bullet kt-menu__link-bullet--dot"><span></span></i><span class="kt-menu__link-text">Deaths</span></a></li></ul>
@@ -317,9 +317,10 @@
 			Add New
 		</a>
     </div>
-    <!-- <div class="kt-subheader__toolbar">
+    <div class="kt-subheader__toolbar">
         <div class="kt-subheader__wrapper">
-                            <a href="#" class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
+            <button class="btn kt-subheader__btn-primary" id="upload_attendance">UPLOAD ATTENDANCE
+                           <!-- <a href="#" class="btn kt-subheader__btn-daterange" id="kt_dashboard_daterangepicker" data-toggle="kt-tooltip" title="Select dashboard daterange" data-placement="left">
                     <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
                     <span class="kt-subheader__btn-daterange-date" id="kt_dashboard_daterangepicker_date">Aug 16</span>
                     <i class="flaticon2-calendar-1"></i>
@@ -394,9 +395,9 @@
                     </ul>
                     <!-end::Nav->
                 </div>
-            </div>
+            </div>-->
         </div>
-    </div> -->
+    </div> 
 </div>
 <!-- end:: Content Head -->		
 	<!-- begin:: Content -->
@@ -581,6 +582,86 @@
 	</div>
 </div>
 <!--end:: Widgets/Outbound Bandwidth-->	</div>
+
+
+
+<!--begin::Modal-->
+<div class="modal fade" id="bva_modal" tabindex="-1" role="dialog" aria-labelledby="attendanceModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="attendanceModal">Update Attendance</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <form class="kt-form" action="upload_attendance" method="POST" id="attendance_form">
+                    <div class="kt-heading kt-heading--md">Select the attendance file (Only .csv files are allowed)</div>
+                    <div class="row">  
+                        <div class="col-xl-6">
+                            <div class="form-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="attendance_file" id="attendance_file" accept=".csv, application/vnd.ms-excel">
+                                    <label class="custom-file-label" id="attendance_file_label" for="attendance_file">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <select class="form-control kt-select2" name="assembly">
+                                <optgroup id ="assembly" label="Select Assembly" selected>
+                                    {% for name in assembly_names %}
+                                        {% if current_user.assembly == name %}
+                                            <option value="{{name}}" selected>{{ name }}</option>
+                                        {% else %}
+                                            <option value="{{name}}">{{ name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </optgroup>
+                            </select>
+                            <!-- <span class="form-text text-muted">Select assembly, ministry and bible studies group of the member. Selection will be saved to the database </span> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </div>    
+                    <!-- <div class="alert alert-secondary" role="alert">
+                        <div class="alert-icon"><i class="flaticon-warning kt-font-brand"></i></div>
+                          <div class="alert-text">
+                            System update for  <code>Biometric Attendance</code> 
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-lg-3 col-sm-12">File Type Validation</label>
+                        <div class="col-lg-4 col-md-9 col-sm-12">
+                            <div class="kt-dropzone dropzone m-dropzone--success" action="upload_attendance" id="m-dropzone-one">
+                                <div class="kt-dropzone__msg dz-message needsclick">
+                                    <h3 class="kt-dropzone__msg-title">Drop files here or click to upload.</h3>
+                                    <span class="kt-dropzone__msg-desc">Only csv files are allowed for upload</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="reset" class="btn btn-secondary">Reset</button> -->
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-secondary" data-dismiss="modal" id="reset_form" >Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="upload_attendance_btn">Upload</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--end::Modal-->
+
+
+
 	<div class="col-xl-4">
 		<!--Begin::Portlet-->
 <div class="kt-portlet kt-portlet--height-fluid">
@@ -766,11 +847,11 @@
                     <img src="{{ url_for('static', filename='assets/media/logos/thecopnsema-pentecost-logo.JPG') }}" alt="">
                 </div>
                 <div class="kt-widget19__info">
-                    <a href="#" class="kt-widget19__username">
-						Anna Krox  
+                    <a href="javascript:void(0)" class="kt-widget19__username">
+						{{ logged_in_admin_data.last_name +', '+ logged_in_admin_data.first_name +' '+logged_in_admin_data.other_names }}  
 					</a>
                     <span class="kt-widget19__time">
-						UX/UI Designer, Google
+						Super Admin, COP
 					</span>
                 </div>
                 <div class="kt-widget19__stats">
@@ -782,29 +863,18 @@
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-md dropdown-menu-fit">
                                 <!--begin::Nav-->
             <ul class="kt-nav">
-                <li class="kt-nav__head">
-                    Export Options                                    
-                    <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i>
+                <li class="kt-nav__head">                                    
+                    Select Assembly
+                    <!-- <i class="flaticon2-information" data-toggle="kt-tooltip" data-placement="right" title="Click to learn more..."></i> -->
                 </li>
                 <li class="kt-nav__separator"></li>
+                {% for name in assembly_names %}
                 <li class="kt-nav__item">
-                    <a href="#" class="kt-nav__link">
-                        <i class="kt-nav__link-icon fa fa-print"></i>
-                        <span class="kt-nav__link-text">Emmanuel English Assembly</span>
+                    <a href="javascript:void(0)" class="kt-nav__link">
+                        <span class="kt-nav__link-text">{{ name }}</span>
                     </a>
                 </li>
-                <li class="kt-nav__item">
-                    <a href="#" class="kt-nav__link">
-                        <i class="kt-nav__link-icon fa fa-parking"></i>
-                        <span class="kt-nav__link-text">Hope Assembly</span>
-                    </a>
-                </li>
-                <li class="kt-nav__item">
-                    <a href="#" class="kt-nav__link">
-                        <i class="kt-nav__link-icon fa fa-parking"></i>
-                        <span class="kt-nav__link-text">Glory Assembly</span>
-                    </a>
-                </li>
+                {% endfor %}
             </ul>
             <!--end::Nav-->				</div>
                         </div>
@@ -819,7 +889,7 @@
             </div>
         </div>
         <div class="kt-widget19__action">
-            <a href="#" class="btn btn-sm btn-label-brand btn-bold">Send message</a>
+            <a href="javascript:void(0)" class="btn btn-sm btn-label-brand btn-bold">Send message</a>
         </div>
     </div>
 </div>
@@ -919,7 +989,7 @@
 							<img src="{{ admin_data['img'] }}" alt="">   
 						</div>
 						<div class="kt-widget4__info">
-							<a href="#" class="kt-widget4__username">
+							<a href="javascript:void(0)" class="kt-widget4__username">
 								{{ admin_data['name'] }}
 							</a>
 							<p class="kt-widget4__text">

@@ -80,10 +80,10 @@
     </div> 
     <div class="kt-header__brand-nav">
         <div class="dropdown">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdow" aria-haspopup="true" aria-expanded="true">
                 The Church Of Pentecost - Nsema Assemblies | 
             </button>
-            <div class="dropdown-menu dropdown-menu-md">
+            <!-- <div class="dropdown-menu dropdown-menu-md">
                 <ul class="kt-nav kt-nav--bold kt-nav--md-space">
                     
                     <li class="kt-nav__separator"></li>
@@ -106,7 +106,7 @@
                         </a>
                     </li>
                 </ul>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -145,19 +145,20 @@
     
 
     <!--begin: Quick panel -->
-    <div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
+    <!-- <div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
         <div class="kt-header__topbar-wrapper">
             <span class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn">
-                <!--<i class="flaticon2-cube-1"></i>-->
+                <i class="flaticon2-cube-1"></i>
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--danger">
-    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <rect id="bound" x="0" y="0" width="24" height="24"/>
-        <rect id="Rectangle-7" fill="#000000" x="4" y="4" width="7" height="7" rx="1.5"/>
-        <path d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z" id="Combined-Shape" fill="#000000" opacity="0.3"/>
-    </g>
-</svg>          </span>
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <rect id="bound" x="0" y="0" width="24" height="24"/>
+                        <rect id="Rectangle-7" fill="#000000" x="4" y="4" width="7" height="7" rx="1.5"/>
+                        <path d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z" id="Combined-Shape" fill="#000000" opacity="0.3"/>
+                    </g>
+                </svg>          
+            </span>
         </div>
-    </div>
+    </div> -->
     <!--end: Quick panel -->
 
     
@@ -165,26 +166,28 @@
     <div class="kt-header__topbar-item kt-header__topbar-item--user">
         <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,10px" aria-expanded="false">
             <span class="kt-header__topbar-welcome">Hi,</span>
-            <span class="kt-header__topbar-username">Prosper Ezekiel <!--Put name of admin here--></span>
-            <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}">
+            <span class="kt-header__topbar-username"> {{logged_in_admin_data.last_name +', '+ logged_in_admin_data.first_name +' '+logged_in_admin_data.other_names}} </span>
+            <img class="" alt="Pic" src="{{ logged_in_admin_img }}">
 
             <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
             <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">S</span>
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
             <!--begin: Head -->
-    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(/static/assets/media/misc/bg-1.jpg)">
+    <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(static/assets/media/misc/bg-1.jpg)">
         <div class="kt-user-card__avatar">
-            <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" /> <!--put user pic here-->
+            <img class="" alt="Pic" src="{{ logged_in_admin_img }}" /> <!--put user pic here-->
             <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">E</span>
+            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">{{logged_in_admin_data.last_name[0]}}</span>
         </div>
         <div class="kt-user-card__name">
-            <!--Put name of administrator here-->Prosper Ezekiel
+            {{logged_in_admin_data.last_name +', '+ logged_in_admin_data.first_name +' '+logged_in_admin_data.other_names}}<!--Put name of administrator here-->
         </div>
-        <div class="kt-user-card__badge">
-            <span class="btn btn-success btn-sm btn-bold btn-font-md">0 messages</span>
-        </div>
+        {% if current_user.permission == 'super_admin' %}
+            <div class="kt-user-card__badge">
+                <span class="btn btn-success btn-sm btn-bold btn-font-md">{{ message_count }} messages</span>
+            </div>
+        {% endif %}
     </div>
 <!--end: Head -->
 
@@ -199,11 +202,11 @@
                 My Profile
             </div>
             <div class="kt-notification__item-time">
-                Account settings and more
+                Dashboard
             </div>
         </div>
     </a>
-    <a href="{{ url_for('messages') }}" class="kt-notification__item">
+    <!--<a href="{{ url_for('messages') }}" class="kt-notification__item">
         <div class="kt-notification__item-icon">
             <i class="flaticon2-mail kt-font-warning"></i>
         </div>
@@ -228,12 +231,12 @@
                 Logs and notifications
             </div>
         </div>
-    </a>
+    </a> -->
 
     <div class="kt-notification__custom kt-space-between">
-        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
+        <a href="{{ url_for('logout') }}" target="_blank" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
 
-        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a>
+        <!-- <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a> -->
     </div>
 </div>
 <!--end: Navigation -->     </div>
@@ -497,9 +500,13 @@
                     <div class="col-lg-4 col-md-9 col-sm-12">
                         <select class="form-control kt-select2" id="kt_select2_3" name="assembly" value="{{ ded_data['assembly'] }}" multiple>
                             <optgroup id ="assembly" label="Assembly" selected>
-                                {% for assembly in assembly_names %}    
-                                    <option value="{{assembly}}">{{ assembly }}</option>
-                                {% endfor %}
+                                {% if current_user.permission == 'super_admin' %}
+                                    <option value="{{current_user.assembly}}" selected>{{ current_user.assembly }}</option>
+                                {% else %}
+                                    {% for assembly in assembly_names %}    
+                                        <option value="{{assembly}}">{{ assembly }}</option>
+                                    {% endfor %}
+                                {% endif %}
                             </optgroup>
                         </select>
                     </div>
@@ -752,7 +759,7 @@
 <!-- end:: Page -->
 
             <!-- begin::Quick Panel -->
-<div id="kt_quick_panel" class="kt-quick-panel">
+<!-- <div id="kt_quick_panel" class="kt-quick-panel">
     <a href="#" class="kt-quick-panel__close" id="kt_quick_panel_close_btn"><i class="flaticon2-delete"></i></a>
 
     <div class="kt-quick-panel__nav">
@@ -791,7 +798,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- end::Quick Panel -->    
     <!-- begin::Scrolltop -->
 <div id="kt_scrolltop" class="kt-scrolltop">

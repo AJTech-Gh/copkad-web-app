@@ -121,10 +121,10 @@
     
 
     <!--begin: Quick panel -->
-    <div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
+    <!-- <div class="kt-header__topbar-item kt-header__topbar-item--quick-panel" data-toggle="kt-tooltip" title="Quick panel" data-placement="left">
         <div class="kt-header__topbar-wrapper">
             <span class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn">
-                <!--<i class="flaticon2-cube-1"></i>-->
+                <--<i class="flaticon2-cube-1"></i>->
                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--danger">
     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <rect id="bound" x="0" y="0" width="24" height="24"/>
@@ -133,7 +133,7 @@
     </g>
 </svg>          </span>
         </div>
-    </div>
+    </div> -->
     <!--end: Quick panel -->
 
     
@@ -141,26 +141,28 @@
     <div class="kt-header__topbar-item kt-header__topbar-item--user">
         <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="10px,10px" aria-expanded="false">
             <span class="kt-header__topbar-welcome">Hi,</span>
-            <span class="kt-header__topbar-username">Prosper Ezekiel <!--Put name of admin here--></span>
-            <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}">
+            <span class="kt-header__topbar-username">{{logged_in_admin_data.last_name +', '+ logged_in_admin_data.first_name +' '+logged_in_admin_data.other_names}} <!--Put name of admin here--></span>
+            <img class="" alt="Pic" src="{{ logged_in_admin_img }}">
 
             <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-            <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">S</span>
+            <span class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden-">{{logged_in_admin_data.last_name[0]}}</span>
         </div>
         <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
             <!--begin: Head -->
     <div class="kt-user-card kt-user-card--skin-dark kt-notification-item-padding-x" style="background-image: url(/static/assets/media/misc/bg-1.jpg)">
         <div class="kt-user-card__avatar">
-            <img class="" alt="Pic" src="{{ url_for('static', filename='assets/media/users/thecopkadna-users.png') }}" /> <!--put user pic here-->
+            <img class="" alt="Pic" src="{{ logged_in_admin_img }}" /> <!--put user pic here-->
             <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">E</span>
+            <span class="kt-badge kt-badge--lg kt-badge--rounded kt-badge--bold kt-font-success">{{logged_in_admin_data.last_name[0]}}</span>
         </div>
-        <div class="kt-user-card__name">
-            <!--Put name of administrator here-->Prosper Ezekiel
+        <div class="kt-user-card__name kt-user-card__avatar">
+            {{logged_in_admin_data.last_name +', '+ logged_in_admin_data.first_name +' '+logged_in_admin_data.other_names}}<!--Put name of administrator here-->
         </div>
-        <div class="kt-user-card__badge">
-            <span class="btn btn-success btn-sm btn-bold btn-font-md">0 messages</span>
-        </div>
+        {% if current_user.permission == 'super_admin' %}
+            <div class="kt-user-card__badge">
+                <span class="btn btn-success btn-sm btn-bold btn-font-md">{{ message_count }} messages</span>
+            </div>
+        {% endif %}
     </div>
 <!--end: Head -->
 
@@ -179,7 +181,7 @@
             </div>
         </div>
     </a>
-    <a href="{{ url_for('messages') }}" class="kt-notification__item">
+    <!-- <a href="" class="kt-notification__item">
         <div class="kt-notification__item-icon">
             <i class="flaticon2-mail kt-font-warning"></i>
         </div>
@@ -191,8 +193,8 @@
                 Inbox and tasks
             </div>
         </div>
-    </a>
-    <a href="{{ url_for('my_activities') }}" class="kt-notification__item">
+    </a> -->
+    <!-- <a href="" class="kt-notification__item">
         <div class="kt-notification__item-icon">
             <i class="flaticon2-rocket-1 kt-font-danger"></i>
         </div>
@@ -204,12 +206,12 @@
                 Logs and notifications
             </div>
         </div>
-    </a>
+    </a> -->
 
     <div class="kt-notification__custom kt-space-between">
-        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-label btn-label-brand btn-sm btn-bold">Sign Out</a>
 
-        <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a>
+        <!-- <a href="{{ url_for('login_v2') }}" target="_blank" class="btn btn-clean btn-sm btn-bold">Upgrade Plan</a> -->
     </div>
 </div>
 <!--end: Navigation -->     </div>
@@ -244,16 +246,16 @@
     </div>
     <div class="kt-subheader__toolbar">
         <div class="kt-subheader__wrapper">
-                            <a href="{{ url_for('all_datatables') }}" target="_blank" class="btn kt-subheader__btn-primary">
+                            <!-- <a href="{{ url_for('all_datatables') }}" target="_blank" class="btn kt-subheader__btn-primary">
                     Database &nbsp;
-                    <!--<i class="flaticon2-calendar-1"></i>-->
+                    <i class="flaticon2-calendar-1"></i>
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">
     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <rect id="bound" x="0" y="0" width="24" height="24"/>
         <rect id="Rectangle-8" fill="#000000" x="4" y="5" width="16" height="3" rx="1.5"/>
         <path d="M7.5,11 L16.5,11 C17.3284271,11 18,11.6715729 18,12.5 C18,13.3284271 17.3284271,14 16.5,14 L7.5,14 C6.67157288,14 6,13.3284271 6,12.5 C6,11.6715729 6.67157288,11 7.5,11 Z M10.5,17 L13.5,17 C14.3284271,17 15,17.6715729 15,18.5 C15,19.3284271 14.3284271,20 13.5,20 L10.5,20 C9.67157288,20 9,19.3284271 9,18.5 C9,17.6715729 9.67157288,17 10.5,17 Z" id="Combined-Shape" fill="#000000" opacity="0.3"/>
     </g>
-</svg>                </a>
+</svg>                </a> -->
                         
            
         </div>
@@ -612,7 +614,7 @@
 <!-- end:: Page -->
 
             <!-- begin::Quick Panel -->
-<div id="kt_quick_panel" class="kt-quick-panel">
+<!-- <div id="kt_quick_panel" class="kt-quick-panel">
     <a href="#" class="kt-quick-panel__close" id="kt_quick_panel_close_btn"><i class="flaticon2-delete"></i></a>
 
     <div class="kt-quick-panel__nav">
@@ -651,7 +653,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- end::Quick Panel -->    
     <!-- begin::Scrolltop -->
 <div id="kt_scrolltop" class="kt-scrolltop">
