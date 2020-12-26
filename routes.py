@@ -1108,7 +1108,7 @@ def dedication():
 
 @app.route('/dedication_submit', methods=['POST'])
 def dedication_submit():
-    if request.method == 'POST':
+    try:
         # get the form data transmitted by Ajax
         # form is an ImmutableMultiDict object
         # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
@@ -1116,6 +1116,62 @@ def dedication_submit():
         record_id = form.get('record_id').strip()
         member_id_father = form.get('member_id_father').strip()
         member_id_mother = form.get('member_id_mother').strip()
+        father_name = form.get('father_name').strip()
+        mother_name = form.get('mother_name').strip()
+        child_name = form.get('child_name').strip()
+        child_dob = form.get('child_dob')
+        dedication_date_time = form.get('dedication_date_time')
+        officiating_minister = form.get('officiating_minister').strip()
+        assembly = form.get('assembly')
+        place_of_ceremony = form.get('place_of_ceremony').strip()
+
+        if record_id == "":
+            dedication = Dedication(member_id_father=member_id_father, member_id_mother=member_id_mother, child_name=child_name,
+                                    officiating_minister=officiating_minister, assembly=assembly, place_of_ceremony=place_of_ceremony)
+
+            dedication.set_child_dob(child_dob)
+            dedication.set_dedication_date_time(dedication_date_time)
+
+            db.session.add(dedication)
+            db.session.commit()
+        else:
+            record_id = int(record_id)
+            # child_dob = child_dob.split('-')
+            # child_dob = datetime(int(child_dob[0]), int(child_dob[1]), int(child_dob[2]))
+            row_dict = {
+                "id": record_id,
+                "member_id_father": member_id_father,
+                "member_id_mother": member_id_mother,
+                "child_name": child_name,
+                "officiating_minister": officiating_minister,
+                "assembly": assembly,
+                "place_of_ceremony": place_of_ceremony,
+                "child_dob": child_dob,
+                "dedication_date_time": utils.set_date_time(dedication_date_time)
+            }
+            Dedication.query.filter_by(id=record_id).update(row_dict)
+            db.session.commit()
+
+        data = {
+            "member_id_father": member_id_father,
+            "member_id_mother": member_id_mother,
+            "father_name": father_name,
+            "mother_name": mother_name,
+            "child_name": child_name,
+            "child_dob": child_dob,
+            "dedication_date_time": dedication_date_time,
+            "officiating_minister": officiating_minister,
+            "assembly": assembly,
+            "place_of_ceremony": place_of_ceremony
+        }
+
+        return Response(json.dumps(data), status=200, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+
+
 @app.route('/rallies_and_conventions')
 def rallies_and_conventions():
     try:
