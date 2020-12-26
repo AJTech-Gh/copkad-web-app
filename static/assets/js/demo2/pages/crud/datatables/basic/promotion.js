@@ -123,7 +123,7 @@ $("#pro_member_id").on("keyup", function(e) {
         $.ajax({
             method: "POST",
 
-            url: "/load_user_by_id/pro_member_id",
+            url: "/load_user_by_id/pro_member_id_check",
 
             data: $(this).serialize(),
 

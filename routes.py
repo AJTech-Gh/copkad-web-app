@@ -744,44 +744,58 @@ def birth_submit():
 @app.route('/promotion_and_transfer')
 def promotion_and_transfer():
     try:
-        data_1 = db.session.query(Promotion, User).join(User).all()
-        promotion_data = []
-        for promotion, user in data_1:
-            row_data = {
-                "record_id": str(promotion.id),
-                "member_id": promotion.member_id,
-                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
-                "assembly": user.assembly,
-                #"ministry": user.ministry,
-                "age": promotion.age,
-                "present_portfolio": promotion.present_portfolio,
-                "promoted_portfolio": promotion.promoted_portfolio,
-                "portfolio_specification": promotion.portfolio_specification,
-                "promotion_date": '{}-{}-{}'.format(promotion.promotion_date.year, promotion.promotion_date.month, promotion.promotion_date.day),
-                "officiating_minister": promotion.officiating_minister
-            }
-            promotion_data.append(row_data)
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
 
-        data_2 = db.session.query(Transfer, User).join(User).all()
-        transfer_data = []
-        for transfer, user in data_2:
-            row_data = {
-                "record_id": str(transfer.id),
-                "member_id": transfer.member_id,
-                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
-                "assembly": user.assembly,
-                #"ministry": user.ministry,
-                "age": transfer.age,
-                "present_portfolio": transfer.present_portfolio,
-                "transfered_from": transfer.transfered_from,
-                "transfered_to": transfer.transfered_to,
-                "transfer_specification": transfer.transfer_specification,
-                "transfer_date": '{}-{}-{}'.format(transfer.transfer_date.year, transfer.transfer_date.month, transfer.transfer_date.day),
-                "officiating_minister": transfer.officiating_minister
-            }
-            transfer_data.append(row_data)
-        #print(death_data[0])
-        return render_template('promotion-and-transfer.html', promotion_data=promotion_data, transfer_data=transfer_data)
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    data_1 = db.session.query(Promotion, User).join(User).all()
+                    promotion_data = []
+                    for promotion, user in data_1:
+                        if permission == 'super_admin' or current_user.assembly == user.assembly:
+                            row_data = {
+                                "record_id": str(promotion.id),
+                                "member_id": promotion.member_id,
+                                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                                "assembly": user.assembly,
+                                #"ministry": user.ministry,
+                                "age": promotion.age,
+                                "present_portfolio": promotion.present_portfolio,
+                                "promoted_portfolio": promotion.promoted_portfolio,
+                                "portfolio_specification": promotion.portfolio_specification,
+                                "promotion_date": '{}-{}-{}'.format(promotion.promotion_date.year, promotion.promotion_date.month, promotion.promotion_date.day),
+                                "officiating_minister": promotion.officiating_minister
+                            }
+                            promotion_data.append(row_data)
+
+                    data_2 = db.session.query(Transfer, User).join(User).all()
+                    transfer_data = []
+                    for transfer, user in data_2:
+                        if permission == 'super_admin' or current_user.assembly == user.assembly:
+                            row_data = {
+                                "record_id": str(transfer.id),
+                                "member_id": transfer.member_id,
+                                "full_name": f"{user.last_name}, {user.first_name} {user.other_names if user.other_names else ''}",
+                                "assembly": user.assembly,
+                                #"ministry": user.ministry,
+                                "age": transfer.age,
+                                "present_portfolio": transfer.present_portfolio,
+                                "transfered_from": transfer.transfered_from,
+                                "transfered_to": transfer.transfered_to,
+                                "transfer_specification": transfer.transfer_specification,
+                                "transfer_date": '{}-{}-{}'.format(transfer.transfer_date.year, transfer.transfer_date.month, transfer.transfer_date.day),
+                                "officiating_minister": transfer.officiating_minister
+                            }
+                            transfer_data.append(row_data)
+                    #print(death_data[0])
+                    return render_template('promotion-and-transfer.html', promotion_data=promotion_data, transfer_data=transfer_data, 
+                    logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -1175,10 +1189,29 @@ def dedication_submit():
 @app.route('/rallies_and_conventions')
 def rallies_and_conventions():
     try:
-        assembly_names, _, _ = utils.load_assembly_data()
-        assembly_names.insert(0, 'All')
-        cr_data = RalliesAndConventions.query.all()
-        return render_template('rallies-and-conventions.html', cr_data=cr_data, assembly_names=assembly_names)
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    assembly_names, _, _ = utils.load_assembly_data()
+                    assembly_names.insert(0, 'All')
+
+                    cr_data = None
+                    if permission == 'super_admin':
+                        cr_data = RalliesAndConventions.query.all()
+                    else:
+                        cr_data = RalliesAndConventions.query.filter(RalliesAndConventions.assembly.ilike(f'%{current_user.assembly}%')).all()
+
+                    return render_template('rallies-and-conventions.html', cr_data=cr_data, assembly_names=assembly_names, 
+                    logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -1405,12 +1438,12 @@ def baptism_certificates_submit():
 def load_user_by_id(src_id_route):
     try:
         if request.method == 'POST':
-            src_id_route = src_id_route.split('_')
-            member_id = request.form.get('member_id').strip()           
+            src_id_route = src_id_route.split('member_id')
+            member_id = request.form.get(f'{src_id_route[0]}member_id').strip()           
             member_data = utils.read_user_by_member_id(member_id)
-            if member_data.get('assembly') and len(src_id_route) > 2:
+            if member_data.get('assembly'):
                 route = src_id_route[-1].strip().lower()
-                if route == 'deaths' and not current_user.permission == 'super_admin' and not current_user.assembly == member_data['assembly']:
+                if route == 'check' and not current_user.permission == 'super_admin' and not current_user.assembly == member_data['assembly']:
                     member_data = dict()
             return Response(json.dumps(member_data), status=200, mimetype='application/json')
     except Exception as e:
