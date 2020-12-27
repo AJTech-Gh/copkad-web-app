@@ -1,0 +1,2 @@
+https://copkad-web-app.herokuapp.com/ 
+https://git.heroku.com/copkad-web-app.git
