@@ -636,7 +636,7 @@ def get_attendance_notifs(assembly):
     return msgs
 
 
-def get_statistical_updates():
+def get_statistical_updates(assembly_name):
     stats_data_dict = dict()
     # get dates
     date_now = datetime.now()
@@ -648,39 +648,58 @@ def get_statistical_updates():
     ded_child_below_13_yrs_dict = dict()
     ded_child_below_13_yrs_dict['male'] = 'N/A'
     ded_child_below_13_yrs_dict['female'] = 'N/A'
-    ded_child_below_13_yrs_dict['total'] = str(Dedication.query.filter(Dedication.child_dob > date_13_years_ago).count())
+    if assembly_name == '%':
+        ded_child_below_13_yrs_dict['total'] = str(Dedication.query.filter(Dedication.child_dob > date_13_years_ago).count())
+    else:
+        ded_child_below_13_yrs_dict['total'] = str(Dedication.query.filter(Dedication.child_dob > date_13_years_ago, Dedication.assembly==assembly_name).count())
     stats_data_dict['1'] = ded_child_below_13_yrs_dict
 
     # get teenagers 13 to 19 years
     teens_13_to_19_yrs_dict = dict()
-    teens_13_to_19_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Male').count())
-    teens_13_to_19_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Female').count())
+    if assembly_name == '%':
+        teens_13_to_19_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Male').count())
+        teens_13_to_19_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Female').count())
+    else:
+        teens_13_to_19_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Male', User.assembly==assembly_name).count())
+        teens_13_to_19_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_20_years_ago, User.gender=='Female', User.assembly==assembly_name).count())
     teens_13_to_19_yrs_dict['total'] = str(int(teens_13_to_19_yrs_dict['male']) + int(teens_13_to_19_yrs_dict['female']))
     stats_data_dict['2'] = teens_13_to_19_yrs_dict
 
     # young adults 20 to 35 years
     adults_20_to_35_yrs_dict = dict()
-    adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Male').count())
-    adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Female').count())
+    if assembly_name == '%':
+        adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Male').count())
+        adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Female').count())
+    else:
+        adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Male', User.assembly==assembly_name).count())
+        adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_20_years_ago, User.dob > date_36_years_ago, User.gender=='Female', User.assembly==assembly_name).count())
     adults_20_to_35_yrs_dict['total'] = str(int(adults_20_to_35_yrs_dict['male']) + int(adults_20_to_35_yrs_dict['female']))
     stats_data_dict['3'] = adults_20_to_35_yrs_dict
 
     # youth from 13 to 35 years
     adults_20_to_35_yrs_dict = dict()
-    adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Male').count())
-    adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Female').count())
+    if assembly_name == '%':
+        adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Male', ).count())
+        adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Female', ).count())
+    else:
+        adults_20_to_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Male', User.assembly==assembly_name).count())
+        adults_20_to_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_13_years_ago, User.dob > date_36_years_ago, User.gender=='Female', User.assembly==assembly_name).count())
     adults_20_to_35_yrs_dict['total'] = str(int(adults_20_to_35_yrs_dict['male']) + int(adults_20_to_35_yrs_dict['female']))
     stats_data_dict['4'] = adults_20_to_35_yrs_dict
 
     # adults above 35
     adults_above_35_yrs_dict = dict()
-    adults_above_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Male').count())
-    adults_above_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Female').count())
+    if assembly_name == '%':
+        adults_above_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Male').count())
+        adults_above_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Female').count())
+    else:
+        adults_above_35_yrs_dict['male'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Male', User.assembly==assembly_name).count())
+        adults_above_35_yrs_dict['female'] = str(User.query.filter(User.dob <= date_36_years_ago, User.gender=='Female', User.assembly==assembly_name).count())
     adults_above_35_yrs_dict['total'] = str(int(adults_above_35_yrs_dict['male']) + int(adults_above_35_yrs_dict['female']))
     stats_data_dict['5'] = adults_above_35_yrs_dict
 
     # total adults 13 and above
-    total_adults_13_and_above = str(User.query.filter(User.dob <= date_13_years_ago).count())
+    total_adults_13_and_above = str(User.query.filter(User.dob <= date_13_years_ago, User.assembly==assembly_name).count())
     stats_data_dict['6'] = total_adults_13_and_above
 
     # overall membership
@@ -700,7 +719,7 @@ def get_statistical_updates():
     stats_data_dict['8'] = officers_dict
 
     # rallies and conventions count
-    outreach_programmes = str(RalliesAndConventions.query.count())
+    outreach_programmes = str(RalliesAndConventions.query.filter(RalliesAndConventions.assembly.ilike(f'%{assembly_name}%')).count())
     stats_data_dict['9'] = outreach_programmes
 
     # adult souls won
@@ -712,7 +731,7 @@ def get_statistical_updates():
     stats_data_dict['11'] = souls_won_on_gospel_sunday_morning
 
     # new converts baptized in water
-    new_converts_baptized_in_water = str(Baptism.query.count())
+    new_converts_baptized_in_water = str(db.session.query(Baptism, User).join(User).filter(User.assembly==assembly_name).count())
     stats_data_dict['12'] = new_converts_baptized_in_water
 
     # new converts baptized in water
@@ -725,18 +744,28 @@ def get_statistical_updates():
 
     # transfers in 
     transfers_in_dict = dict()
-    transfers_in_dict['teens_13_19'] = str(Transfer.query.filter(Transfer.age >= 13, Transfer.age < 20).count())
-    transfers_in_dict['young_adults_20_35'] = str(Transfer.query.filter(Transfer.age >= 20, Transfer.age < 36).count())
-    transfers_in_dict['adults_36'] = str(Transfer.query.filter(Transfer.age >= 36).count())
+    if assembly_name == '%':
+        transfers_in_dict['teens_13_19'] = str(Transfer.query.filter(Transfer.transfered_to==assembly_name, Transfer.age >= 13, Transfer.age < 20).count())
+        transfers_in_dict['young_adults_20_35'] = str(Transfer.query.filter(Transfer.transfered_to==assembly_name, Transfer.age >= 20, Transfer.age < 36).count())
+        transfers_in_dict['adults_36'] = str(Transfer.query.filter(Transfer.transfered_to==assembly_name, Transfer.age >= 36).count())
+    else:
+        transfers_in_dict['teens_13_19'] = str(db.session.query(Transfer, User).join(User).filter(Transfer.transfered_to==assembly_name, Transfer.age >= 13, Transfer.age < 20, User.assembly==assembly_name).count())
+        transfers_in_dict['young_adults_20_35'] = str(db.session.query(Transfer, User).join(User).filter(Transfer.transfered_to==assembly_name, Transfer.age >= 20, Transfer.age < 36, User.assembly==assembly_name).count())
+        transfers_in_dict['adults_36'] = str(db.session.query(Transfer, User).join(User).filter(Transfer.transfered_to==assembly_name, Transfer.age >= 36, User.assembly==assembly_name).count())
     transfers_in_dict['total'] = str(int(transfers_in_dict['teens_13_19'])+int(transfers_in_dict['young_adults_20_35'])+int(transfers_in_dict['adults_36']))
     stats_data_dict['15'] = transfers_in_dict
 
     #transfers out
     transfers_out_dict = dict()
-    transfers_out_dict['teens_13_19'] = str(Transfer.query.filter(Transfer.age >= 13, Transfer.age < 20).count())
-    transfers_out_dict['young_adults_20_35'] = str(Transfer.query.filter(Transfer.age >= 20, Transfer.age < 36).count())
-    transfers_out_dict['adults_36'] = str(Transfer.query.filter(Transfer.age >= 36).count())
-    transfers_out_dict['total'] = str(int(transfers_in_dict['teens_13_19'])+int(transfers_in_dict['young_adults_20_35'])+int(transfers_in_dict['adults_36']))
+    if assembly_name == '%':
+        transfers_out_dict['teens_13_19'] = str(Transfer.query.filter(Transfer.transfered_from==assembly_name, Transfer.age >= 13, Transfer.age < 20).count())
+        transfers_out_dict['young_adults_20_35'] = str(Transfer.query.filter(Transfer.transfered_from==assembly_name, Transfer.age >= 20, Transfer.age < 36).count())
+        transfers_out_dict['adults_36'] = str(Transfer.query.filter(Transfer.transfered_from==assembly_name, Transfer.age >= 36).count())
+    else:
+        transfers_out_dict['teens_13_19'] = str(db.session.query(Transfer, User).join(User).filter(Transfer.transfered_from==assembly_name, Transfer.age >= 13, Transfer.age < 20, User.assembly==assembly_name).count())
+        transfers_out_dict['young_adults_20_35'] = str(db.session.query(Transfer, User).join(User).filter(Transfer.transfered_from==assembly_name, Transfer.age >= 20, Transfer.age < 36, User.assembly==assembly_name).count())
+        transfers_out_dict['adults_36'] = str(db.session.query(Transfer, User).join(User).filter(Transfer.transfered_from==assembly_name, Transfer.age >= 36, User.assembly==assembly_name).count())
+    transfers_out_dict['total'] = str(int(transfers_out_dict['teens_13_19'])+int(transfers_out_dict['young_adults_20_35'])+int(transfers_out_dict['adults_36']))
     stats_data_dict['16'] = transfers_in_dict
 
     # back sliders 
@@ -746,7 +775,11 @@ def get_statistical_updates():
     stats_data_dict['17'] = backsliders_dict
 
     # deaths
-    user_death_data = db.session.query(Death, User).join(User).all()
+    user_death_data = None
+    if assembly_name == '%':
+        user_death_data = db.session.query(Death, User).join(User).all()
+    else:
+        user_death_data = db.session.query(Death, User).join(User).filter(User.assembly==assembly_name).all()
     adult_deaths = 0
     for death, user in user_death_data:
         aged = (death.death_date - user.dob).days / 365
@@ -770,8 +803,16 @@ def get_statistical_updates():
     stats_data_dict['21'] = number_of_home_cells_held
 
     # number of bible study groups
-    latest_updates = get_latest_updates('Emmanuel English Assembly')
-    number_of_bible_study_groups = latest_updates['bible_studies_groups']
+    number_of_bible_study_groups = 0
+    if assembly_name == '%':
+        _, _, groups_dict = load_assembly_data()
+        all_groups = []
+        for g in groups_dict.values():
+            all_groups.extend(g)
+        number_of_bible_study_groups = len(all_groups)
+    else:
+        latest_updates = get_latest_updates('Emmanuel English Assembly')
+        number_of_bible_study_groups = latest_updates['bible_studies_groups']
     stats_data_dict['22'] = number_of_bible_study_groups
 
     # number of trained bible study group teachers/leaders
@@ -847,6 +888,11 @@ def get_statistical_updates():
     stats_data_dict['40'] = num_of_adult_and_children_service_held
 
     # num of children dedicated
+    num_of_children_dedicated = 0
+    if assembly_name == '%':
+        num_of_children_dedicated = str(Dedication.query.count())
+    else:
+        num_of_children_dedicated = str(Dedication.query.filter(Dedication.assembly==assembly_name).count())
     num_of_children_dedicated = str(Dedication.query.count())
     stats_data_dict['41'] = num_of_children_dedicated
 
@@ -879,11 +925,19 @@ def get_statistical_updates():
     stats_data_dict['48'] = children_transfered_out
 
     # births
-    num_births = str(Birth.query.count())
+    num_births = 0
+    if assembly_name == '%':
+        num_births = str(Birth.query.count())
+    else:
+        num_births = str(Birth.query.filter(Birth.assembly == assembly_name).count())
     stats_data_dict['49'] = num_births
 
     # deaths
-    num_deaths = str(Death.query.count())
+    num_deaths = 0
+    if assembly_name == '%':
+        num_deaths = str(Death.query.count())
+    else:
+        num_deaths = str(db.session.query(Death, User).join(User).filter(User.assembly == assembly_name).count())
     stats_data_dict['50'] = num_deaths
 
     # number of classes held

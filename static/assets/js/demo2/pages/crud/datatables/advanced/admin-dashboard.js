@@ -136,7 +136,7 @@ $(".assembly_ui_toggle_activate").on("click", function(e) {
 			} else {
 				document.querySelector("#" + assembly_name).innerHTML = `<span class="kt-badge kt-badge--danger kt-badge--inline">Deactivate</span>`;
 				$("#edit_settings_" + assembly_name).attr("target", "_blank");
-				$("#edit_settings_" + assembly_name).attr("href", "/edit_settings/" + assembly_name);
+				$("#edit_settings_" + assembly_name).attr("href", "/edit_settings?assembly_name=" + assembly_name);
 			}
 			$("#" + assembly_name + "_spinner").attr("hidden", true);
 

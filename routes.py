@@ -382,43 +382,53 @@ def assembly_forecast(assembly_name):
 @app.route('/filtered_member_datatable')
 def filtered_member_datatable():
     try:
-        assembly_name = request.args.get("assembly_name")
-        assembly_name_list = assembly_name.split('_')
-        assembly_name = ' '.join([p.capitalize() for p in assembly_name_list])
-        data_1 = User.query.filter_by(assembly=assembly_name).all()
-        data_2 = utils.load_all_incomplete_reg()
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission == 'super_admin':
+                    message_count = str(utils.get_notif_count())
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
 
-        member_data = []
+                    assembly_name = request.args.get("assembly_name")
+                    assembly_name_list = assembly_name.split('_')
+                    assembly_name = ' '.join([p.capitalize() for p in assembly_name_list])
+                    data_1 = User.query.filter_by(assembly=assembly_name).all()
+                    data_2 = utils.load_all_incomplete_reg()
 
-        for user in data_1:
-            row_data = {
-                'member_id': user.member_id,
-                'full_name': f'{user.last_name}, {user.first_name} {user.other_names}',
-                'gender': user.gender, 
-                'assembly': user.assembly, 
-                'contact': (f'{user.contact_phone_1}' if user.contact_phone_2.strip() == "" else f'{user.contact_phone_1}/{user.contact_phone_2}'), 
-                'marital_status': user.marital_status.capitalize(), 
-                'ministry': user.ministry, 
-                'status': "1"
-            }
-            member_data.append(row_data)
+                    member_data = []
 
-        for user in data_2:
-            row_data = {
-                'member_id': user["member_id"],
-                'full_name': f'{user["last_name"]}, {user["first_name"]} {user["other_names"]}',
-                'gender': user['gender'], 
-                'assembly': ("" if user["assembly"] == None else user["assembly"]), 
-                'contact': (f'{user["contact_phone_1"]}' if user["contact_phone_2"].strip() == "" else f'{user["contact_phone_1"]}/{user["contact_phone_2"]}'), 
-                'marital_status': user["marital_status"].capitalize(), 
-                'ministry': user["ministry"], 
-                'status': "0"
-            }
-            member_data.append(row_data)
+                    for user in data_1:
+                        row_data = {
+                            'member_id': user.member_id,
+                            'full_name': f'{user.last_name}, {user.first_name} {user.other_names}',
+                            'gender': user.gender, 
+                            'assembly': user.assembly, 
+                            'contact': (f'{user.contact_phone_1}' if user.contact_phone_2.strip() == "" else f'{user.contact_phone_1}/{user.contact_phone_2}'), 
+                            'marital_status': user.marital_status.capitalize(), 
+                            'ministry': user.ministry, 
+                            'status': "1"
+                        }
+                        member_data.append(row_data)
 
-        #print(death_data[0])
-        
-        return render_template('member-datatable.html', member_data=member_data)
+                    for user in data_2:
+                        row_data = {
+                            'member_id': user["member_id"],
+                            'full_name': f'{user["last_name"]}, {user["first_name"]} {user["other_names"]}',
+                            'gender': user['gender'], 
+                            'assembly': ("" if user["assembly"] == None else user["assembly"]), 
+                            'contact': (f'{user["contact_phone_1"]}' if user["contact_phone_2"].strip() == "" else f'{user["contact_phone_1"]}/{user["contact_phone_2"]}'), 
+                            'marital_status': user["marital_status"].capitalize(), 
+                            'ministry': user["ministry"], 
+                            'status': "0"
+                        }
+                        member_data.append(row_data)
+
+                    #print(death_data[0])
+                    
+                    return render_template('member-datatable.html', member_data=member_data, logged_in_admin_data=logged_in_admin_data, 
+                    logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
     except Exception as e:
         print(e)
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
@@ -429,33 +439,33 @@ def filtered_member_datatable():
 def admin_dashboard():
     try:
         if current_user.is_authenticated:
-                if str(current_user).split(':')[0].lower() == 'accessibility':
-                    permission = current_user.permission
-                    if permission == 'super_admin':
-                        message_count = str(utils.get_notif_count())
-                        assembly_names, _, _ = utils.load_assembly_data()
-                        registered_member_data = utils.assemblies_registration_summary()
-                        attendance_notifs = utils.get_attendance_notifs('%')
-                        assembly_ui_data = utils.get_assembly_ui_data()
-                        access_admin_data = db.session.query(Accessibility, User).join(User).all()
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission == 'super_admin':
+                    message_count = str(utils.get_notif_count())
+                    assembly_names, _, _ = utils.load_assembly_data()
+                    registered_member_data = utils.assemblies_registration_summary()
+                    attendance_notifs = utils.get_attendance_notifs('%')
+                    assembly_ui_data = utils.get_assembly_ui_data()
+                    access_admin_data = db.session.query(Accessibility, User).join(User).all()
 
-                        logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
-                        logged_in_admin_img = utils.get_img_path(current_user.member_id)
-                        
-                        accessibility_list = []
-                        for access, user in access_admin_data:
-                            admin_data = dict()
-                            admin_data['member_id'] = user.member_id
-                            admin_data['name'] = f'{user.last_name}, {user.first_name} {user.other_names}' 
-                            admin_data['img'] = utils.get_img_path(user.member_id)
-                            admin_data['assembly'] = user.assembly
-                            admin_data['permission'] = access.permission
-                            accessibility_list.append(admin_data)
-                        return render_template('admin.html', accessibility_list=accessibility_list, assembly_names=assembly_names, 
-                        registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data, 
-                        permission_map=utils.PERMISSION_MAP, logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img,
-                        message_count=message_count
-                        )
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+                    
+                    accessibility_list = []
+                    for access, user in access_admin_data:
+                        admin_data = dict()
+                        admin_data['member_id'] = user.member_id
+                        admin_data['name'] = f'{user.last_name}, {user.first_name} {user.other_names}' 
+                        admin_data['img'] = utils.get_img_path(user.member_id)
+                        admin_data['assembly'] = user.assembly
+                        admin_data['permission'] = access.permission
+                        accessibility_list.append(admin_data)
+                    return render_template('admin.html', accessibility_list=accessibility_list, assembly_names=assembly_names, 
+                    registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data, 
+                    permission_map=utils.PERMISSION_MAP, logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img,
+                    message_count=message_count
+                    )
         return redirect(url_for('login'))
     except Exception as e:
         print(e)
@@ -464,8 +474,20 @@ def admin_dashboard():
 
 @app.route('/statistical_updates')
 def statistical_updates():
-    stats_data = utils.get_statistical_updates()
-    return render_template('statistical-updates.html', stats_data=stats_data)
+    try:
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin'):
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+
+                    stats_data = utils.get_statistical_updates(current_user.assembly)
+                    return render_template('statistical-updates.html', stats_data=stats_data, logged_in_admin_data=logged_in_admin_data, 
+                    logged_in_admin_img=logged_in_admin_img)
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
 @app.route('/overview')
@@ -511,16 +533,33 @@ def upload_attendance():
 
 @app.route('/view_member_data')
 def view_member_data():
-    member_id = request.args.get("id")
-    status = request.args.get("status")
-    user_data = {}
-    if status == '0':
-        user_data = utils.read_incomplete_reg(member_id)
-    else:
-        user_data = utils.read_user_by_member_id(member_id)
+    try:
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
 
-    assembly_names, ministry_names, group_names = utils.load_assembly_data()
-    return render_template("add-user.html", user_data=user_data, assembly_names=assembly_names, ministry_names=ministry_names, group_names=group_names)
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    member_id = request.args.get("id")
+                    status = request.args.get("status")
+                    user_data = {}
+                    if status == '0':
+                        user_data = utils.read_incomplete_reg(member_id)
+                    else:
+                        user_data = utils.read_user_by_member_id(member_id)
+
+                    assembly_names, ministry_names, group_names = utils.load_assembly_data()
+                    return render_template("add-user.html", user_data=user_data, assembly_names=assembly_names, ministry_names=ministry_names, 
+                    group_names=group_names, logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
 @app.route('/member_datatable')
@@ -581,15 +620,41 @@ def member_datatable():
         return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
-@app.route('/edit_settings/<assembly_name>')
-def edit_settings(assembly_name):
-    assembly_data = utils.read_assembly_config(assembly_name)
-    # print(assembly_data)
-    return render_template('edit-settings.html', assembly_data=assembly_data)
+@app.route('/edit_settings')
+def edit_settings():
+    try:
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission == 'super_admin':
+                    assembly_name = request.args.get('assembly_name')
+                    message_count = str(utils.get_notif_count())
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+                    return render_template('settings.html', logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+                    assembly_data = utils.read_assembly_config(assembly_name)
+                    # print(assembly_data)
+                    return render_template('edit-settings.html', assembly_data=assembly_data)
+        return redirect(url_for('login'))
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    try:
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission == 'super_admin':
+                    message_count = str(utils.get_notif_count())
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+                    return render_template('settings.html', logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/settings_submit', methods=['POST'])
 def settings_submit():
@@ -1462,72 +1527,89 @@ def load_user_img(member_id):
 
 @app.route('/add_user')
 def add_user():
-    user_data = {
-            "member_id": "",
-            "first_name": "",
-            "last_name": "",
-            "other_names": "",
-            "full_name": "",
-            "gender": "Male",
-            "occupation": "",
-            "contact_1": "",
-            "contact_2": "",
-            "dob": "",
-            "email": "",
-            "marital_status": "Single",
-            "assembly": "",
-            "ministry": "",
-            "group": "Group One",
-            "comm_email": "checked",
-            "comm_sms": "checked",
-            "comm_phone": "",
-            "address_line_1": "",
-            "address_line_2": "",
-            "digital_address_code": "",
-            "region": "",
-            "district": "",
-            "country": "GH",
-            "img": "/static/assets/media/users/thecopkadna-users.png"
-        }
-    assembly_names, ministry_names, group_names = utils.load_assembly_data()
-    return render_template('add-user.html', user_data=user_data, assembly_names=assembly_names, ministry_names=ministry_names, group_names=group_names)
+    try:
+        if current_user.is_authenticated:
+            if str(current_user).split(':')[0].lower() == 'accessibility':
+                permission = current_user.permission
+                if permission.startswith('admin') or permission == 'super_admin':
+                    logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
+                    logged_in_admin_img = utils.get_img_path(current_user.member_id)
+
+                    message_count = '0'
+                    if permission == 'super_admin':
+                        message_count = str(utils.get_notif_count())
+
+                    user_data = {
+                            "member_id": "",
+                            "first_name": "",
+                            "last_name": "",
+                            "other_names": "",
+                            "full_name": "",
+                            "gender": "Male",
+                            "occupation": "",
+                            "contact_1": "",
+                            "contact_2": "",
+                            "dob": "",
+                            "email": "",
+                            "marital_status": "Single",
+                            "assembly": "",
+                            "ministry": "",
+                            "group": "Group One",
+                            "comm_email": "checked",
+                            "comm_sms": "checked",
+                            "comm_phone": "",
+                            "address_line_1": "",
+                            "address_line_2": "",
+                            "digital_address_code": "",
+                            "region": "",
+                            "district": "",
+                            "country": "GH",
+                            "img": "/static/assets/media/users/thecopkadna-users.png"
+                        }
+                    assembly_names, ministry_names, group_names = utils.load_assembly_data()
+                    return render_template('add-user.html', user_data=user_data, assembly_names=assembly_names, ministry_names=ministry_names, 
+                    group_names=group_names, logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+        return redirect(url_for('login'))
+    except Exception as e:
+        print(e)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 @app.route('/add_user_submit', methods=['POST'])
 def add_user_submit():
-    if request.method == 'POST':
-        # get the form data transmitted by Ajax
-        # form is an ImmutableMultiDict object
-        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
-        form = request.form
-        member_id = form.get('member_id').strip()
-        first_name = form.get('first_name').strip()
-        last_name = form.get('last_name').strip()
-        other_names = form.get('other_names').strip() 
-        gender = form.get('gender')
-        occupation = form.get('occupation').strip()
-        contact_phone_1 = form.get('contact_phone_1').strip()
-        contact_phone_2 = form.get('contact_phone_2').strip()
-        dob = form.get('dob')
-        email = form.get('email').strip()
-        marital_status = form.get('marital_status')
-        assembly = form.get('assembly')
-        ministry = form.getlist('ministry')
-        group = form.get('group')
+    try:
+        if request.method == 'POST':
+            # get the form data transmitted by Ajax
+            # form is an ImmutableMultiDict object
+            # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+            form = request.form
+            member_id = form.get('member_id').strip()
+            first_name = form.get('first_name').strip()
+            last_name = form.get('last_name').strip()
+            other_names = form.get('other_names').strip() 
+            gender = form.get('gender')
+            occupation = form.get('occupation').strip()
+            contact_phone_1 = form.get('contact_phone_1').strip()
+            contact_phone_2 = form.get('contact_phone_2').strip()
+            dob = form.get('dob')
+            email = form.get('email').strip()
+            marital_status = form.get('marital_status')
+            assembly = form.get('assembly')
+            ministry = form.getlist('ministry')
+            group = form.get('group')
 
-        comm_email = form.get('comm_email')
-        comm_sms = form.get('comm_sms')
-        comm_phone = form.get('comm_phone')
-        
-        address_line_1 = form.get('address_line_1').strip()
-        address_line_2 = form.get('address_line_2').strip()
-        digital_address_code = form.get('digital_address_code').strip()
-        region = form.get('region').strip()
-        district = form.get('district').strip()
-        country = form.get('country')
+            comm_email = form.get('comm_email')
+            comm_sms = form.get('comm_sms')
+            comm_phone = form.get('comm_phone')
+            
+            address_line_1 = form.get('address_line_1').strip()
+            address_line_2 = form.get('address_line_2').strip()
+            digital_address_code = form.get('digital_address_code').strip()
+            region = form.get('region').strip()
+            district = form.get('district').strip()
+            country = form.get('country')
 
-        password = utils.generate_password()
+            password = utils.generate_password()
 
-        try:
             if member_id == "": 
                 member_id = utils.gen_id(first_name, other_names, last_name)
                 if not member_id:
@@ -1597,46 +1679,46 @@ def add_user_submit():
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful', 'member_data': utils.read_user_by_member_id(member_id)}), status=200, mimetype='application/json')
-        except Exception as e:
-            print(e)
-            # print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Fatal error'}), status=400, mimetype='application/json')
 
 
 @app.route("/add_user_save_continue", methods=['POST'])
 def add_user_save_continue():
-    if request.method == 'POST':
-        # get the form data transmitted by Ajax
-        # form is an ImmutableMultiDict object
-        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
-        form = request.form
-        first_name = form.get('first_name').strip()
-        last_name = form.get('last_name').strip()
-        other_names = form.get('other_names').strip() 
-        gender = form.get('gender')
-        occupation = form.get('occupation').strip()
-        contact_phone_1 = form.get('contact_phone_1').strip()
-        contact_phone_2 = form.get('contact_phone_2').strip()
-        dob = form.get('dob')
-        email = form.get('email').strip()
-        marital_status = form.get('marital_status')
-        assembly = form.get('assembly')
-        ministry = form.getlist('ministry')
-        group = form.get('group')
+    try:
+        if request.method == 'POST':
+            # get the form data transmitted by Ajax
+            # form is an ImmutableMultiDict object
+            # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+            form = request.form
+            first_name = form.get('first_name').strip()
+            last_name = form.get('last_name').strip()
+            other_names = form.get('other_names').strip() 
+            gender = form.get('gender')
+            occupation = form.get('occupation').strip()
+            contact_phone_1 = form.get('contact_phone_1').strip()
+            contact_phone_2 = form.get('contact_phone_2').strip()
+            dob = form.get('dob')
+            email = form.get('email').strip()
+            marital_status = form.get('marital_status')
+            assembly = form.get('assembly')
+            ministry = form.getlist('ministry')
+            group = form.get('group')
 
-        password = form.get('password')
-        comm_email = form.get('comm_email')
-        comm_sms = form.get('comm_sms')
-        comm_phone = form.get('comm_phone')
+            password = form.get('password')
+            comm_email = form.get('comm_email')
+            comm_sms = form.get('comm_sms')
+            comm_phone = form.get('comm_phone')
+            
+            address_line_1 = form.get('address_line_1').strip()
+            address_line_2 = form.get('address_line_2').strip()
+            digital_address_code = form.get('digital_address_code').strip()
+            region = form.get('region').strip()
+            district = form.get('district').strip()
+            country = form.get('country')
         
-        address_line_1 = form.get('address_line_1').strip()
-        address_line_2 = form.get('address_line_2').strip()
-        digital_address_code = form.get('digital_address_code').strip()
-        region = form.get('region').strip()
-        district = form.get('district').strip()
-        country = form.get('country')
-        
-        try:
             # generate the pseudo id
             pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
             # put the data in a dictionary
@@ -1672,46 +1754,46 @@ def add_user_save_continue():
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
-        except Exception as e:
-            print(e)
-            # print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
 
 
 @app.route("/add_user_save_new", methods=['POST'])
 def add_user_save_new():
-    if request.method == 'POST':
-        # get the form data transmitted by Ajax
-        # form is an ImmutableMultiDict object
-        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
-        form = request.form
-        first_name = form.get('first_name').strip()
-        last_name = form.get('last_name').strip()
-        other_names = form.get('other_names').strip() 
-        gender = form.get('gender')
-        occupation = form.get('occupation').strip()
-        contact_phone_1 = form.get('contact_phone_1').strip()
-        contact_phone_2 = form.get('contact_phone_2').strip()
-        dob = form.get('dob')
-        email = form.get('email').strip()
-        marital_status = form.get('marital_status')
-        assembly = form.get('assembly')
-        ministry = form.getlist('ministry')
-        group = form.get('group')
+    try:
+        if request.method == 'POST':
+            # get the form data transmitted by Ajax
+            # form is an ImmutableMultiDict object
+            # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+            form = request.form
+            first_name = form.get('first_name').strip()
+            last_name = form.get('last_name').strip()
+            other_names = form.get('other_names').strip() 
+            gender = form.get('gender')
+            occupation = form.get('occupation').strip()
+            contact_phone_1 = form.get('contact_phone_1').strip()
+            contact_phone_2 = form.get('contact_phone_2').strip()
+            dob = form.get('dob')
+            email = form.get('email').strip()
+            marital_status = form.get('marital_status')
+            assembly = form.get('assembly')
+            ministry = form.getlist('ministry')
+            group = form.get('group')
 
-        password = form.get('password')
-        comm_email = form.get('comm_email')
-        comm_sms = form.get('comm_sms')
-        comm_phone = form.get('comm_phone')
+            password = form.get('password')
+            comm_email = form.get('comm_email')
+            comm_sms = form.get('comm_sms')
+            comm_phone = form.get('comm_phone')
+            
+            address_line_1 = form.get('address_line_1').strip()
+            address_line_2 = form.get('address_line_2').strip()
+            digital_address_code = form.get('digital_address_code').strip()
+            region = form.get('region').strip()
+            district = form.get('district').strip()
+            country = form.get('country')
         
-        address_line_1 = form.get('address_line_1').strip()
-        address_line_2 = form.get('address_line_2').strip()
-        digital_address_code = form.get('digital_address_code').strip()
-        region = form.get('region').strip()
-        district = form.get('district').strip()
-        country = form.get('country')
-        
-        try:
             # generate the pseudo id
             pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
             # put the data in a dictionary
@@ -1747,46 +1829,46 @@ def add_user_save_new():
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
-        except Exception as e:
-            print(e)
-            # print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
 
 
 @app.route("/add_user_save_exit", methods=['POST'])
 def add_user_save_exit():
-    if request.method == 'POST':
-        # get the form data transmitted by Ajax
-        # form is an ImmutableMultiDict object
-        # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
-        form = request.form
-        first_name = form.get('first_name').strip()
-        last_name = form.get('last_name').strip()
-        other_names = form.get('other_names').strip() 
-        gender = form.get('gender')
-        occupation = form.get('occupation').strip()
-        contact_phone_1 = form.get('contact_phone_1').strip()
-        contact_phone_2 = form.get('contact_phone_2').strip()
-        dob = form.get('dob')
-        email = form.get('email').strip()
-        marital_status = form.get('marital_status')
-        assembly = form.get('assembly')
-        ministry = form.getlist('ministry')
-        group = form.get('group')
+    try:
+        if request.method == 'POST':
+            # get the form data transmitted by Ajax
+            # form is an ImmutableMultiDict object
+            # https://tedboy.github.io/flask/generated/generated/werkzeug.ImmutableMultiDict.html
+            form = request.form
+            first_name = form.get('first_name').strip()
+            last_name = form.get('last_name').strip()
+            other_names = form.get('other_names').strip() 
+            gender = form.get('gender')
+            occupation = form.get('occupation').strip()
+            contact_phone_1 = form.get('contact_phone_1').strip()
+            contact_phone_2 = form.get('contact_phone_2').strip()
+            dob = form.get('dob')
+            email = form.get('email').strip()
+            marital_status = form.get('marital_status')
+            assembly = form.get('assembly')
+            ministry = form.getlist('ministry')
+            group = form.get('group')
 
-        password = form.get('password')
-        comm_email = form.get('comm_email')
-        comm_sms = form.get('comm_sms')
-        comm_phone = form.get('comm_phone')
+            password = form.get('password')
+            comm_email = form.get('comm_email')
+            comm_sms = form.get('comm_sms')
+            comm_phone = form.get('comm_phone')
+            
+            address_line_1 = form.get('address_line_1').strip()
+            address_line_2 = form.get('address_line_2').strip()
+            digital_address_code = form.get('digital_address_code').strip()
+            region = form.get('region').strip()
+            district = form.get('district').strip()
+            country = form.get('country')
         
-        address_line_1 = form.get('address_line_1').strip()
-        address_line_2 = form.get('address_line_2').strip()
-        digital_address_code = form.get('digital_address_code').strip()
-        region = form.get('region').strip()
-        district = form.get('district').strip()
-        country = form.get('country')
-        
-        try:
             # generate the pseudo id
             pseudo_member_id = utils.gen_pseudo_id(first_name, last_name, contact_phone_1)
             # put the data in a dictionary
@@ -1822,7 +1904,7 @@ def add_user_save_exit():
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
             return Response(json.dumps({'status':'OK', 'message': 'successful'}), status=200, mimetype='application/json')
-        except Exception as e:
-            print(e)
-            # print(form)
-            return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
+    except Exception as e:
+        print(e)
+        # print(form)
+        return Response(json.dumps({'status':'FAIL', 'message': 'Failed to save!'}), status=400, mimetype='application/json')
