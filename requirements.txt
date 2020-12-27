@@ -4,11 +4,14 @@ blinker==1.4
 cffi==1.14.2
 click==7.1.2
 cryptography==3.0
+dnspython==1.16.0
+eventlet==0.30.0
 Flask==1.1.2
 Flask-Login==0.5.0
 Flask-Mail==0.9.1
 Flask-Migrate==2.5.3
 Flask-SQLAlchemy==2.4.4
+greenlet==0.4.17
 gunicorn==20.0.4
 itsdangerous==1.1.0
 Jinja2==2.11.2
