@@ -2289,22 +2289,22 @@
                                                     <div class="col-xl-8 col-lg-8 col-sm-12 col-md-12"><br><br>
                                                         <div class="radio-list">
                                                             <label class="radio">
-                                                               <input name="permission" id="permission" value="super_admin" type="radio"> Super Administrator 
+                                                               <input name="permission" value="super_admin" type="radio"> Super Administrator 
                                                                <span></span>
                                                             </label><br>
                                                             <label class="radio">
-                                                                <input name="permission" id="permission" value="chief_finance" type="radio"> Chief Finance 
+                                                                <input name="permission" value="chief_finance" type="radio"> Chief Finance 
                                                                 <span></span>
                                                             </label><br>
                                                             {% for name in assembly_names %}
                                                                 <label class="radio">
-                                                                    <input name="permission" id="permission" value="admin_{{ name.lower().replace(' ', '_').replace('_assembly', '') }}" type="radio"> Sub Administrator - {{ name }}
+                                                                    <input name="permission" value="admin_{{ name.lower().replace(' ', '_').replace('_assembly', '') }}" type="radio"> Sub Administrator - {{ name }}
                                                                     <span></span>
                                                                 </label><br>
                                                             {% endfor %}
                                                             {% for name in assembly_names %}
                                                                 <label class="radio">
-                                                                    <input name="permission" id="permission" value="finance_{{ name.lower().replace(' ', '_').replace('_assembly', '') }}" type="radio"> Finance Officer - {{ name }}
+                                                                    <input name="permission" value="finance_{{ name.lower().replace(' ', '_').replace('_assembly', '') }}" type="radio"> Finance Officer - {{ name }}
                                                                     <span></span>
                                                                 </label><br>
                                                             {% endfor %}
