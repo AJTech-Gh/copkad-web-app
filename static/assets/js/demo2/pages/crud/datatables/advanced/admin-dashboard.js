@@ -275,8 +275,8 @@ var KTForm = function () {
 						
 						let img_url = "/static/assets/media/users/thecopkadna-users.png";
 						$('#update_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
-						document.querySelector("#member_id").value = "";
-						document.querySelector("#assembly").value = "";
+						document.querySelector("#accessibility_member_id").value = "";
+						document.querySelector("#accessibility_assembly").value = "";
 						document.querySelector("#accessibility_full_name").textContent = "";
 						document.querySelector("#accessibility_email").textContent = "";
 						document.querySelector("#accessibility_ministry").textContent = "";
@@ -327,7 +327,7 @@ jQuery(document).ready(function() {
 
 
 // search for user's data when member id field value length is 8
-$("#member_id").on("keyup", function(e) {
+$("#accessibility_member_id").on("keyup", function(e) {
 	e.stopImmediatePropagation();
     if ($(this).val().length >= 3) {
         $(".spin").attr("hidden", false);
@@ -350,7 +350,7 @@ $("#member_id").on("keyup", function(e) {
                     if (res.other_names) {
                         fullName = fullName + " " + res.other_names;
 					}
-					document.querySelector("#assembly").value = res.assembly;
+					document.querySelector("#accessibility_assembly").value = res.assembly;
 					document.querySelector("#accessibility_full_name").textContent = fullName;
 					document.querySelector("#accessibility_email").textContent = res.email;
 					document.querySelector("#accessibility_ministry").textContent = res.ministry;
@@ -363,7 +363,7 @@ $("#member_id").on("keyup", function(e) {
                 } else {
                     let img_url = "/static/assets/media/users/thecopkadna-users.png";
                     $('#update_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
-					document.querySelector("#assembly").value = "";
+					document.querySelector("#accessibility_assembly").value = "";
 					document.querySelector("#accessibility_full_name").textContent = "";
 					document.querySelector("#accessibility_email").textContent = "";
 					document.querySelector("#accessibility_ministry").textContent = "";
@@ -390,7 +390,7 @@ $("#member_id").on("keyup", function(e) {
     } else {
         let img_url = "/static/assets/media/users/thecopkadna-users.png";
         $('#update_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ")
-        document.querySelector("#assembly").value = "";
+        document.querySelector("#accessibility_assembly").value = "";
 		document.querySelector("#accessibility_full_name").textContent = "";
 		document.querySelector("#accessibility_email").textContent = "";
 		document.querySelector("#accessibility_ministry").textContent = "";
@@ -402,9 +402,9 @@ $("#member_id").on("keyup", function(e) {
     }
 });
 
-$("#member_id").on("change", function(e) {
+$("#accessibility_member_id").on("change", function(e) {
 	e.preventDefault();
-    $("#member_id").trigger("keyup");
+    $("#accessibility_member_id").trigger("keyup");
 });
 
 $("#upload_attendance").on('click', function(e) {
