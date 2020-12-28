@@ -1022,7 +1022,7 @@ def get_assembly_ui_data():
             assembly_dict['admins'] = '2' #str(Admins.query.filter_by(assembly=assembly_dict['assembly_name']).count())
             assembly_ui_data.append(assembly_dict)
     for dir_name in os.listdir(ASSEMBLY_DEACTIVATED_BASE_DIR):
-        if os.path.isdir(os.path.join(ASSEMBLY_CONFIG_BASE_DIR, dir_name)):
+        if os.path.isdir(os.path.join(ASSEMBLY_DEACTIVATED_BASE_DIR, dir_name)):
             assembly_dict = dict()
             assembly_dict['toggle_activate_btn_label'] = 'Activate'
             assembly_dict['assembly_name'] = read_assembly_config(dir_name, active=False)['assembly_name']
