@@ -628,13 +628,15 @@ def edit_settings():
                 permission = current_user.permission
                 if permission == 'super_admin':
                     assembly_name = request.args.get('assembly_name')
+                    print
                     message_count = str(utils.get_notif_count())
                     logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
                     logged_in_admin_img = utils.get_img_path(current_user.member_id)
-                    return render_template('settings.html', logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img, message_count=message_count)
+                    
                     assembly_data = utils.read_assembly_config(assembly_name)
                     # print(assembly_data)
-                    return render_template('edit-settings.html', assembly_data=assembly_data)
+                    return render_template('edit-settings.html', assembly_data=assembly_data, logged_in_admin_data=logged_in_admin_data, 
+                    logged_in_admin_img=logged_in_admin_img, message_count=message_count)
         return redirect(url_for('login'))
     except Exception as e:
         print(e)
