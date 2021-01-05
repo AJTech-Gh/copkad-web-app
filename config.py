@@ -19,9 +19,9 @@ class Config(object):
     UPLOAD_FOLDER = 'static' + os.sep + 'storage'
 
     # EMAIL CONFIGURATIONS
-    MAIL_SERVER = 'smtp.gmail.com'
-    MAIL_PORT = 587
-    MAIL_USE_TLS = True
-    MAIL_USERNAME = 'unibasesoftware@gmail.com'
-    MAIL_DEFAULT_SENDER = 'unibasesoftware@gmail.com'
-    MAIL_PASSWORD = 'Godisgood2018'
+    MAIL_SERVER = 'smtp.mail.yahoo.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = 'copkad@yahoo.com'
+    MAIL_DEFAULT_SENDER = 'copkad@yahoo.com'
+    MAIL_PASSWORD = 'oohcikgdptuhpdfy'
