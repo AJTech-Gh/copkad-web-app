@@ -22,6 +22,11 @@ class Config(object):
     MAIL_SERVER = 'smtp.mail.yahoo.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
+    MAIL_SENDER_NAME = 'COP-Nsema'
     MAIL_USERNAME = 'copkad@yahoo.com'
     MAIL_DEFAULT_SENDER = 'copkad@yahoo.com'
     MAIL_PASSWORD = 'oohcikgdptuhpdfy'
+
+    # SMS API key
+    SMS_API_KEY = 'wYlETdU1fcrjy4Ql0nHESio4c'
+    SMS_SENDER_ID = 'COP-Nsema'

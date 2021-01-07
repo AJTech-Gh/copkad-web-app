@@ -16,5 +16,20 @@
         "titleBar.activeForeground": "#e7e7e7",
         "titleBar.inactiveBackground": "#1b63ba99",
         "titleBar.inactiveForeground": "#e7e7e799"
-    }
+    },
+    "sqltools.connections": [
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "www.db4free.net",
+            "port": 3306,
+            "driver": "MySQL",
+            "name": "copkad",
+            "username": "copkad_admin",
+            "database": "copkad",
+            "password": "copkad_admin"
+        }
+    ]
 }

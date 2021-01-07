@@ -50,7 +50,7 @@ var KTAppUserAdd = function () {
 					required: true
 				},	 
 				profile_email: {
-					required: true,
+					required: false,
 					email: true
 				}
 			},

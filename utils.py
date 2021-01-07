@@ -21,6 +21,7 @@ import base64
 from io import BytesIO
 from PIL import Image
 from datetime import datetime
+import urllib
 from file_encrypter import FileEncrypter
 from constants import *
 
@@ -340,41 +341,13 @@ def async_send_mail(msg):
 def compose_email_msg(member_id, password):
     return render_template("msg.html", member_id=member_id, password=password)
 
-def send_email(subject, recipient, msg_content):
+def send_email(recipient, msg_content):
+    subject = app.config['MAIL_SENDER_NAME']
     msg = Message(subject, recipients=[recipient])
     msg.html = msg_content
     t = Thread(target=async_send_mail, args=[msg])
     t.start()
     return t
-
-def async_send_sms(msg, recipient):
-    # set progress signal
-    print("Sending Message ...")
-    # parameters to send SMS
-    base_url = "https://apps.mnotify.net/smsapi?"
-    api_key = "vuWSVGpTxpTeMHPxXNuQ4iRNO"
-    sender_name = "COP"
-    params = {"key": api_key,"to": recipient, "msg": msg, "sender_id": sender_name}
-    # prepare your url
-    url = base_url + urllib.parse.urlencode(params)
-    try:
-        # get the response
-        content = urllib.request.urlopen(url).read()   # content contains the response from mNotify
-        if int(content) == 1000:    # check if message was successful
-            # send success message signal
-            print("Message Sent")
-        else:
-            print("Message Not Sent")
-    except:
-        # send error message signal
-        print("Fatal error")
-
-def compose_sms_msg(member_id, password):
-    return f'Membership Account Details\n\nMEMBER ID: {member_id}\nPASSWORD: {password}'
-
-def send_sms(msg, recipient):
-    t = Thread(target=async_send_sms, args=[msg, recipient])
-    t.start()
 
 def read_user_by_member_id(id):
     user = User.query.filter_by(member_id=id).first()
@@ -1067,3 +1040,36 @@ def get_notif_count():
 
 def valid_next_param(next_param):
     return (True if urlparse(next_param).netloc.strip() == '' else False)
+
+
+def check_sms_balance():
+    """
+    Returns the SMS balance
+    """
+    try:
+        params = {'key': app.config['SMS_API_KEY']}
+        params = urllib.parse.urlencode(params)
+        url = f'https://apps.mnotify.net/smsapi/balance?{params}'
+        balance = urllib.request.urlopen(url).read()
+        return balance.decode()
+    except Exception as e:
+        print(e)
+
+
+def async_send_sms(recipient_contact, member_id, password):
+    try:
+        message = f'Membership Account Details\n\nMEMBER ID: {member_id}\nPASSWORD: {password}'
+        params = {'key': app.config['SMS_API_KEY'], 'to': recipient_contact, 'msg': message, 'sender_id': app.config['SMS_SENDER_ID']}
+        params = urllib.parse.urlencode(params)
+        url = f'https://apps.mnotify.net/smsapi?{params}'
+        return_code = urllib.request.urlopen(url).read()
+        if int(return_code) == 1000:
+            print(f'Message sent successfully to {recipient_contact}')
+        else:
+            print(f'Message not sent to {recipient_contact}')
+    except Exception as e:
+        print(e)
+
+def send_sms(recipient_contact, member_id, password):
+    t = Thread(target=async_send_sms, args=[recipient_contact, member_id, password], daemon=True)
+    t.start()

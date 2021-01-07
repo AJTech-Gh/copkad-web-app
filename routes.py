@@ -448,6 +448,7 @@ def admin_dashboard():
                     attendance_notifs = utils.get_attendance_notifs('%')
                     assembly_ui_data = utils.get_assembly_ui_data()
                     access_admin_data = db.session.query(Accessibility, User).join(User).all()
+                    sms_balance = utils.check_sms_balance()
 
                     logged_in_admin_data = User.query.filter_by(member_id=current_user.member_id).first()
                     logged_in_admin_img = utils.get_img_path(current_user.member_id)
@@ -459,13 +460,12 @@ def admin_dashboard():
                         admin_data['name'] = f'{user.last_name}, {user.first_name} {user.other_names}' 
                         admin_data['img'] = utils.get_img_path(user.member_id)
                         admin_data['assembly'] = user.assembly
-                        admin_data['permission'] = access.permission
+                        admin_data['permission'] = access.permission 
                         accessibility_list.append(admin_data)
                     return render_template('admin.html', accessibility_list=accessibility_list, assembly_names=assembly_names, 
                     registered_member_data=registered_member_data, attendance_notifs=attendance_notifs, assembly_ui_data=assembly_ui_data, 
                     permission_map=utils.PERMISSION_MAP, logged_in_admin_data=logged_in_admin_data, logged_in_admin_img=logged_in_admin_img,
-                    message_count=message_count
-                    )
+                    message_count=message_count, sms_balance=sms_balance)
         return redirect(url_for('login'))
     except Exception as e:
         print(e)
@@ -678,7 +678,7 @@ def settings_submit():
             'country':form.get('country'),
             'contact':form.get('contact'),
             'email':form.get('email'),
-            'e_password':form.get('e_password')
+            # 'e_password':form.get('e_password')
         })
         
         offering_count = 0
@@ -1669,14 +1669,14 @@ def add_user_submit():
                 User.query.filter_by(member_id=member_id).update(row_dict)
                 db.session.commit()
 
-            # send confirmation email or sms
-            if email:
-                subject = "COP"
+            # send confirmation email
+            if comm_email == 'on' and email.strip():
                 msg_content = utils.compose_email_msg(member_id, password)
-                utils.send_email(subject, email, msg_content)
-            else:
-                msg = utils.compose_sms_msg(member_id, password)
-                utils.send_sms(msg, contact_phone_1)
+                utils.send_email(email, msg_content)
+
+            # send confirmation sms
+            if comm_sms == 'on' and contact_phone_1.strip():
+                utils.send_sms(contact_phone_1, member_id, password)
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})

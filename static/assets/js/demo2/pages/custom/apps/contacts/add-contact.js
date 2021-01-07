@@ -75,8 +75,8 @@ var KTAppContactsAdd = function () {
 					required: true
 				},
 				email: {
-					required: true,
-					email: true
+					required: false,
+					email: false
 				},
 				marital_status: {
 					required: true
