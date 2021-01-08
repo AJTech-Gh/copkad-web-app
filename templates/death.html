@@ -73,7 +73,7 @@
             <!-- begin:: Brand -->
 <div class="kt-header__brand   kt-grid__item" id="kt_header_brand">
     <div class="kt-header__brand-logo">
-        <a href="{{ url_for('index') }}">
+        <a href="{{ url_for('overview') }}">
             <img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-2.png') }}" class="kt-header__brand-logo-default"/>
             <img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-4.png') }}" class="kt-header__brand-logo-sticky"/>
         </a>        
@@ -305,7 +305,7 @@
                 <label class="col-xl-3 col-lg-3 col-form-label">User Image</label> <!--take data member's registation database-->
                 <div class="col-lg-9 col-xl-6">
                     <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
-                        <div class="kt-avatar__holder" style="background-image: url(/static/assets/media/users/thecopkadna-users.png)" ></div>
+                        <div class="kt-avatar__holder" style="background-image: url(/static/assets/media/users/thecopkadna-users.png); min-height: 200px; min-width:200px; background-position: center;" ></div>
                         </label>
                         <span class="kt-avatar__cancel" data-toggle="kt-tooltip" title="" data-original-title="Cancel avatar">
                             <i class="fa fa-times"></i>

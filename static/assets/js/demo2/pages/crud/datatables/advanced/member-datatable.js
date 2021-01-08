@@ -153,6 +153,7 @@ let viewRowData = (row) => {
 
 // print the row data
 let printRowData = (row) => {
+
 	let colIds = ["member_id", "full_name", "gender", "marital_status", "phone", "assembly", "ministry", "status"];
 	let jsonData = {};
 	let rowData = row.getElementsByTagName("td");
@@ -160,7 +161,26 @@ let printRowData = (row) => {
 		jsonData[colIds[i]] = rowData[i].textContent;
 	}
 
-	printDetails(jsonData);
+	$.ajax({
+		method: "POST",
+
+		url: '/load_user_img/' + jsonData.member_id,
+
+		success: function(res) {
+			let img_url = "/" + res.img.replaceAll("\\", "/");
+			if (img_url === "/") {
+				img_url = "/static/assets/media/users/thecopkadna-users.png";
+			}
+			jsonData["img"] = img_url;
+			printDetails(jsonData);
+		},
+
+		error: function(res, status, error) {
+			let img_url = "/static/assets/media/users/thecopkadna-users.png";
+			jsonData["img"] = img_url;
+			printDetails(jsonData);
+		}
+	});
 }
 
 let printDetails =  (data) => {
@@ -194,28 +214,39 @@ let printDetails =  (data) => {
 				<div class="kt-portlet__body kt-portlet__body--fit">
 					<div class="kt-invoice-2">
 						<div class="kt-invoice__wrapper">
-							<div class="kt-invoice__head">
-								<div class="kt-invoice__container kt-invoice__container--centered">
-									<div class="kt-invoice__logo">
-										<a href="#">
-											<h1>MEMBER DATA SUMMARY</h1>
-										</a>
-										<a href="#">
-											<img src="/static/assets/media/logos/thecopnsema-2.png">
-										</a>
-									</div>
-									<span class="kt-invoice__desc">
-										<span>The Church of Pentecost</span>
-										<span>Kwadaso Area | Kwadaso Agric District | Nsema Assemblies</span>
-										<span>Post Office Box, KW 101. </span>
-										<span>Kwadaso - Kumasi</span>
-										<span>Tel : +233 570 364 383</span>
-										<span>Email: info@thecopkadna.com</span>
-									</span>
+							<div class="row kt-invoice__head">
+
+								<div class="col">
+									<h1>MEMBER DATA SUMMARY</h1>
 								</div>
+								
+								<div class="col">
+									<div class="kt-invoice__container kt-invoice__container--centered">
+										<span class="kt-invoice__desc">
+											<a href="#">
+												<img src="/static/assets/media/logos/thecopnsema-2.png">
+											</a>
+											<span>The Church of Pentecost</span>
+											<span>Kwadaso Area | Kwadaso Agric District || Nsema Assemblies</span>
+											<span>Post Office Box, KW 101. </span>
+											<span>Kwadaso - Kumasi</span>
+											<span>Tel : +233 570 364 383</span>
+											<span>Email: info@thecopkadna.com</span>
+										</span>
+									</div>
+								</div>
+								
 							</div>
 							<!-- body -->
 							<div class="kt-invoice__body kt-invoice__body--centered">
+								<div class="row">
+									<div class="col"></div>
+									<div class="col">
+									<img src="` + data.img + `" style="min-width: 200px; min-height: 200px; max-width: 200px; max-height: 200px; object-fit:contain;" />
+									</div>
+									<div class="col"></div>
+								</div>
+								<br />
 								<div class="row">
 									<div class="col">
 										<strong>Member ID:</strong><br/>

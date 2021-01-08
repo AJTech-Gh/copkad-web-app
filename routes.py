@@ -903,7 +903,6 @@ def transfer_submit():
             else: 
                 # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
                 # https://docs.sqlalchemy.org/en/13/core/dml.html
-                member_id = int(member_id)
                 row_dict = {
                     'age':age,
                     'present_portfolio':present_portfolio,
@@ -927,7 +926,8 @@ def transfer_submit():
             "transfered_from": transfered_from,
             "transfered_to": transfered_to,
             "transfer_specification": transfer_specification,
-            "officiating_minister": officiating_minister
+            "officiating_minister": officiating_minister,
+            "img": utils.get_img_path(member_id)
             }
 
             return Response(json.dumps(data), status=200, mimetype='application/json')
@@ -975,7 +975,6 @@ def promotion_submit():
             else: 
                 # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
                 # https://docs.sqlalchemy.org/en/13/core/dml.html
-                member_id = int(member_id)
                 row_dict = {
                     'age':age,
                     'present_portfolio':present_portfolio,
@@ -997,7 +996,8 @@ def promotion_submit():
             "present_portfolio":present_portfolio,
             "promoted_portfolio": promoted_portfolio,
             "portfolio_specification": portfolio_specification,
-            "officiating_minister": officiating_minister
+            "officiating_minister": officiating_minister,
+            "img": utils.get_img_path(member_id)
             }
 
             return Response(json.dumps(data), status=200, mimetype='application/json')
@@ -1085,7 +1085,6 @@ def death_submit():
             else: 
                 # https://stackoverflow.com/questions/6699360/flask-sqlalchemy-update-a-rows-information
                 # https://docs.sqlalchemy.org/en/13/core/dml.html
-                member_id = int(member_id)
                 row_dict = {
                     "death_date": death_date,
                     "burial_date": burial_date,
@@ -1108,7 +1107,8 @@ def death_submit():
             'ministry':ministry,
             "burial_date": burial_date,
             "place_of_burial": place_of_burial,
-            "officiating_minister": officiating_minister
+            "officiating_minister": officiating_minister,
+            "img": utils.get_img_path(member_id)
             }
 
             return Response(json.dumps(data), status=200, mimetype='application/json')
@@ -1489,7 +1489,8 @@ def baptism_certificates_submit():
                 "officiating_minister":officiating_minister,
                 "district":district,
                 "area":area,
-                "country":country
+                "country":country,
+                "img": utils.get_img_path(member_id)
             }
 
             # return the success response to Ajax
@@ -1669,14 +1670,14 @@ def add_user_submit():
                 User.query.filter_by(member_id=member_id).update(row_dict)
                 db.session.commit()
 
-            # send confirmation email
-            if comm_email == 'on' and email.strip():
-                msg_content = utils.compose_email_msg(member_id, password)
-                utils.send_email(email, msg_content)
+            # # send confirmation email
+            # if comm_email == 'on' and email.strip():
+            #     msg_content = utils.compose_email_msg(member_id, password)
+            #     utils.send_email(email, msg_content)
 
-            # send confirmation sms
-            if comm_sms == 'on' and contact_phone_1.strip():
-                utils.send_sms(contact_phone_1, member_id, password)
+            # # send confirmation sms
+            # if comm_sms == 'on' and contact_phone_1.strip():
+            #     utils.send_sms(contact_phone_1, member_id, password)
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})

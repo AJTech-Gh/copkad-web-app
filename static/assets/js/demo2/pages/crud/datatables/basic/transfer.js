@@ -118,7 +118,7 @@ $("#trans_member_id").on("keyup", function(e) {
                     if (img_url === "/") {
                         img_url = "/static/assets/media/users/thecopkadna-users.png";
                     }
-                    $('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
+                    $('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); min-height: 200px; min-width:200px; background-position: center; ");
                     let fullName = res.last_name + ", " + res.first_name;
                     if (res.other_names) {
                         fullName = fullName + " " + res.other_names;
@@ -127,7 +127,7 @@ $("#trans_member_id").on("keyup", function(e) {
 						
                 } else {
                     let img_url = "/static/assets/media/users/thecopkadna-users.png";
-                    $('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
+                    $('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); min-height: 200px; min-width:200px; background-position: center; ");
                     document.querySelector("#trans_full_name").value = "";
                     $(".spin").attr("hidden", true);
                     $("#trans_record_id_div").attr("hidden", true);
@@ -149,7 +149,7 @@ $("#trans_member_id").on("keyup", function(e) {
 
     } else {
         let img_url = "/static/assets/media/users/thecopkadna-users.png";
-        $('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ")
+        $('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); min-height: 200px; min-width:200px; background-position: center; ")
         document.querySelector("#trans_full_name").value = "";
         $(".spin").attr("hidden", true);
         $("#trans_record_id_div").attr("hidden", true);
@@ -171,7 +171,27 @@ let transPrintRowData = (row) => {
 	for (let i = 0; i < rowData.length - 1; i++) {
 		jsonData[colIds[i]] = rowData[i].textContent;
 	}
-	transPrintDetails(jsonData);
+
+	$.ajax({
+		method: "POST",
+
+		url: '/load_user_img/' + jsonData.member_id,
+
+		success: function(res) {
+			let img_url = "/" + res.img.replaceAll("\\", "/");
+			if (img_url === "/") {
+				img_url = "/static/assets/media/users/thecopkadna-users.png";
+			}
+			jsonData["img"] = img_url;
+			transPrintDetails(jsonData);
+		},
+
+		error: function(res, status, error) {
+			let img_url = "/static/assets/media/users/thecopkadna-users.png";
+			jsonData["img"] = img_url;
+			transPrintDetails(jsonData);
+		}
+	});
 }
 
 
@@ -212,12 +232,12 @@ let transViewRowData = (row) => {
 			if (img_url === "/") {
 				img_url = "/static/assets/media/users/thecopkadna-users.png";
 			}
-			$('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ");
+			$('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); min-height: 200px; min-width:200px; background-position: center; ");
 		},
 
 		error: function(res, status, error) {
 			let img_url = "/static/assets/media/users/thecopkadna-users.png";
-			$('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); background-position: center; ")
+			$('#trans_kt-avatar__holder').attr("style", "background-image: url(" + img_url + "); min-height: 200px; min-width:200px; background-position: center; ")
 
 			swal.fire({
 				"title": "",
@@ -411,28 +431,39 @@ let transPrintDetails =  (data) => {
 											<div class="kt-portlet__body kt-portlet__body--fit">
 												<div class="kt-invoice-2">
 													<div class="kt-invoice__wrapper">
-														<div class="kt-invoice__head">
-															<div class="kt-invoice__container kt-invoice__container--centered">
-																<div class="kt-invoice__logo">
-																	<a href="#">
-																		<h1>TRANSFER DATA</h1>
-																	</a>
-																	<a href="#">
-																		<img src="/static/assets/media/logos/thecopnsema-2.png">
-																	</a>
-																</div>
-																<span class="kt-invoice__desc">
-																	<span>The Church of Pentecost</span>
-																	<span>Kwadaso Area | Kwadaso Agric District | Nsema Assemblies</span>
-																	<span>Post Office Box, KW 101. </span>
-																	<span>Kwadaso - Kumasi</span>
-																	<span>Tel : +233 570 364 383</span>
-																	<span>Email: info@thecopkadna.com</span>
-																</span>
+														<div class="row kt-invoice__head">
+
+															<div class="col">
+																<h1>TRANSFER DATA</h1>
 															</div>
+															
+															<div class="col">
+																<div class="kt-invoice__container kt-invoice__container--centered">
+																	<span class="kt-invoice__desc">
+																		<a href="#">
+																			<img src="/static/assets/media/logos/thecopnsema-2.png">
+																		</a>
+																		<span>The Church of Pentecost</span>
+																		<span>Kwadaso Area | Kwadaso Agric District || Nsema Assemblies</span>
+																		<span>Post Office Box, KW 101. </span>
+																		<span>Kwadaso - Kumasi</span>
+																		<span>Tel : +233 570 364 383</span>
+																		<span>Email: info@thecopkadna.com</span>
+																	</span>
+																</div>
+															</div>
+															
 														</div>
 														<!-- body -->
 														<div class="kt-invoice__body kt-invoice__body--centered">
+															<div class="row">
+																<div class="col"></div>
+																<div class="col">
+																<img src="` + data.img.replaceAll('\\', '/') + `" style="min-width: 200px; min-height: 200px; max-width: 200px; max-height: 200px; object-fit:contain;" />
+																</div>
+																<div class="col"></div>
+															</div>
+															<br />
 															<div class="row">
 																<div class="col">
 																	<strong>Member ID:</strong><br/>

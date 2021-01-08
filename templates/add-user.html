@@ -68,7 +68,7 @@
 			<!-- begin:: Brand -->
 <div class="kt-header__brand   kt-grid__item" id="kt_header_brand">
 	<div class="kt-header__brand-logo">
-		<a href="{{ url_for('index') }}">
+        <a href="{{ url_for('overview') }}">
 			<img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-2.png') }}" class="kt-header__brand-logo-default"/>
 			<img alt="Logo" src="{{ url_for('static', filename='assets/media/logos/thecopnsema-4.png') }}" class="kt-header__brand-logo-sticky"/>
 		</a>		
@@ -363,8 +363,8 @@
                                             <div class="form-group row">
                                                 <label class="col-xl-3 col-lg-3 col-form-label">Photo ID</label>
                                                 <div class="col-lg-9 col-xl-6">
-                                                    <div class="kt-avatar kt-avatar--outline kt-avatar--circle--" id="kt_apps_user_add_avatar">
-                                                        <div class="kt-avatar__holder" style="background-image: url({{ user_data['img'].replace('\\', '/') }})"></div>
+                                                    <div class="kt-avatar kt-avatar--outline kt-avatar--circle" id="kt_apps_user_add_avatar">
+                                                        <div class="kt-avatar__holder" style="min-height: 200px; min-width:200px; background-position: center; background-image: url({{ user_data['img'].replace('\\', '/') }});"></div>
                                                         <label class="kt-avatar__upload" data-toggle="kt-tooltip" title="" data-original-title="Change avatar">
                                                             <i class="fa fa-pen"></i>
                                                             <input type="file" id= "kt_apps_contacts_add_avatar" name="kt_apps_contacts_add_avatar" accept="image/jpeg,image/png">

@@ -531,7 +531,7 @@ $("#kt_apps_contacts_add_avatar").on("change", function () {
     if (acceptedImgExt.indexOf(fileExt) > -1) {
         try {
 			$('.kt-avatar__holder').attr("style", "background-image: url(" + window.URL.createObjectURL(this.files[0]) + 
-			"); background-position: center; ");
+			"); min-height: 200px; min-width:200px; background-position: center; ");
         } catch (error) {
             swal.fire({
 				"title": "",
@@ -565,28 +565,39 @@ let printDetails =  (elementId, member_data) => {
 							<div class="kt-portlet__body kt-portlet__body--fit">
 								<div class="kt-invoice-2">
 									<div class="kt-invoice__wrapper">
-										<div class="kt-invoice__head">
-											<div class="kt-invoice__container kt-invoice__container--centered">
-												<div class="kt-invoice__logo">
-													<a href="#">
-														<h1>MEMBER DETAILS</h1>
-													</a>
-													<a href="#">
-														<img src="/static/assets/media/logos/thecopnsema-2.png">
-													</a>
-												</div>
-												<span class="kt-invoice__desc">
-													<span>The Church of Pentecost</span>
-													<span>Kwadaso Area | Kwadaso Agric District || Nsema Assemblies</span>
-													<span>Post Office Box, KW 101. </span>
-													<span>Kwadaso - Kumasi</span>
-													<span>Tel : +233 570 364 383</span>
-													<span>Email: info@thecopkadna.com</span>
-												</span>
+										<div class="row kt-invoice__head">
+
+											<div class="col">
+												<h1>MEMBER DETAILS</h1>
 											</div>
+											
+											<div class="col">
+												<div class="kt-invoice__container kt-invoice__container--centered">
+													<span class="kt-invoice__desc">
+														<a href="#">
+															<img src="/static/assets/media/logos/thecopnsema-2.png">
+														</a>
+														<span>The Church of Pentecost</span>
+														<span>Kwadaso Area | Kwadaso Agric District || Nsema Assemblies</span>
+														<span>Post Office Box, KW 101. </span>
+														<span>Kwadaso - Kumasi</span>
+														<span>Tel : +233 570 364 383</span>
+														<span>Email: info@thecopkadna.com</span>
+													</span>
+												</div>
+											</div>
+											
 										</div>
 										<!-- body -->
 										<div class="kt-invoice__body kt-invoice__body--centered">
+											<div class="row">
+												<div class="col"></div>
+												<div class="col">
+													<img src="/` + member_data.img.replaceAll('\\', '/') + `" style="min-width: 200px; min-height: 200px; max-width: 200px; max-height: 200px; object-fit:contain;" />
+												</div>
+												<div class="col"></div>
+											</div>
+											<br />
 											<div class="row">
 												<div class="col">
 													<strong>Member ID:</strong><br/>
