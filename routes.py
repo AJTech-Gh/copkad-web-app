@@ -1670,14 +1670,14 @@ def add_user_submit():
                 User.query.filter_by(member_id=member_id).update(row_dict)
                 db.session.commit()
 
-            # # send confirmation email
-            # if comm_email == 'on' and email.strip():
-            #     msg_content = utils.compose_email_msg(member_id, password)
-            #     utils.send_email(email, msg_content)
+            # send confirmation email
+            if comm_email == 'on' and email.strip():
+                msg_content = utils.compose_email_msg(member_id, password)
+                utils.send_email(email, msg_content)
 
-            # # send confirmation sms
-            # if comm_sms == 'on' and contact_phone_1.strip():
-            #     utils.send_sms(contact_phone_1, member_id, password)
+            # send confirmation sms
+            if comm_sms == 'on' and contact_phone_1.strip():
+                utils.send_sms(contact_phone_1, member_id, password)
 
             # return the success response to Ajax
             # return json.dumps({'status':'OK', 'message': 'successful'})
