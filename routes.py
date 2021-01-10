@@ -198,6 +198,7 @@ def logout():
 @app.route('/')
 @app.route('/login')
 def login():
+    utils.setup_dirs()
     if current_user.is_authenticated:
         if str(current_user).split(':')[0].lower() == 'accessibility':
             permission = current_user.permission

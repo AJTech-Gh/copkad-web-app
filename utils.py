@@ -1057,6 +1057,9 @@ def check_sms_balance():
 
 
 def async_send_sms(recipient_contact, member_id, password):
+    """
+    Sends SMS to the selected member
+    """
     try:
         message = f'Membership Account Details\n\nMEMBER ID: {member_id}\nPASSWORD: {password}'
         params = {'key': app.config['SMS_API_KEY'], 'to': recipient_contact, 'msg': message, 'sender_id': app.config['SMS_SENDER_ID']}
@@ -1071,5 +1074,27 @@ def async_send_sms(recipient_contact, member_id, password):
         print(e)
 
 def send_sms(recipient_contact, member_id, password):
+    """
+    Starts the SMS thread
+    """
     t = Thread(target=async_send_sms, args=[recipient_contact, member_id, password], daemon=True)
     t.start()
+
+
+def setup_dirs():
+    """
+    Creates all the required directories
+    """
+    dir_list = [
+        'assembly_config', 
+        'attendance', 
+        'baptism_photos',
+        'deactivated_assembly',
+        'incomplete_reg_acc' + os.sep + 'data',
+        'incomplete_reg_acc' + os.sep + 'profile_photos',
+        'profile_photos',
+        'push_notifications'
+    ]
+    for dir_path in dir_list:
+        full_path = os.path.join(app.config['UPLOAD_FOLDER'], dir_path)
+        os.makedirs(full_path, exist_ok=True)
