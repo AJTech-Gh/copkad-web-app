@@ -104,7 +104,10 @@ def load_all_incomplete_reg():
     Returns all the incomplete registration account filenames (pseudo ids)
     """
     filenames = os.listdir(PSEUDO_DATA_DIR)
-    filenames.remove("constant_empty_json_file.json")
+    try:
+        filenames.remove("constant_empty_json_file.json")
+    except:
+        pass
     incomplete_reg_data = []
     for name in filenames:
         pseudo_id = name.replace(".json", "")
