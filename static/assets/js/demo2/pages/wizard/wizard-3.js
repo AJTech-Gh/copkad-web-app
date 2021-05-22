@@ -280,11 +280,13 @@ for(let i=0; i < groupNodeValues.length; i++){
 }
 document.querySelector("#rev_groups").innerHTML = groupSpan.innerHTML;
 //End -> Review Groups
-let assembly_name = document.querySelector("#assembly_name").value;
-document.querySelector(".dis_dis_assembly_name").innerHTML = assembly_name;
+let assembly_name = document.getElementById("assembly_name").value;
+console.log(assembly_name);
+let list = document.querySelectorAll(".dis_assembly_name");
+list.forEach(e => e.textContent = assembly_name);
 
-}
 
+}//End of review
 
 /**
  * Toggles the visibility of the email password

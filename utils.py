@@ -4,7 +4,7 @@ import shutil
 import random
 import string
 
-from sqlalchemy.util.langhelpers import group_expirable_memoized_property
+#from sqlalchemy.util.langhelpers import group_expirable_memoized_property
 from sqlalchemy import func
 from app import db, app, mail
 from models import Accessibility, User, Baptism, RalliesAndConventions, Dedication, Death, Promotion, Transfer, Birth, Attendance
