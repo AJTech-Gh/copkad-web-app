@@ -280,7 +280,8 @@ for(let i=0; i < groupNodeValues.length; i++){
 }
 document.querySelector("#rev_groups").innerHTML = groupSpan.innerHTML;
 //End -> Review Groups
-
+let assembly_name = document.querySelector("#assembly_name").value;
+document.querySelector(".dis_dis_assembly_name").innerHTML = assembly_name;
 
 }
 

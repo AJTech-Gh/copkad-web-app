@@ -11,7 +11,6 @@ from models import User, Baptism, RalliesAndConventions, Dedication, Death, Prom
 import utils
 from constants import *
 
-
 # @app.after_request
 # def add_header(r):
 #     """
